@@ -3,7 +3,7 @@ Nationstates API wrapper
 
 ### API
 
-#####Making a API request
+#####[Making a API request](URL)
 
 To make a request, we need to first put together are request. Lets say we want to get the amount of nations in the world
 
@@ -26,8 +26,9 @@ When we run the code (Assuming no errors on Nationstates end), we are returned t
 
     {'numnations': u'119228'}
 
+To see more advanced usage, click [here](TEMPLATE)
 
-###### *Note: call.collect() only returns fully supported shards. Shards not fully supported will return `None`*
+###### *Note: call.collect() only returns fully supported shards. Shards not fully supported will return `None`
 
 
 
@@ -39,6 +40,12 @@ When we run the code (Assuming no errors on Nationstates end), we are returned t
 ### Shards
 
 While some shards are simple strings that you can pass into the API very easily, others are not able to be adequately represented by a str. To handle these more advanced requests, the `Shard` object is used.
+
+Basic Example
+
+    nationstates.Shard("numnations")
+
+To see more advanced usage go [here](URLTEMPLATe)
 
 
 
