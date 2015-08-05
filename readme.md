@@ -3,7 +3,7 @@ Nationstates API wrapper
 
 ### API
 
-#####Making a API request
+#####[Making a API request](URL)
 
 To make a request, we need to first put together are request. Lets say we want to get the amount of nations in the world
 
@@ -45,7 +45,11 @@ Basic Example
 
     nationstates.Shard("numnations")
 
+<<<<<<< HEAD:readme.md
 To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)
+=======
+To see more advanced usage go [here](URLTEMPLATe)
+>>>>>>> 90f81f83674ba684934c2cf6ee008e60da02e6ca:readme.md
 
 
 
