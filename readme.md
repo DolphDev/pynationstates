@@ -26,7 +26,7 @@ When we run the code (Assuming no errors on Nationstates end), we are returned t
 
     {'numnations': u'119228'}
 
-To see more advanced usage, click [here](TEMPLATE)
+To see more advanced usage, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
 
 ###### *Note: call.collect() only returns fully supported shards. Shards not fully supported will return `None`
 
@@ -45,11 +45,9 @@ Basic Example
 
     nationstates.Shard("numnations")
 
-<<<<<<< HEAD:readme.md
+
 To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)
-=======
-To see more advanced usage go [here](URLTEMPLATe)
->>>>>>> 90f81f83674ba684934c2cf6ee008e60da02e6ca:readme.md
+
 
 
 
