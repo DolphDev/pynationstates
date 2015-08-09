@@ -3,7 +3,7 @@ Nationstates API wrapper
 
 ### API
 
-#####[Making a API request](URL)
+##### Making a API request
 
 To make a request, we need to first put together are request. Lets say we want to get the amount of nations in the world
 
@@ -54,20 +54,12 @@ To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/
 
 ###### These are the supported Shards *as of version 0.01. 
 
-Nations API
+Nations 
 ---
 
-###Supported Tags
+###Supported Shards
 
-<!--crappy hack to achieve single space with indentation-->
-
-####&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No associated tags (`str` or [shards](#shards) accepted)
-######&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <sub>Note: URLs point to the result the particular shard may return<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ** denote that this shard may return None depending on the actual actions of a nation in-game
-
-<!--  The shards are presented in a indented single spaced appearence, to replicate nationstates.net presentation (Pattern: 10 shards, seperated by a singe line break,
-followed by 12 &nbsp; for a somewhat hacky indentation -->
-
-Full support: 
+<sub>Note: URLs point to the result the particular shard may return<br>** denote that this shard may return None depending on the actual actions of a nation in-game
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`name`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=name)
@@ -85,28 +77,20 @@ Full support:
 [`animaltrait`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=animaltrait)
 [`currency`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=currency)
 [`flag`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=flag)
+[`banner`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=flag)
 [`majorindustry`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=majorindustry)
 [`crime`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=crime)
 [`sensibilities`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=sensibilities)
-[`govtpriority`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-['govdesc'](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
+[`govtpriority`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
+[`govdesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
+[`industrydesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=industrydesc)
+[`notable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
+['admirable'](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
+['founded'](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=founded)
+[`firstlogin`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=firstlogin)
+[lastlogin](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=lastlogin)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[lastactivity](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=lastactivity)
 
-Limited Support: <em> Returns bs4 Soup
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-
-No support <em> 
-
-
-
-
-####&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Shards using tags >>> [shards](#shards)
-
-###Unsupported Tags
-
-
-
+If a shard is not listed here, it is not currently supported by this module.
