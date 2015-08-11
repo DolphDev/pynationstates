@@ -15,7 +15,7 @@ class DictMethods:
         return result
 
     @staticmethod
-    def dict_creation(data, shard, rText):
+    def dict_creation(data, shard, rText, SpecialCase=False):
 
         """
         This handles Parser.collect_gen() dict creation
@@ -83,17 +83,60 @@ class Parser:
         return soup
 
     @staticmethod
-    def collect_gen(data, payload, rText):
+    def collect_gen(data, payload, _type_,  rText):
 
         collecter = {}
         for shard in payload:
+            specialcase = SpecialCase.ShardCase(data, shard, _type_)
+            print specialcase
             if type(shard) is str:
-                if SpecialCase.collect(shard.lower()):
+                if specialcase[1]:
+                    collecter = DictMethods.merge_dicts(collecter, {shard:specialcase[0]})
+                else:
                     collecter = DictMethods.merge_dicts(collecter, DictMethods.dict_creation(data, shard, rText))
             else:
-                if SpecialCase.collect(shard._get_main_value().lower()):
+                if specialcase[1]:
+                    collecter = DictMethods.merge_dicts(collecter, {shard._get_main_value:specialcase[0]})
+                else:
                     collecter = DictMethods.merge_dicts(collecter, DictMethods.dict_creation(data, shard._get_main_value(), rText))
         return collecter
+
+class ShardCase:
+
+    """
+    This Class contains all methods dealing with shards that require more processing
+    """
+
+    @staticmethod
+    def freedom(data, freedomtype):
+        data = (data.find(freedomtype))
+        return {
+        "economy":data.economy.text,
+        "politicalfreedom":data.politicalfreedom.text,
+        "civilrights":data.civilrights.text
+        }
+
+    @staticmethod
+    def census(data, censustype):
+        data = (data.find(censustype)) if "censusscore-" not in censustype else (data.find("censusscore")) 
+        print data
+        return {
+        "id":data["id"],
+        "value":data.text
+        }
+
+"""
+    @staticmethod
+    def happenings(data):
+        data = (data.find("happenings"))
+        eventlist = []
+        for x in data.find_all("event"):
+            eventlist.append({
+                ""
+                })
+"""
+
+
 
 
 class SpecialCase:
@@ -106,7 +149,25 @@ class SpecialCase:
     @staticmethod
     def collect(keyword):
         return not keyword in ["happenings"]
-        
+
+    @staticmethod
+    def ShardCase(data, shard, _type_):
+        print shard
+        if _type_ is "nation":
+            if shard == "freedom":
+                return (ShardCase.freedom(data, "freedom"), True)
+            if shard == "freedomscores":
+                (ShardCase.freedom(data, "freedomscores"), True)
+            if "census" in shard and shard not in ["rcensus", "wcensus"]:
+                return (ShardCase.census(data, shard), True)
+            #if shard == "happenings":
+            #    return ShardCase.happenings
+            #if shard == "Legistation":
+            #    pass+
+
+        return (None, False)
+
+
 
 class ApiCall:
 #THIS CLASS CONTAINS Static Methods needed for requesting data 
@@ -129,7 +190,6 @@ class ApiCall:
 
 
         """
-
         if user_agent is None:
             header = {"User-Agent":"NationStates Python API Wrapper V 0.01 Pre-Release"}
         else:
@@ -144,7 +204,7 @@ class ApiCall:
 
 class Api:
 
-    def __init__(self, _type_, value="NoValue", shard=None, limit=None):
+    def __init__(self, _type_, value="NoValue", shard=None, limit=None, user_agent=None):
 
         """
         Initializes the Api Object, sets up suppied shards for use.
@@ -218,28 +278,16 @@ class Api:
         "Returns the key ['data'] from self.data "
         return self.data.get("data", None)
 
-    def get_freedom(self):
-        pass
-
     def collect(self, text_online=True):
         """
-        Collects all data extractable via dynamic means
+        Collects all data mostly through dynamic means 
 
         Documentation covers all shards returned via this method.
 
         """
         data = self.get_data()
         payload = self.shard
-        return (Parser.collect_gen(data, payload, rText=text_online))
-
-    def get_all(self, rText=True):
-        """
-        Returns all shards requested, including shards that are not parsed by collect() method
-        """
-        scshards = {
-            "freedom":self.get_freedom()
-        }
-        DictMethods.merge_dicts(self.collect(rText))
+        return (Parser.collect_gen(data, payload, self.type[0],  rText=text_online, ))
 
 class Telegram:
 
