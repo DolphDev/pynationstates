@@ -21,7 +21,6 @@ class DictMethods:
         This handles Parser.collect_gen() dict creation
 
         """
-
         if rText:
             try:
                 if not "/n" in data.find(shard.lower()).text:
@@ -46,8 +45,7 @@ class Shard:
     def __str__(self):
         try:
             return ("(Shard: \'{ShardName}\', tags: {tags})").format(ShardName = self.shardname, tags = self.tags)
-        except Exception as err:
-            print err
+        except:
             raise Exception("Shard Object Empty")
 
 
@@ -83,12 +81,16 @@ class Parser:
         return soup
 
     @staticmethod
-    def collect_gen(data, payload, _type_,  rText):
+    def collect_gen(data, payload, _type_, meta, rText):
 
-        collecter = {}
+        collecter = {
+        "meta":{
+            "api": _type_,
+            "value": meta,
+            "shardlist": payload        
+        }}
         for shard in payload:
             specialcase = SpecialCase.ShardCase(data, shard, _type_)
-            print specialcase
             if type(shard) is str:
                 if specialcase[1]:
                     collecter = DictMethods.merge_dicts(collecter, {shard:specialcase[0]})
@@ -107,6 +109,10 @@ class ShardCase:
     This Class contains all methods dealing with shards that require more processing
     """
 
+    """
+    Nation Shards
+
+    """
     @staticmethod
     def freedom(data, freedomtype):
         data = (data.find(freedomtype))
@@ -117,25 +123,119 @@ class ShardCase:
         }
 
     @staticmethod
+    def banners(data):
+        data = (data.find("banners"))
+        bannerslist = []
+        for x in data.find_all("banner"):
+            bannerslist.append(x.text)
+        return bannerslist
+
+    @staticmethod
+    def deaths(data):
+        data = (data.find("deaths"))
+        deathlist = []
+        for x in data.find_all("cause"):
+            deathlist.append({
+                "cause": {
+                "type": x["type"],
+                "value": x.text
+                }
+                })
+
+
+    @staticmethod
+    def govt(data):
+        data = (data.find("govt"))
+        return {
+        "administration": data.find("administration").text,
+        "defence": data.find("defence").text,
+        "education": data.find("education").text,
+        "environment": data.find("environment").text,
+        "healthcare": data.find("healthcare").text,
+        "commerce": data.find("commerce").text,
+        "internationalaid": data.find("internationalaid").text,
+        "lawandorder": data.find("lawandorder").text,
+        "publictransport": data.find("publictransport").text,
+        "socialequality": data.find("socialequality").text,
+        "spirituality": data.find("spirituality").text,
+        "welfare": data.find("welfare").text
+        }
+
+
+    @staticmethod
     def census(data, censustype):
         data = (data.find(censustype)) if "censusscore-" not in censustype else (data.find("censusscore")) 
-        print data
         return {
         "id":data["id"],
         "value":data.text
         }
 
-"""
+
     @staticmethod
     def happenings(data):
         data = (data.find("happenings"))
         eventlist = []
         for x in data.find_all("event"):
             eventlist.append({
-                ""
+                "event":{
+                "timestamp":x.timestamp.text,
+                "text":x.find("text").text
+                }
                 })
-"""
+        return eventlist
 
+    @staticmethod
+    def legislation(data):
+        data = (data.find("legislation"))
+        lawlist = []
+        for x in data.find_all("law"):
+            lawlist.append({"law":x.text})
+        return lawlist
+
+    @staticmethod
+    def factbooklist(data):
+        data = data.find("factbooklist")
+        factlist = []
+        if data.text != None:
+
+            for x in data.find_all("factbook"):
+                factlist.append({"factbook":{
+                "id": x["id"],
+                "title": x.find("title").text,
+                "author": x.find("author").text,
+                "category": x.find("category").text,
+                "subcategory": x.find("subcategory").text if not x.find("subcategory") is None else None,
+                "created": x.find("created").text,
+                "edited": x.find("edited").text,
+                "views": x.find("views").text,
+                "score": x.find("score").text
+
+                }})
+        return factlist
+
+    @staticmethod
+    def dispatchlist(data):
+        data = data.find("dispatchlist")
+        if data.text != None:
+            dispatchlist = []
+
+
+            for x in data.find_all("dispatch"):
+                dispatchlist.append({"dispatch":{
+                "id": x["id"],
+                "title": x.find("title").text,
+                "author": x.find("author").text,
+                "category": x.find("category").text,
+                "subcategory": x.find("subcategory").text if not x.find("subcategory") is None else None,
+                "created": x.find("created").text,
+                "edited": x.find("edited").text,
+                "views": x.find("views").text,
+                "score": x.find("score").text
+
+                }})
+            return dispatchlist
+        else:
+            return None
 
 
 
@@ -146,24 +246,32 @@ class SpecialCase:
         _shard_, tag, tagvalue = tag_tuple
         return (tag+"="+tagvalue+"+")
 
-    @staticmethod
-    def collect(keyword):
-        return not keyword in ["happenings"]
+
 
     @staticmethod
     def ShardCase(data, shard, _type_):
-        print shard
         if _type_ is "nation":
             if shard == "freedom":
                 return (ShardCase.freedom(data, "freedom"), True)
             if shard == "freedomscores":
-                (ShardCase.freedom(data, "freedomscores"), True)
+                return (ShardCase.freedom(data, "freedomscores"), True)
             if "census" in shard and shard not in ["rcensus", "wcensus"]:
                 return (ShardCase.census(data, shard), True)
-            #if shard == "happenings":
-            #    return ShardCase.happenings
-            #if shard == "Legistation":
-            #    pass+
+            if shard == "happenings":
+                return (ShardCase.happenings(data), True)
+            if shard == "legislation":
+                return (ShardCase.legislation(data), True)
+            if shard == "govt":
+                return (ShardCase.govt(data), True)
+            if shard == "factbooklist":
+                return (ShardCase.factbooklist(data), True)
+            if shard == "dispatchlist":
+                return (ShardCase.dispatchlist(data), True)
+            if shard == "banners":
+                return (ShardCase.banners(data), True)
+            if shard == "deaths":
+                return (ShardCase.deaths(data), True)
+
 
         return (None, False)
 
@@ -287,7 +395,8 @@ class Api:
         """
         data = self.get_data()
         payload = self.shard
-        return (Parser.collect_gen(data, payload, self.type[0],  rText=text_online, ))
+        value =(self.type[1]) if self.type[0] is not "world" else None
+        return (Parser.collect_gen(data, payload, self.type[0],  value , text_online, ))
 
 class Telegram:
 
