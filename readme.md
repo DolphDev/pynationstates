@@ -61,7 +61,7 @@ Nations
 
 <sub>Note: URLs point to the result the particular shard may return<br>** denots unsupported shards
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 [`name`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=name)
 [`fullname`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=fullname)
 [`type`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=type)
@@ -70,7 +70,6 @@ Nations
 [`gavote`**](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=gavote)
 [`scvote`\*\*](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=scvote)
 [`freedom`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=freedom)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`region`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=region)
 [`population`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=population)
 [`tax`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=tax)
@@ -79,7 +78,6 @@ Nations
 [`currency`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=currency)
 [`flag`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=flag)
 [`banner`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=banner)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`banners`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=banners)
 [`majorindustry`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=majorindustry)
 [`crime`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=crime)
@@ -88,7 +86,6 @@ Nations
 [`govt`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govt)
 [`govdesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
 [`industrydesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=industrydesc)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`notable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
 [`admirable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
 [`founded`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=founded)
@@ -97,7 +94,6 @@ Nations
 [`lastactivity`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=lastactivity)
 [`influence`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=influence)
 [`freedomscores`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=freedomscores)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`publicsector`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=publicsector)
 [`deaths`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=deaths)
 [`leader`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=leader)
@@ -106,7 +102,6 @@ Nations
 [`customleader`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=customleader)
 [`customcapital`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=customcapital)
 [`customreligion`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=customreligion)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`rcensus`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=rcensus)
 [`wcensus`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=wcensus)
 [`censusscore`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=censusscore)
@@ -115,7 +110,6 @@ Nations
 [`happenings`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=happenings)
 [`demonym`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=demonym)
 [`demonym2`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=demonym2)
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [`demonym2plural`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=demonym2plural)
 [`factbook`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=factbooks)
 [`factbooklist`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=factbooklist)
