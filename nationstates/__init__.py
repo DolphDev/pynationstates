@@ -1,6 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 
+"""
+Defualt UserAgents
+
+"""
+
+default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
+
 class DictMethods:
     #Functions to be organized
     @staticmethod
@@ -247,7 +254,7 @@ class SpecialCase:
         return (tag+"="+tagvalue+"+")
 
 
-
+#This deals with Special Cases for shards.
     @staticmethod
     def ShardCase(data, shard, _type_):
         if _type_ is "nation":
@@ -278,7 +285,9 @@ class SpecialCase:
 
 
 class ApiCall:
-#THIS CLASS CONTAINS Static Methods needed for requesting data 
+
+#Methods used for creating and sending requests to the api
+
     @staticmethod
     def tail_generator(_type_, args, limit=None):
         string = "?"+_type_[0]+"="+_type_[1]+"&q=" if not (_type_[0] == "world") else "?q="
@@ -299,16 +308,18 @@ class ApiCall:
 
         """
         if user_agent is None:
-            header = {"User-Agent":"NationStates Python API Wrapper V 0.01 Pre-Release"}
+            header = {"User-Agent":default_useragent}
         else:
             header = {"User-Agent":user_agent}
         url = "https://www.nationstates.net/cgi-bin/api.cgi"+ tail + (";limit="+limit if limit else "")
         data = requests.get(url = "https://www.nationstates.net/cgi-bin/api.cgi"+ tail, headers=header)
-        return {
+        print(data.url)
+        returnvalue = {
             "status":data.status_code,
             "data":Parser.xmlparser(_type_, data.text.encode("utf-8")),
             "url_requested": data.url
         }
+        return returnvalue
 
 class Api:
 
@@ -330,9 +341,9 @@ class Api:
         and also accept any changes when calling .__call__() on this object
 
         """
-        self.__call__(_type_, value, shard, limit)
+        self.__call__(_type_, value, shard, limit, user_agent)
 
-    def __call__(self, _type_, value="NoValue", shard=None, limit=None):
+    def __call__(self, _type_, value="NoValue", shard=None, limit=None, user_agent=None):
 
         """
         Same as Api.__init__()
@@ -343,6 +354,7 @@ class Api:
         self.set_payload(shard)
         self.data = None
         self.collect_result = {}
+        self.user_agent = user_agent
 
 
     def set_payload(self, shard):
@@ -363,16 +375,21 @@ class Api:
         else:
             self.shard = None
 
-    def load(self):
+    def load(self, user_agent = None, telegram_load=False):
+        if self.user_agent is None and user_agent:
+            self.user_agent = user_agent
 
         """
         Sends the request for the current _type_, value, and shard. Raises error if no shards are set.
         """
-        if self.shard:
-            self.data = ApiCall.request(self.type[0], ApiCall.tail_generator(self.type, self.shard))
+        if self.shard and not telegram_load:
+            self.data = ApiCall.request(self.type[0], ApiCall.tail_generator(self.type, self.shard), self.user_agent)
             return self.data
-        else:
+        elif telegram_load:
+            self.data = ApiCall.request(self.type[0], self.type[1], user_agent = user_agent)
+        else: 
             raise Exception("No Shards were supplied")
+
 
     def all_data(self):
 
@@ -405,7 +422,7 @@ class Telegram:
 
     :param to: The Target nation or recipient
 
-    :param client_key: The API key - Must be requested by Moderators
+    :param client_key: The API key - Obtained through requesting one from a NS Moderators
 
     :param tgid: Seemily the meta information that Nationstates uses to get and send your message.
     Obtained through sending a message (in nationstates) with tag:api as the recipient
@@ -414,31 +431,25 @@ class Telegram:
     :Obtained through sending a message (in nationstates) with tag:api as the recipient
     """
     
-    def __init__(self, to = None, client_key = None, tgid = None, secret_key = None, auto_send=False):
-        self.__call__(self, to, client_key, tgid, secret_key, auto_send)
+    def __init__(self, to = None, client_key = None, tgid = None, secret_key = None, auto_send=False, user_agent=default_useragent):
+        self.__call__(to, client_key, tgid, secret_key, auto_send)
 
 
-    def __call__(self, to = None, client_key = None, tgid = None, secret_key = None, auto_send=False):
+    def __call__(self, to = None, client_key = None, tgid = None, secret_key = None, auto_send=False, user_agent=default_useragent):
+
         self.api_instance = Api("a", 
-            value = "sendTG", 
-            shard=[
-            "client={}".format(client_key),
-            "tgid={}".format(tgid),
-            "key={}".format(secret_key)
-            ] 
+            value = "?a=sendTG" + "&client={}&".format(client_key) + "tgid={}&".format(tgid)+"key={}&".format(secret_key)+"to={}".format(to),
+            shard=[""],
+            user_agent = user_agent
             )
         if auto_send:
             self.send
 
 
     def send(self):
-        self.api_instance.load()
+        self.api_instance.load(telegram_load=True)
         if self.api_instance.data["status"] == "200":
             return True
         return False
 
     
-
-
-
-#https://www.nationstates.net/cgi-bin/api.cgi?q=happenings;view=nation.testlandia
