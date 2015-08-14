@@ -5,7 +5,7 @@ Nationstates API wrapper
 
 ##### Making a API request
 
-To make a request, we need to first put together are request. Lets say we want to get the amount of nations in the world
+To make a request, we need to first put together our request. Lets say we want to get the amount of nations in the world
 
 The code
 
@@ -22,7 +22,7 @@ The code
 
     print(data)
 
-When we run the code (Assuming no errors on Nationstates end), we are returned this
+When we run the code (Assuming there were no errors on Nationstates end), The code returned this
 
     {'numnations': u'119228'}
 
@@ -39,7 +39,7 @@ To see more advanced usage, click [here](https://github.com/Dolphman/pynationsta
 
 ### Shards
 
-While some shards are simple strings that you can pass into the API very easily, others are not able to be adequately represented by a str. To handle these more advanced requests, the `Shard` object is used.
+While some shards are simple strings that you can pass into the API object, a few shards are simply not able to be adequately represented by a string. To handle these more advanced requests, the `Shard` object is used.
 
 Basic Example
 
@@ -48,6 +48,10 @@ Basic Example
 
 To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)
 
+
+### Telegrams
+
+Telege
 
 
 
@@ -84,10 +88,10 @@ Nations
 [`sensibilities`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=sensibilities)
 [`govtpriority`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
 [`govt`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govt)
-[`govdesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtpriority)
+[`govdesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=govtdesc)
 [`industrydesc`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=industrydesc)
 [`notable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
-[`admirable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=notable)
+[`admirable`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=admirable)
 [`founded`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=founded)
 [`firstlogin`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=firstlogin)
 [`lastlogin`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=lastlogin)

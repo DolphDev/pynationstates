@@ -313,7 +313,6 @@ class ApiCall:
             header = {"User-Agent":user_agent}
         url = "https://www.nationstates.net/cgi-bin/api.cgi"+ tail + (";limit="+limit if limit else "")
         data = requests.get(url = "https://www.nationstates.net/cgi-bin/api.cgi"+ tail, headers=header)
-        print(data.url)
         returnvalue = {
             "status":data.status_code,
             "data":Parser.xmlparser(_type_, data.text.encode("utf-8")),
@@ -422,7 +421,7 @@ class Telegram:
 
     :param to: The Target nation or recipient
 
-    :param client_key: The API key - Obtained through requesting one from a NS Moderators
+    :param client_key: The API key - Obtained through requesting one from the NS Moderators
 
     :param tgid: Seemily the meta information that Nationstates uses to get and send your message.
     Obtained through sending a message (in nationstates) with tag:api as the recipient
