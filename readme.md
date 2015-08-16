@@ -32,9 +32,21 @@ To see more advanced usage, click [here](https://github.com/Dolphman/pynationsta
 
 
 
+### Telegrams
 
+Telegrams are simple with the NS api wrapper
 
+To send me a message in game, simply run this code (Replace the client argument with your client key)
 
+    message = nationstates.Telegram(
+        to="The United Island Tribes",
+        client_key="YOUR_API_CLIENT_KEy",
+        tgid="12420908",
+        secret_key="155d5c05f9ff")
+
+    message.send()
+
+[More Documentation here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/telegram.md)
  
 
 ### Shards
@@ -47,13 +59,6 @@ Basic Example
 
 
 To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)
-
-
-### Telegrams
-
-Telege
-
-
 
 
 ###### These are the supported Shards *as of version 0.01. 
