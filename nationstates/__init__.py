@@ -1,4 +1,3 @@
-#DEV ONLY, REMOVE FOR RELEASE
 try:
     import NSback # Dev
 except:
@@ -54,7 +53,7 @@ class Telegram:
 
     def __call__(self, to = None, client_key = None, tgid = None, secret_key = None, auto_send=False, user_agent=default_useragent):
 
-        self.api_instance = NSbackApi("a", 
+        self.api_instance = NSback.Api("a", 
             value = "?a=sendTG" + "&client={}&".format(client_key) + "tgid={}&".format(tgid)+"key={}&".format(secret_key)+"to={}".format(to),
             shard=[""],
             user_agent = user_agent
