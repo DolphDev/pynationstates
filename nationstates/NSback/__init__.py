@@ -88,7 +88,7 @@ class Parser:
         return soup
 
     @staticmethod
-    def collect_gen(data, payload, _type_, meta, rText):
+    def collect_gen(data, payload, _type_, meta, rText, parse_args):
 
         collecter = {
         "meta":{
@@ -97,7 +97,7 @@ class Parser:
             "shardlist": payload        
         }}
         for shard in payload:
-            specialcase = SpecialCase.ShardCase(data, shard, _type_)
+            specialcase = SpecialCase.ShardCase(data, shard, _type_, parse_args)
             if type(shard) is str:
                 if specialcase[1]:
                     collecter = DictMethods.merge_dicts(collecter, {shard:specialcase[0]})
@@ -175,11 +175,29 @@ class ShardCase:
 
 
     @staticmethod
-    def census(data, censustype, census_id=None):
+    def census(data, censustype, parser_args):
         """
         This send another request to nationstates 
 
         """
+        censusdata = data.find_all("censusscore")
+        try:
+            census_id = parser_args.get("censusid")
+        except:
+            census_id = None
+        if census_id:
+            for census in censusdata:
+                if censustype == "censusscore" and census["id"] == census_id:
+                    return {
+                        "id":census["id"],
+                        "value":census.text
+                        } 
+                elif censustype != "censusscore" and census["id"] != census_id:
+                    return {
+                           "id":census["id"],
+                           "value":census.text
+                           } 
+
         if not census_id:
             data = (data.find(censustype)) if "censusscore-" not in censustype else (data.find("censusscore")) 
 
@@ -267,14 +285,14 @@ class SpecialCase:
 
 #This deals with Special Cases for shards.
     @staticmethod
-    def ShardCase(data, shard, _type_):
+    def ShardCase(data, shard, _type_, parse_args):
         if _type_ is "nation":
             if shard == "freedom":
                 return (ShardCase.freedom(data, "freedom"), True)
             if shard == "freedomscores":
                 return (ShardCase.freedom(data, "freedomscores"), True)
             if "census" in shard and shard not in ["rcensus", "wcensus"]:
-                return (ShardCase.census(data, shard), True)
+                return (ShardCase.census(data, shard, parse_args), True)
             if shard == "happenings":
                 return (ShardCase.happenings(data), True)
             if shard == "legislation":
@@ -349,6 +367,8 @@ class Api:
 
         :param limit: Will set the limit for the request. Only used on shards that accepted a limit. Global Limit.
         
+        :param parse_args: Arguments dealing with how data will be requested and parsed
+
         Uses __call__ attribute to make these values creatable during Initialization 
         and also accept any changes when calling .__call__() on this object
 
@@ -428,7 +448,7 @@ class Api:
         data = self.get_data()
         payload = self.shard
         value =(self.type[1]) if self.type[0] is not "world" else None
-        return (Parser.collect_gen(data, payload, self.type[0],  value , text_online, ))
+        return (Parser.collect_gen(data, payload, self.type[0],  value , text_online, self.parse_args))
 
 
     
