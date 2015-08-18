@@ -2,9 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
-
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
+
 
 class DictMethods:
 
@@ -33,20 +32,21 @@ class DictMethods:
         """
         if rText:
             try:
-                if not "/n" in data.find(shard.lower()).text:
-                    return {shard.lower():data.find(shard.lower()).text}
+                if not ("/n" in data.find(shard.lower()).text):
+                    return {shard.lower(): data.find(shard.lower()).text}
                 else:
-                    return {shard.lower():data.find(shard.lower())}
-            except Exception as err:
+                    return {shard.lower(): data.find(shard.lower())}
+            except:
                 return {shard: None}
-        return {shard.lower():data.find(shard.lower())}
+        return {shard.lower(): data.find(shard.lower())}
+
 
 class Shard:
     def __init__(self, shard, tags=None):
         if shard:
             self.__call__(shard, tags)
 
-    def __call__(self, shard, tags = None):
+    def __call__(self, shard, tags=None):
 
         self.shardname = shard
         self.tags = tags
@@ -54,7 +54,9 @@ class Shard:
 
     def __str__(self):
         try:
-            return ("(Shard: \'{ShardName}\', tags: {tags})").format(ShardName = self.shardname, tags = self.tags)
+            return ("(Shard: \'{ShardName}\', tags: {tags})"
+                   ).format(ShardName = self.shardname,
+                            tags = self.tags)
         except:
             raise Exception("Shard Object Empty")
 
@@ -69,7 +71,12 @@ class Shard:
         if type(self.tags) is list:
             string = self.shardname+";"
             for x in self.tags:
-                string += (SpecialCase.create_tag_tail((self.shardname, x["tagtype"], str(x["tagvalue"]))))[:-1] + ';' if self.tags else ""
+                string += (SpecialCase.create_tag_tail((self.shardname,
+                                                        x["tagtype"],
+                                                        (str(
+                                                        x["tagvalue"])
+                                                        )))[:-1]
+                                                        + ';' if self.tags else "")
             return string[:-1]
         elif type(self.tags) is dict:
             return self.shardname + (SpecialCase.create_tag_tail((self.shardname, self.tags["tagtype"], str(self.tags["tagvalue"]))))[:-1] if self.tags else ""
@@ -95,11 +102,18 @@ class Parser:
         Collects the shards
 
         :param data: the bs4 object
+
         :param payload: A list of shards supplied during api setup
+
         :param _type_: the type of request. Used for special cases
+
         :param meta": The value of the api request
-        :param rText: Detirmes if HTML tags will be included in the result
-        :param parse_args: A dictionary that includes any data that the wrapper processed.
+
+        :param rText: Detirmes if HTML tags will be included in the
+            result
+        
+        :param parse_args: A dictionary that includes any data that
+            the wrapper processed.
 
         """
 
@@ -126,7 +140,8 @@ class Parser:
 class ShardCase:
 
     """
-    This Class contains all methods dealing with shards that require more processing
+    This Class contains all methods dealing with shards that require
+        more processing
     """
 
     """
@@ -211,7 +226,7 @@ class ShardCase:
                            } 
 
         if not census_id:
-            data = (data.find(censustype)) if "censusscore-" not in censustype else (data.find("censusscore")) 
+            data = (data.find(censustype)) if not ("censusscore-" in censustype) else (data.find("censusscore")) 
 
             return {
             "id":data["id"],
@@ -289,7 +304,72 @@ class ShardCase:
     Region Shards
     """
 
-    pass
+    def reg_vote(data, _type_):
+        data = data.find(_type_)
+        return {
+            "for": data.find("for").text,
+            "against": data.find("against")
+        }
+
+    def embassies(data):
+        emblist = []
+        for x in (data.find("embassies")).find_all("embassy"):
+            emblist.append(x.text)
+
+    def tags(data):
+        taglist = []
+        for x in (data.find("tags")).find_all("tag"):
+            taglist.append(x.text)
+        return taglist
+
+    def messages(data):
+        data = data.find("messages")
+        messlist = []
+        for x in data.find_all("post"):
+            messlist.append({
+                    "post": {
+                        "id": x["id"],
+                        "timestamp": x.find("timestamp").text,
+                        "nation": x.find("nation").text,
+                        "message": x.find("message").text
+                    }
+                })
+
+        return messlist
+
+    @staticmethod
+    def history(data):
+        data = (data.find("history"))
+        eventlist = []
+        for x in data.find_all("event"):
+            eventlist.append({
+                "event":{
+                "timestamp":x.timestamp.text,
+                "text":x.find("text").text
+                }
+                })
+        return eventlist 
+
+    def poll(data):
+        data = data.find("poll")
+        if data is None:
+            return None
+        meta = {
+            "title": data.find("title").text,
+            "region": data.find("region").text,
+            "start": data.find("start").text,
+            "stop": data.find("stop").text,
+            "author": data.find("author").text,
+        }
+        optlist = []
+        for option in data.find_all("option"):
+            optlist.append({
+                    "id": option["id"],
+                    "optiontext": option.find("optiontext").text,
+                    "votes": option.find("votes").text
+                })
+        return DictMethods.merge_dicts(meta, {"options": optlist})
+
 
 
 
@@ -335,6 +415,21 @@ class SpecialCase:
                 return (ShardCase.deaths(data), True)
             if shard == "wa":
                 return (ShardCase.wa(data), True)
+        if _type_ is "region":
+            if shard in ["gavote","scvote"]:
+                return (ShardCase.reg_vote(data, shard), True)
+            if shard == "embassies":
+                return (ShardCase.embassies(data), True)
+            if shard == "tags":
+                return (ShardCase.tags(data), True)
+            if shard == "happenings":
+                return (ShardCase.happenings(data), True)
+            if shard == "messages":
+                return (ShardCase.messages(data), True)
+            if shard == "history":
+                return (ShardCase.history(data), True)
+            if shard == "poll":
+                return (ShardCase.poll(data), True)
 
 
         return (None, False)
@@ -363,9 +458,14 @@ class ApiCall:
         This handles all requests.
 
         :param _type_: Type of request
+
         :param tail: The result of ApiCall.tail_generator()
-        :param user_agent: (optional) A user_agent. Will use the default one if not supplied
-        :param limit: If supplied it will append a limit to the request
+
+        :param user_agent: (optional) A user_agent.
+            Will use the default one if not supplied
+        
+        :param limit: If supplied it will append a limit
+            to the request
 
         """
         if user_agent is None:
