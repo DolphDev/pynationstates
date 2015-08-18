@@ -5,7 +5,7 @@ Nationstates API wrapper
 
 ##### Making a API request
 
-To make a request, we need to first put together our request. Lets say we want to get the amount of nations in the world
+To make a request, the api request must be set up. For example, to get the amount of nations in the world
 
 The code
 
@@ -27,8 +27,6 @@ When we run the code (Assuming there were no errors on Nationstates end), The co
     {'numnations': u'119228'}
 
 To see more advanced usage, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
-
-###### *Note: call.collect() only returns fully supported shards. Shards not fully supported will return `None`
 
 
 
@@ -125,4 +123,24 @@ Nations
 [`dispatches`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=dispatches)
 [`dispatchlist`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=dispatchlist)
 
-If a shard is not listed here, it is not currently supported by this module.
+
+Regions
+---
+
+[`name`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=name)
+[`factbook`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=factbook)
+[`numnations`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=numnations)
+[`nations`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=nations)
+[`delegatevotes`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=delegate)
+[`gavote`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=gavote)
+[`scvote](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=scvote)
+[`founder`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=founder)
+[`power`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=power)
+[`flag`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=flag)
+[`embassies`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=embassies)
+[`tags`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=tags)
+[`happenings`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=happenings)
+[`massages`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=messages;offset=75)
+[`history`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=history)
+[`poll`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=poll)
+
