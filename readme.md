@@ -133,7 +133,7 @@ Regions
 [`nations`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=nations)
 [`delegatevotes`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=delegate)
 [`gavote`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=gavote)
-[`scvote](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=scvote)
+[`scvote`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=scvote)
 [`founder`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=founder)
 [`power`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=power)
 [`flag`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=flag)
