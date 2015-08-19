@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/Dolphman/pynationstates.svg)](https://travis-ci.org/Dolphman/pynationstates)
+
+
 Nationstates API wrapper
 ---
 
