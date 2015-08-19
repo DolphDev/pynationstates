@@ -40,7 +40,7 @@ Parameters:
 
 Tags:
 
-To add tags you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. An example as a valid tag argument.
+To add tags you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. Each dictionary needs the keys "tagtype" and "tagvalue", with them reprenting the param name and the param value.
 
     [
     {
