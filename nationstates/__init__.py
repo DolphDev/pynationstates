@@ -75,8 +75,12 @@ class Api(object):
                                        parse_args=self.parse_args)
 
     def load(self):
-        self.api_instance.load()
+        if self.api_instance.load():
+            return self
+        else:
+            return False
         self.collect_data = None
+
 
     def collect(self):
         if self.collect_data:
