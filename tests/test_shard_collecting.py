@@ -65,6 +65,7 @@ nationcall = nationstates.Api(
 
 time.sleep(1)
 
+
 if nationcall.load():
     class shardNations(unittest.TestCase):
         def test_collect(self):
