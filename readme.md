@@ -147,3 +147,12 @@ Regions
 [`history`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=history)
 [`poll`](https://www.nationstates.net/cgi-bin/api.cgi?region=the_rejected_realms&q=poll)
 
+World
+---
+
+All Shards that are simply a string can be accessed.
+
+Wa
+---
+
+All Shards that are simply a string can be accessed.
