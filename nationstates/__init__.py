@@ -75,7 +75,7 @@ class Api(object):
                                        parse_args=self.parse_args)
 
     def load(self, user_agent=None):
-        if self.api_instance.load(user_agent=useragent):
+        if self.api_instance.load(user_agent=user_agent):
             return self
         else:
             return False
