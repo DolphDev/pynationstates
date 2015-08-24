@@ -18,7 +18,7 @@ The code
     call = nationstates.Api("world", shard=["numnations"])
     
     #Make the api request
-    call.load()
+    call.load("Requesting the amount of nations in nationstates for my awesome applicaiton")
 
     #Collect the shards
     data = call.collect()
