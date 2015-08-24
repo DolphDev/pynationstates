@@ -74,8 +74,8 @@ class Api(object):
                                        limit=limit, user_agent=None,
                                        parse_args=self.parse_args)
 
-    def load(self):
-        if self.api_instance.load():
+    def load(self, user_agent=None):
+        if self.api_instance.load(user_agent=useragent):
             return self
         else:
             return False
