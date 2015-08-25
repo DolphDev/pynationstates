@@ -69,13 +69,18 @@ class Api(object):
         self.value = value
         self.shard = shard
         self.limit = limit
+        self.user_agent = user_agent
         self.parse_args = self.arghandeler(args)
         self.api_instance = NSback.Api(_type_, value=value, shard=shard,
                                        limit=limit, user_agent=None,
                                        parse_args=self.parse_args)
 
     def load(self, user_agent=None):
-        if self.api_instance.load(user_agent=user_agent):
+        if not (user_agent or self.user_agent):
+            print("Warning: No user-agent set, default will be used.")
+        if user_agent:
+            self.user_agent = user_agent
+        if self.api_instance.load(user_agent=self.user_agent):
             return self
         else:
             return False

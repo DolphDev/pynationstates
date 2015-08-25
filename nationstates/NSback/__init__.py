@@ -124,8 +124,7 @@ class Parser:
             "meta": {
                 "api": _type_,
                 "value": meta,
-                "shardlist": payload
-            }}
+                }}
         for shard in payload:
             specialcase = SpecialCase.ShardCase(
                 data, shard, _type_, parse_args)
@@ -563,6 +562,8 @@ class Api:
 
         Special settings are used for telegram requests
         """
+  
+
         if self.user_agent is None and user_agent:
             self.user_agent = user_agent
 
