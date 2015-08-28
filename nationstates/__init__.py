@@ -6,8 +6,8 @@ except:
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
-def Shard(shard, tags):
-    return NSback.Shard(shard, tag)
+def Shard(shard, tags=None):
+    return NSback.Shard(shard, tags)
 
 
 class Api(object):
@@ -86,7 +86,6 @@ class Api(object):
             return False
         self.collect_data = None
 
-
     def collect(self):
         if self.collect_data:
             return self.collect_data
@@ -105,8 +104,8 @@ class Api(object):
                     tempcall = NSback.Api("world", shard=["censusid"])
                     tempcall.load()
                     parse_args = NSback.DictMethods.merge_dicts(
-                                 parse_args,
-                                 {"censusid": tempcall.collect()["censusid"]})
+                    parse_args,
+                    {"censusid": tempcall.collect()["censusid"]})
             return parse_args
 
 
@@ -149,7 +148,7 @@ class Telegram:
                         shard=[""],
                         user_agent=user_agent
                                )
-                              )
+                                )
         if auto_send:
             self.send
 

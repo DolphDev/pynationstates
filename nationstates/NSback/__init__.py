@@ -62,7 +62,7 @@ class Shard:
 
     def tail_gen(self):
         """
-        Generates any values attached to the shard objec
+        Generates any values attached to the shard object
 
         """
 
@@ -75,13 +75,14 @@ class Shard:
                                                             x["tagvalue"])
                                                          )))[:-1]
                            + ';' if self.tags else "")
-            return string[:-1]
+                setattr(self, x["tagtype"], x["tagvalue"])
+            return string[:-1] + ";"
         elif isinstance(self.tags, dict):
             return self.shardname + (
                 SpecialCase.create_tag_tail(
                     (self.shardname, self.tags["tagtype"], str(
                         self.tags["tagvalue"]))))[
-                :-1] if self.tags else ""
+                :-1] if self.tags + ";" else ""
         else:
             return self.shardname
 
@@ -139,7 +140,7 @@ class Parser:
             else:
                 if specialcase[1]:
                     collecter = DictMethods.merge_dicts(
-                        collecter, {shard._get_main_value: specialcase[0]})
+                        collecter, {shard._get_main_value(): specialcase[0]})
                 else:
                     collecter = DictMethods.merge_dicts(
                         collecter, DictMethods.dict_creation(
@@ -376,6 +377,32 @@ class ShardCase:
                 "votes": option.find("votes").text
             })
         return DictMethods.merge_dicts(meta, {"options": optlist})
+    #World 
+
+    def w_dispatch(data, shard):
+        for x in data.find_all("dispatch"):
+            if x["id"] == shard.dispatchid:
+                data = x
+        try:
+            dispatch = {
+                "id": data["id"],
+                "author": data.find("author"),
+                "category": data.find("category"),
+                "subcategory": data.find("subcategory"),
+                "created": data.find("created"),
+                "edited": data.find("edited"),
+                "views": data.find("views"),
+                "score": data.find("score"),
+                "text": data.find("text").encode("utf-8")
+            }
+        except:
+            return None
+    def w_census(data, censustype):
+        data = data.find(censustype._get_main_value())
+        return {
+                "id": data["id"],
+                "value": data.text
+            }
 
 
 class SpecialCase:
@@ -384,7 +411,7 @@ class SpecialCase:
     @staticmethod
     def create_tag_tail(tag_tuple):
         _shard_, tag, tagvalue = tag_tuple
-        return (tag + "=" + tagvalue + "+")
+        return (tag + "=" + tagvalue + "+") 
 
 
 # This deals with Special Cases for shards.
@@ -398,44 +425,60 @@ class SpecialCase:
         :param parse_args: Any special data (in dict type) that is supplied by the wrapper
 
         """
+        try:
+            shard._get_main_value()
+        except:
+            shard = Shard(shard)
+
         if _type_ is "nation":
-            if shard == "freedom":
+            if shard._get_main_value() == "freedom":
                 return (ShardCase.freedom(data, "freedom"), True)
-            if shard == "freedomscores":
+            if shard._get_main_value() == "freedomscores":
                 return (ShardCase.freedom(data, "freedomscores"), True)
-            if "census" in shard and shard not in ["rcensus", "wcensus"]:
-                return (ShardCase.census(data, shard, parse_args), True)
-            if shard == "happenings":
+            if "census" in shard._get_main_value() and shard._get_main_value() not in ["rcensus", "wcensus"]:
+                return (ShardCase.census(data, shard._get_main_value(), parse_args), True)
+            if shard._get_main_value() == "happenings":
                 return (ShardCase.happenings(data), True)
-            if shard == "legislation":
+            if shard._get_main_value() == "legislation":
                 return (ShardCase.legislation(data), True)
-            if shard == "govt":
+            if shard._get_main_value() == "govt":
                 return (ShardCase.govt(data), True)
-            if shard == "factbooklist":
+            if shard._get_main_value() == "factbooklist":
                 return (ShardCase.factbooklist(data), True)
-            if shard == "dispatchlist":
+            if shard._get_main_value() == "dispatchlist":
                 return (ShardCase.dispatchlist(data), True)
-            if shard == "banners":
+            if shard._get_main_value() == "banners":
                 return (ShardCase.banners(data), True)
-            if shard == "deaths":
+            if shard._get_main_value() == "deaths":
                 return (ShardCase.deaths(data), True)
-            if shard == "wa":
+            if shard._get_main_value() == "wa":
                 return (ShardCase.wa(data), True)
         if _type_ is "region":
-            if shard in ["gavote", "scvote"]:
+            if shard._get_main_value() in ["gavote", "scvote"]:
                 return (ShardCase.reg_vote(data, shard), True)
-            if shard == "embassies":
+            if shard._get_main_value() == "embassies":
                 return (ShardCase.embassies(data), True)
-            if shard == "tags":
+            if shard._get_main_value() == "tags":
                 return (ShardCase.tags(data), True)
-            if shard == "happenings":
+            if shard._get_main_value() == "happenings":
                 return (ShardCase.happenings(data), True)
-            if shard == "messages":
+            if shard._get_main_value() == "messages":
                 return (ShardCase.messages(data), True)
-            if shard == "history":
+            if shard._get_main_value() == "history":
                 return (ShardCase.history(data), True)
-            if shard == "poll":
+            if shard._get_main_value() == "poll":
                 return (ShardCase.poll(data), True)
+        if _type_ is "world":
+            if shard._get_main_value() == "dispatch":
+                return (ShardCase.w_dispatch(data, shard), True)
+            if shard._get_main_value() == "dispatchlist":
+                return (ShardCase.dispatchlist(data), True)
+            if shard._get_main_value() == "happenings":
+                return (ShardCase.happenings(data), True)
+            if shard._get_main_value() == "poll":
+                return (ShardCase.poll(data), True)
+            if shard._get_main_value() in ["censusscale","censusmedian","census"]:
+                return (ShardCase.w_census(data, shard), True)
 
         return (None, False)
 
