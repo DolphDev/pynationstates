@@ -381,22 +381,22 @@ class ShardCase:
 
     def w_dispatch(data, shard):
         for x in data.find_all("dispatch"):
-            if x["id"] == shard.dispatchid:
+            if x["id"] == str(shard.dispatchid):
                 data = x
-        try:
-            dispatch = {
-                "id": data["id"],
-                "author": data.find("author"),
-                "category": data.find("category"),
-                "subcategory": data.find("subcategory"),
-                "created": data.find("created"),
-                "edited": data.find("edited"),
-                "views": data.find("views"),
-                "score": data.find("score"),
-                "text": data.find("text").encode("utf-8")
+        
+        dispatch = {
+            "id": data["id"],
+            "author": data.find("author").text,
+            "category": data.find("category").text,
+            "subcategory": data.find("subcategory").text,
+            "created": data.find("created").text,
+            "edited": data.find("edited").text,
+            "views": data.find("views").text,
+            "score": data.find("score").text,
+            "text": data.find("text").text
             }
-        except:
-            return None
+        return dispatch
+        
     def w_census(data, censustype):
         data = data.find(censustype._get_main_value())
         return {
