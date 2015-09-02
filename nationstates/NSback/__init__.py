@@ -120,7 +120,7 @@ class Parser:
             "meta": {
                 "api": _type_,
                 "value": meta,
-                }}
+            }}
         for shard in payload:
             specialcase = SpecialCase.ShardCase(
                 data, shard, _type_, parse_args)
@@ -372,13 +372,13 @@ class ShardCase:
                 "votes": option.find("votes").text
             })
         return DictMethods.merge_dicts(meta, {"options": optlist})
-    #World 
+    # World
 
     def w_dispatch(data, shard):
         for x in data.find_all("dispatch"):
             if x["id"] == str(shard.dispatchid):
                 data = x
-        
+
         dispatch = {
             "id": data["id"],
             "author": data.find("author").text,
@@ -389,15 +389,15 @@ class ShardCase:
             "views": data.find("views").text,
             "score": data.find("score").text,
             "text": data.find("text").text
-            }
+        }
         return dispatch
-        
+
     def w_census(data, censustype):
         data = data.find(censustype._get_main_value())
         return {
-                "id": data["id"],
-                "value": data.text
-            }
+            "id": data["id"],
+            "value": data.text
+        }
 
     def regionsbytag(data):
         return {"regionsbytag": data.find("regions").text}
@@ -409,7 +409,7 @@ class SpecialCase:
     @staticmethod
     def create_tag_tail(tag_tuple):
         _shard_, tag, tagvalue = tag_tuple
-        return (tag + "=" + tagvalue + "+") 
+        return (tag + "=" + tagvalue + "+")
 
 
 # This deals with Special Cases for shards.
@@ -433,8 +433,14 @@ class SpecialCase:
                 return (ShardCase.freedom(data, "freedom"), True)
             if shard._get_main_value() == "freedomscores":
                 return (ShardCase.freedom(data, "freedomscores"), True)
-            if "census" in shard._get_main_value() and shard._get_main_value() not in ["rcensus", "wcensus"]:
-                return (ShardCase.census(data, shard._get_main_value(), parse_args), True)
+            if "census" in shard._get_main_value() and shard._get_main_value() not in [
+                    "rcensus", "wcensus"]:
+                return (
+                    ShardCase.census(
+                        data,
+                        shard._get_main_value(),
+                        parse_args),
+                    True)
             if shard._get_main_value() == "happenings":
                 return (ShardCase.happenings(data), True)
             if shard._get_main_value() == "legislation":
@@ -475,7 +481,8 @@ class SpecialCase:
                 return (ShardCase.happenings(data), True)
             if shard._get_main_value() == "poll":
                 return (ShardCase.poll(data), True)
-            if shard._get_main_value() in ["censusscale","censusmedian","census"]:
+            if shard._get_main_value() in [
+                    "censusscale", "censusmedian", "census"]:
                 return (ShardCase.w_census(data, shard), True)
             if shard._get_main_value() == "regionsbytag":
                 return (ShardCase.regionsbytag(data), True)
@@ -607,7 +614,6 @@ class Api:
 
         Special settings are used for telegram requests
         """
-  
 
         if self.user_agent is None and user_agent:
             self.user_agent = user_agent

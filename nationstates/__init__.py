@@ -9,6 +9,7 @@ default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 class Shard(NSback.Shard):
     pass
 
+
 class Api(object):
 
     """
@@ -26,7 +27,6 @@ class Api(object):
 
     def __init__(self, _type_, value=None, shard=None,
                  limit=None, user_agent=None, args=None):
-
         """
         Passes on the arguments to self.__call__()
 
@@ -39,7 +39,6 @@ class Api(object):
 
     def __call__(self, _type_, value=None, shard=None, limit=None,
                  user_agent=None, args=None):
-
         """
         Handles the arguments and sends the args to be parsed
 
@@ -96,22 +95,20 @@ class Api(object):
         parse_list = args
         parse_args = {}
 
-        if type(parse_list) is list:
+        if isinstance(parse_list, list):
             for x in args:
                 # Census Id
                 if x == "censusid":
                     tempcall = NSback.Api("world", shard=["censusid"])
                     tempcall.load()
                     parse_args = NSback.DictMethods.merge_dicts(
-                    parse_args,
-                    {"censusid": tempcall.collect()["censusid"]})
+                        parse_args,
+                        {"censusid": tempcall.collect()["censusid"]})
             return parse_args
+
     @property
     def data(self):
         return self.api_instance.all_data()
-
-
-
 
 
 class Telegram:
@@ -143,17 +140,17 @@ class Telegram:
                  user_agent=default_useragent):
 
         self.api_instance = (
-                    NSback.Api(
-                        "a",
-                        value=+("?a=sendTG" +
-                                "&client={}&".format(client_key) +
-                                "tgid={}&".format(tgid) +
-                                "key={}&".format(secret_key) +
-                                "to={}".format(to)),
-                        shard=[""],
-                        user_agent=user_agent
-                               )
-                                )
+            NSback.Api(
+                "a",
+                value=+("?a=sendTG" +
+                        "&client={}&".format(client_key) +
+                        "tgid={}&".format(tgid) +
+                        "key={}&".format(secret_key) +
+                        "to={}".format(to)),
+                shard=[""],
+                user_agent=user_agent
+            )
+        )
         if auto_send:
             self.send
 
