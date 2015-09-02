@@ -65,8 +65,9 @@ class Shard:
         Generates any values attached to the shard object
 
         """
-
-        if isinstance(self.tags, list):
+        if isinstance(self.tags, dict):
+            self.tags = [self.tags]
+        if self.tags is not None and isinstance(self.tags, list):
             string = ""
             for x in self.tags:
                 string += (SpecialCase.create_tag_tail((self.shardname,
@@ -77,12 +78,6 @@ class Shard:
                            + ';' if self.tags else "")
                 setattr(self, x["tagtype"], x["tagvalue"])
             return string[:-1]
-        elif isinstance(self.tags, dict):
-            return self.shardname + (
-                SpecialCase.create_tag_tail(
-                    (self.shardname, self.tags["tagtype"], str(
-                        self.tags["tagvalue"]))))[
-                :-1] if self.tags + ";" else ""
         else:
             return self.shardname
 
@@ -404,6 +399,9 @@ class ShardCase:
                 "value": data.text
             }
 
+    def regionsbytag(data):
+        return {"regionsbytag": data.find("regions").text}
+
 
 class SpecialCase:
     # Functions dealing with special cases
@@ -479,6 +477,8 @@ class SpecialCase:
                 return (ShardCase.poll(data), True)
             if shard._get_main_value() in ["censusscale","censusmedian","census"]:
                 return (ShardCase.w_census(data, shard), True)
+            if shard._get_main_value() == "regionsbytag":
+                return (ShardCase.regionsbytag(data), True)
 
         return (None, False)
 

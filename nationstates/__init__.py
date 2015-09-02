@@ -6,9 +6,8 @@ except:
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
-def Shard(shard, tags=None):
-    return NSback.Shard(shard, tags)
-
+class Shard(NSback.Shard):
+    pass
 
 class Api(object):
 
@@ -107,6 +106,12 @@ class Api(object):
                     parse_args,
                     {"censusid": tempcall.collect()["censusid"]})
             return parse_args
+    @property
+    def data(self):
+        return self.api_instance.all_data()
+
+
+
 
 
 class Telegram:
