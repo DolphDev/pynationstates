@@ -67,7 +67,7 @@ class Shard:
         """
 
         if isinstance(self.tags, list):
-            string = self.shardname + ";"
+            string = ""
             for x in self.tags:
                 string += (SpecialCase.create_tag_tail((self.shardname,
                                                         x["tagtype"],
@@ -76,7 +76,7 @@ class Shard:
                                                          )))[:-1]
                            + ';' if self.tags else "")
                 setattr(self, x["tagtype"], x["tagvalue"])
-            return string[:-1] + ";"
+            return string[:-1]
         elif isinstance(self.tags, dict):
             return self.shardname + (
                 SpecialCase.create_tag_tail(
@@ -491,12 +491,14 @@ class ApiCall:
     def tail_generator(_type_, args, limit=None):
         string = "?" + _type_[0] + "=" + _type_[1] + \
             "&q=" if not (_type_[0] == "world") else "?q="
+        tailcollecter = ""
         for x in args:
             if not (isinstance(x, str)):  # Shard Objects
-                string += (x.tail_gen() + "+")
+                string += (x._get_main_value() + "+")
+                tailcollecter += (x.tail_gen() + ";")
             else:  # Strings
                 string += (str(x) + "+")
-        return string[:-1]
+        return string[:-1] + ";" + tailcollecter[:-1]
 
     @staticmethod
     def request(_type_, tail, user_agent=None, limit=None):
