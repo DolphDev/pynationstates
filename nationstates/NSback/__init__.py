@@ -1,6 +1,8 @@
 import requests
-from bs4 import BeautifulSoup
-
+try:
+    from . import bs4parser
+except:
+    import bs4parser
 
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
@@ -40,7 +42,7 @@ class DictMethods:
         return {shard.lower(): data.find(shard.lower())}
 
 
-class Shard:
+class Shard(object):
 
     def __init__(self, shard, tags=None):
         if shard:
@@ -62,7 +64,7 @@ class Shard:
 
     def tail_gen(self):
         """
-        Generates any values attached to the shard object
+        Generates the parameters for the url.
 
         """
         if isinstance(self.tags, dict):
@@ -70,37 +72,38 @@ class Shard:
         if self.tags is not None and isinstance(self.tags, list):
             string = ""
             for x in self.tags:
-                string += (SpecialCase.create_tag_tail((self.shardname,
-                                                        x["tagtype"],
-                                                        (str(
-                                                            x["tagvalue"])
-                                                         )))[:-1]
-                           + ';' if self.tags else "")
+                string += (self.create_tag_tail((
+                    self.shardname,
+                    x["tagtype"],
+                    (str(x["tagvalue"]))))[:-1] + ';' if self.tags else "")
                 setattr(self, x["tagtype"], x["tagvalue"])
             return string[:-1]
         else:
             return self.shardname
 
+    def create_tag_tail(self, tag_tuple):
+        _shard_, tag, tagvalue = tag_tuple
+        return (tag + "=" + tagvalue + "+")
+
     def _get_main_value(self):
         return self.shardname
 
 
-class Parser:
+class Parser(object):
     # Functions Dealing with the parser or parsing
 
-    @staticmethod
-    def xmlparser(_type_, xml):
-        soup = (BeautifulSoup(xml, "html.parser"))
+    def xmlparser(self, _type_, xml):
+        soup = (bs4parser.BeautifulSoup(xml, "html.parser"))
+        parsedsoup = bs4parser.parsetree(soup)
         if not soup.find("h1") is None:
             raise Exception(soup.h1.text)
-        return soup
+        return parsedsoup
 
-    @staticmethod
-    def collect_gen(data, payload, _type_, meta, rText, parse_args):
+    def collect_gen(self, data, payload, _type_, meta, rText, parse_args):
         """
-        Collects the shards
+        Collects the shards (Prepares the generated dictionary for use)
 
-        :param data: the bs4 object
+        :param data: The parsed data
 
         :param payload: A list of shards supplied during api setup
 
@@ -115,387 +118,30 @@ class Parser:
             the wrapper processed.
 
         """
-
+        data = data[_type_]
         collecter = {
             "meta": {
                 "api": _type_,
                 "value": meta,
             }}
         for shard in payload:
-            specialcase = SpecialCase.ShardCase(
-                data, shard, _type_, parse_args)
             if isinstance(shard, str):
-                if specialcase[1]:
-                    collecter = DictMethods.merge_dicts(
-                        collecter, {shard: specialcase[0]})
-                else:
-                    collecter = DictMethods.merge_dicts(
-                        collecter, DictMethods.dict_creation(
-                            data, shard, rText))
+                collecter.update({shard: data.get(shard)})
             else:
-                if specialcase[1]:
-                    collecter = DictMethods.merge_dicts(
-                        collecter, {shard._get_main_value(): specialcase[0]})
-                else:
-                    collecter = DictMethods.merge_dicts(
-                        collecter, DictMethods.dict_creation(
-                            data, shard._get_main_value(), rText))
+                collecter.update({shard._get_main_value(): data.get(shard._get_main_value())})
+
         return collecter
 
 
-class ShardCase:
-
-    """
-    This Class contains all methods dealing with shards that require
-        more processing
-    """
-
-    """
-    Nation Shards
-    """
-    @staticmethod
-    def freedom(data, freedomtype):
-        data = (data.find(freedomtype))
-        return {
-            "economy": data.economy.text,
-            "politicalfreedom": data.politicalfreedom.text,
-            "civilrights": data.civilrights.text
-        }
-
-    @staticmethod
-    def wa(data):
-        return data.find("unstatus").text
-
-    @staticmethod
-    def banners(data):
-        data = (data.find("banners"))
-        bannerslist = []
-        for x in data.find_all("banner"):
-            bannerslist.append(x.text)
-        return bannerslist
-
-    @staticmethod
-    def deaths(data):
-        data = (data.find("deaths"))
-        deathlist = []
-        for x in data.find_all("cause"):
-            deathlist.append({
-                "cause": {
-                    "type": x["type"],
-                    "value": x.text
-                }
-            })
-        return deathlist
-
-    @staticmethod
-    def govt(data):
-        data = (data.find("govt"))
-        return {
-            "administration": data.find("administration").text,
-            "defence": data.find("defence").text,
-            "education": data.find("education").text,
-            "environment": data.find("environment").text,
-            "healthcare": data.find("healthcare").text,
-            "commerce": data.find("commerce").text,
-            "internationalaid": data.find("internationalaid").text,
-            "lawandorder": data.find("lawandorder").text,
-            "publictransport": data.find("publictransport").text,
-            "socialequality": data.find("socialequality").text,
-            "spirituality": data.find("spirituality").text,
-            "welfare": data.find("welfare").text
-        }
-
-    @staticmethod
-    def census(data, censustype, parser_args):
-        """
-        This send another request to nationstates
-
-        """
-        censusdata = data.find_all("censusscore")
-        try:
-            census_id = parser_args.get("censusid")
-        except:
-            census_id = None
-        if census_id:
-            for census in censusdata:
-                if censustype == "censusscore" and census["id"] == census_id:
-                    return {
-                        "id": census["id"],
-                        "value": census.text
-                    }
-                elif censustype != "censusscore" and census["id"] != census_id:
-                    return {
-                        "id": census["id"],
-                        "value": census.text
-                    }
-
-        if not census_id:
-            data = (data.find(censustype)) if not (
-                "censusscore-" in censustype) else (data.find("censusscore"))
-
-            return {
-                "id": data["id"],
-                "value": data.text
-            }
-
-    @staticmethod
-    def happenings(data):
-        data = (data.find("happenings"))
-        eventlist = []
-        for x in data.find_all("event"):
-            eventlist.append({
-                "event": {
-                    "timestamp": x.timestamp.text,
-                    "text": x.find("text").text
-                }
-            })
-        return eventlist
-
-    @staticmethod
-    def legislation(data):
-        data = (data.find("legislation"))
-        lawlist = []
-        for x in data.find_all("law"):
-            lawlist.append({"law": x.text})
-        return lawlist
-
-    @staticmethod
-    def factbooklist(data):
-        data = data.find("factbooklist")
-        factlist = []
-        if data.text is not None:
-
-            for x in data.find_all("factbook"):
-                factlist.append({"factbook": {
-                    "id": x["id"],
-                    "title": x.find("title").text,
-                    "author": x.find("author").text,
-                    "category": x.find("category").text,
-                    "subcategory": x.find("subcategory").text if not x.find("subcategory") is None else None,
-                    "created": x.find("created").text,
-                    "edited": x.find("edited").text,
-                    "views": x.find("views").text,
-                    "score": x.find("score").text
-
-                }})
-        return factlist
-
-    @staticmethod
-    def dispatchlist(data):
-        data = data.find("dispatchlist")
-        if data.text is not None:
-            dispatchlist = []
-
-            for x in data.find_all("dispatch"):
-                dispatchlist.append({"dispatch": {
-                    "id": x["id"],
-                    "title": x.find("title").text,
-                    "author": x.find("author").text,
-                    "category": x.find("category").text,
-                    "subcategory": x.find("subcategory").text if not x.find("subcategory") is None else None,
-                    "created": x.find("created").text,
-                    "edited": x.find("edited").text,
-                    "views": x.find("views").text,
-                    "score": x.find("score").text
-
-                }})
-            return dispatchlist
-        else:
-            return None
-
-    """
-    Region Shards
-    """
-
-    def reg_vote(data, _type_):
-        data = data.find(_type_)
-        return {
-            "for": data.find("for").text,
-            "against": data.find("against")
-        }
-
-    def embassies(data):
-        emblist = []
-        for x in (data.find("embassies")).find_all("embassy"):
-            emblist.append(x.text)
-
-    def tags(data):
-        taglist = []
-        for x in (data.find("tags")).find_all("tag"):
-            taglist.append(x.text)
-        return taglist
-
-    def messages(data):
-        data = data.find("messages")
-        messlist = []
-        for x in data.find_all("post"):
-            messlist.append({
-                "post": {
-                    "id": x["id"],
-                    "timestamp": x.find("timestamp").text,
-                    "nation": x.find("nation").text,
-                    "message": x.find("message").text
-                }
-            })
-
-        return messlist
-
-    @staticmethod
-    def history(data):
-        data = (data.find("history"))
-        eventlist = []
-        for x in data.find_all("event"):
-            eventlist.append({
-                "event": {
-                    "timestamp": x.timestamp.text,
-                    "text": x.find("text").text
-                }
-            })
-        return eventlist
-
-    def poll(data):
-        data = data.find("poll")
-        if data is None:
-            return None
-        meta = {
-            "title": data.find("title").text,
-            "region": data.find("region").text,
-            "start": data.find("start").text,
-            "stop": data.find("stop").text,
-            "author": data.find("author").text,
-        }
-        optlist = []
-        for option in data.find_all("option"):
-            optlist.append({
-                "id": option["id"],
-                "optiontext": option.find("optiontext").text,
-                "votes": option.find("votes").text
-            })
-        return DictMethods.merge_dicts(meta, {"options": optlist})
-    # World
-
-    def w_dispatch(data, shard):
-        for x in data.find_all("dispatch"):
-            if x["id"] == str(shard.dispatchid):
-                data = x
-
-        dispatch = {
-            "id": data["id"],
-            "author": data.find("author").text,
-            "category": data.find("category").text,
-            "subcategory": data.find("subcategory").text,
-            "created": data.find("created").text,
-            "edited": data.find("edited").text,
-            "views": data.find("views").text,
-            "score": data.find("score").text,
-            "text": data.find("text").text
-        }
-        return dispatch
-
-    def w_census(data, censustype):
-        data = data.find(censustype._get_main_value())
-        return {
-            "id": data["id"],
-            "value": data.text
-        }
-
-    def regionsbytag(data):
-        return {"regionsbytag": data.find("regions").text}
+class ShardCase(object):
+    pass
 
 
-class SpecialCase:
-    # Functions dealing with special cases
-
-    @staticmethod
-    def create_tag_tail(tag_tuple):
-        _shard_, tag, tagvalue = tag_tuple
-        return (tag + "=" + tagvalue + "+")
-
-
-# This deals with Special Cases for shards.
-    @staticmethod
-    def ShardCase(data, shard, _type_, parse_args):
-        """
-        Detects Special cases and points to the function to deal with it
-
-        :param data: the bs4 object that will be parsed
-        :param shard: the current shard (This method)
-        :param parse_args: Any special data (in dict type) that is supplied by the wrapper
-
-        """
-        try:
-            shard._get_main_value()
-        except:
-            shard = Shard(shard)
-
-        if _type_ is "nation":
-            if shard._get_main_value() == "freedom":
-                return (ShardCase.freedom(data, "freedom"), True)
-            if shard._get_main_value() == "freedomscores":
-                return (ShardCase.freedom(data, "freedomscores"), True)
-            if "census" in shard._get_main_value() and shard._get_main_value() not in [
-                    "rcensus", "wcensus"]:
-                return (
-                    ShardCase.census(
-                        data,
-                        shard._get_main_value(),
-                        parse_args),
-                    True)
-            if shard._get_main_value() == "happenings":
-                return (ShardCase.happenings(data), True)
-            if shard._get_main_value() == "legislation":
-                return (ShardCase.legislation(data), True)
-            if shard._get_main_value() == "govt":
-                return (ShardCase.govt(data), True)
-            if shard._get_main_value() == "factbooklist":
-                return (ShardCase.factbooklist(data), True)
-            if shard._get_main_value() == "dispatchlist":
-                return (ShardCase.dispatchlist(data), True)
-            if shard._get_main_value() == "banners":
-                return (ShardCase.banners(data), True)
-            if shard._get_main_value() == "deaths":
-                return (ShardCase.deaths(data), True)
-            if shard._get_main_value() == "wa":
-                return (ShardCase.wa(data), True)
-        if _type_ is "region":
-            if shard._get_main_value() in ["gavote", "scvote"]:
-                return (ShardCase.reg_vote(data, shard), True)
-            if shard._get_main_value() == "embassies":
-                return (ShardCase.embassies(data), True)
-            if shard._get_main_value() == "tags":
-                return (ShardCase.tags(data), True)
-            if shard._get_main_value() == "happenings":
-                return (ShardCase.happenings(data), True)
-            if shard._get_main_value() == "messages":
-                return (ShardCase.messages(data), True)
-            if shard._get_main_value() == "history":
-                return (ShardCase.history(data), True)
-            if shard._get_main_value() == "poll":
-                return (ShardCase.poll(data), True)
-        if _type_ is "world":
-            if shard._get_main_value() == "dispatch":
-                return (ShardCase.w_dispatch(data, shard), True)
-            if shard._get_main_value() == "dispatchlist":
-                return (ShardCase.dispatchlist(data), True)
-            if shard._get_main_value() == "happenings":
-                return (ShardCase.happenings(data), True)
-            if shard._get_main_value() == "poll":
-                return (ShardCase.poll(data), True)
-            if shard._get_main_value() in [
-                    "censusscale", "censusmedian", "census"]:
-                return (ShardCase.w_census(data, shard), True)
-            if shard._get_main_value() == "regionsbytag":
-                return (ShardCase.regionsbytag(data), True)
-
-        return (None, False)
-
-
-class ApiCall:
+class ApiCall(Parser):
 
     # Methods used for creating and sending requests to the api
 
-    @staticmethod
-    def tail_generator(_type_, args, limit=None):
+    def tail_generator(self, _type_, args, limit=None):
         string = "?" + _type_[0] + "=" + _type_[1] + \
             "&q=" if not (_type_[0] == "world") else "?q="
         tailcollecter = ""
@@ -507,10 +153,8 @@ class ApiCall:
                 string += (str(x) + "+")
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    @staticmethod
-    def request(_type_, tail, user_agent=None, limit=None):
-        """
-        This handles all requests.
+    def request(self, _type_, tail, user_agent=None, limit=None):
+        """This handles all requests.
 
         :param _type_: Type of request
 
@@ -527,21 +171,20 @@ class ApiCall:
             header = {"User-Agent": default_useragent}
         else:
             header = {"User-Agent": user_agent}
-        url = "https://www.nationstates.net/cgi-bin/api.cgi" + \
-            tail + (";limit=" + limit if limit else "")
+        url = "https://www.nationstates.net/cgi-bin/api.cgi" + tail
         data = requests.get(
             url="https://www.nationstates.net/cgi-bin/api.cgi" +
             tail,
             headers=header)
         returnvalue = {
             "status": data.status_code,
-            "data": Parser.xmlparser(_type_, data.text.encode("utf-8")),
+            "data": self.xmlparser(_type_, data.text.encode("utf-8")),
             "url_requested": data.url
         }
         return returnvalue
 
 
-class Api:
+class Api(ApiCall):
 
     def __init__(
             self,
@@ -619,12 +262,12 @@ class Api:
             self.user_agent = user_agent
 
         if self.shard and not telegram_load:
-            self.data = ApiCall.request(
-                self.type[0], ApiCall.tail_generator(
+            self.data = self.request(
+                self.type[0], self.tail_generator(
                     self.type, self.shard), self.user_agent)
             return self.data
         elif telegram_load:
-            self.data = ApiCall.request(
+            self.data = self.request(
                 self.type[0], self.type[1], user_agent=user_agent)
         else:
             raise Exception("No Shards were supplied")
@@ -642,13 +285,13 @@ class Api:
 
     def collect(self, text_online=True):
         """
-        Collects all the supplied shards. (Parses the Document)
+        Collects all the supplied shards. (Collects and Prettifies the result of bs4parser)
         """
         data = self.get_data()
         payload = self.shard
         value = (self.type[1]) if self.type[0] is not "world" else None
         return (
-            Parser.collect_gen(
+            self.collect_gen(
                 data,
                 payload,
                 self.type[0],

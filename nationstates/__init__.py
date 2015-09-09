@@ -1,12 +1,14 @@
 try:
-    import NSback
+    from . import NSback
 except:
-    from nationstates import NSback
-
+    import NSback
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
 class Shard(NSback.Shard):
+    @property
+    def name(self):
+        return self._get_main_value()
     pass
 
 

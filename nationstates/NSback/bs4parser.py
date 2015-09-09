@@ -6,11 +6,13 @@ def arraychild(xml, name):
 
 
 def xml2dict(xml):
-    content = {"content": xml.text if xml.text else None}
     atr = xml.attrs
     if atr:
+        content = {"content": xml.text if xml.text else None}
         content.update(atr)
-    return {xml.name: xml}
+    else:
+        content = xml.text if xml.text else None
+    return {xml.name: content}
 
 
 def readtree(xml, secondlevel=False):
