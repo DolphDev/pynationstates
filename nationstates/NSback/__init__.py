@@ -1,48 +1,15 @@
 import requests
 try:
-    from . import bs4parser
-except:
     import bs4parser
+except:
+    from . import bs4parser
+            
 
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
-
-class DictMethods:
-
-    """
-
-    Methods dealing with dict handeling
-
-    """
-    @staticmethod
-    def merge_dicts(*dict_args):
-        '''
-        Given any number of dicts, shallow copy and merge into a new dict,
-        precedence goes to key value pairs in latter dicts.
-        '''
-        result = {}
-        for dictionary in dict_args:
-            result.update(dictionary)
-        return result
-
-    @staticmethod
-    def dict_creation(data, shard, rText, SpecialCase=False):
-        """
-        This handles Parser.collect_gen() dict creation
-
-        """
-        if rText:
-            try:
-                if not ("/n" in data.find(shard.lower()).text):
-                    return {shard.lower(): data.find(shard.lower()).text}
-                else:
-                    return {shard.lower(): data.find(shard.lower())}
-            except:
-                return {shard: None}
-        return {shard.lower(): data.find(shard.lower())}
-
-
 class Shard(object):
+
+    """Shard Object"""
 
     def __init__(self, shard, tags=None):
         if shard:
@@ -92,12 +59,28 @@ class Shard(object):
 class Parser(object):
     # Functions Dealing with the parser or parsing
 
+    #Tests for specialcases
+    def sctest(self, shard):
+        sclist = ["regionsbytag"]
+        #return shard in sclist
+
+    #Parses XML
     def xmlparser(self, _type_, xml):
         soup = (bs4parser.BeautifulSoup(xml, "html.parser"))
         parsedsoup = bs4parser.parsetree(soup)
         if not soup.find("h1") is None:
             raise Exception(soup.h1.text)
         return parsedsoup
+
+    def shardcheck(self, shard):
+        sharddict = {
+            "regionsbytag": "regions"
+        }
+        if shard[-1].isdigit():
+            sharddict.update({shard:"censusscore"})
+
+        return sharddict.get(shard, shard)
+
 
     def collect_gen(self, data, payload, _type_, meta, rText, parse_args):
         """
@@ -126,15 +109,15 @@ class Parser(object):
             }}
         for shard in payload:
             if isinstance(shard, str):
+                shard = self.shardcheck(shard)
                 collecter.update({shard: data.get(shard)})
             else:
+                shard = Shard(self.shardcheck(shard._get_main_value()))
                 collecter.update({shard._get_main_value(): data.get(shard._get_main_value())})
 
         return collecter
 
 
-class ShardCase(object):
-    pass
 
 
 class ApiCall(Parser):

@@ -6,11 +6,11 @@ default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
 class Shard(NSback.Shard):
+    """Inherits from NSback Shard"""
+
     @property
     def name(self):
         return self._get_main_value()
-    pass
-
 
 class Api(object):
 
@@ -18,12 +18,6 @@ class Api(object):
     Api object
 
     This Wraps around the NSback.Api Object.
-
-    Currently handles:
-
-    Storing the last collect operation,
-
-    Handling Special arguments.
 
     """
 
@@ -44,7 +38,7 @@ class Api(object):
         """
         Handles the arguments and sends the args to be parsed
 
-        Then sets up a NSback.Api instance (api_instance) that the object
+        Then sets up a NSback.Api instance (api_instance) that this object
              will interact with
 
         :param _type_: The type of API being accessed
