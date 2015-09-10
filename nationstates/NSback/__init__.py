@@ -1,7 +1,7 @@
 import requests
-try:
+if __name__ == "__main__":
     import bs4parser
-except:
+else:
     from . import bs4parser
 
 
