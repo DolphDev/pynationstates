@@ -155,13 +155,13 @@ class ApiCall(Parser):
             header = {"User-Agent": user_agent}
         url = "https://www.nationstates.net/cgi-bin/api.cgi" + tail
         data = requests.get(
-            url="https://www.nationstates.net/cgi-bin/api.cgi" +
-            tail,
+            url= url,
             headers=header)
         returnvalue = {
             "status": data.status_code,
             "data": self.xmlparser(_type_, data.text.encode("utf-8")),
-            "url_requested": data.url
+            "url": data.url,
+            "request_instance": data
         }
         return returnvalue
 
