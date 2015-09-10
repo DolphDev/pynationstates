@@ -1,7 +1,9 @@
-try:
-    from . import NSback
-except:
-    import NSback
+if __name__ == "__main__":
+    import NSback  # DEV
+else:
+    from . import NSback  # Used as a module
+
+
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
@@ -30,12 +32,12 @@ class Api(object):
         Creates the variable self.collect
         """
 
-        self.__call__(_type_, value, shard, limit, user_agent, args)
+        self.__call__(_type_, value, shard, limit, user_agent)
         # To store the last collect() call
         self.collect_data = None
 
     def __call__(self, _type_, value=None, shard=None, limit=None,
-                 user_agent=None, args=None):
+                 user_agent=None):
         """
         Handles the arguments and sends the args to be parsed
 
@@ -65,7 +67,6 @@ class Api(object):
         self.shard = shard
         self.limit = limit
         self.user_agent = user_agent
-        self.parse_args = self.arghandeler(args)
         self.api_instance = NSback.Api(
             _type_,
             value=value,
@@ -73,7 +74,14 @@ class Api(object):
             user_agent=None,
             parse_args=self.parse_args)
 
+    def shard_handeler(shard):
+        if isinstance(shard, str):
+            return list(shard)
+        else:
+            return shard
+
     def load(self, user_agent=None):
+
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
         if user_agent:
@@ -90,21 +98,6 @@ class Api(object):
         else:
             self.collect_data = self.api_instance.collect()
             return self.collect_data
-
-    def arghandeler(self, args):
-        parse_list = args
-        parse_args = {}
-
-        if isinstance(parse_list, list):
-            for x in args:
-                # Census Id
-                if x == "censusid":
-                    tempcall = NSback.Api("world", shard=["censusid"])
-                    tempcall.load()
-                    parse_args = NSback.DictMethods.merge_dicts(
-                        parse_args,
-                        {"censusid": tempcall.collect()["censusid"]})
-            return parse_args
 
     @property
     def data(self):
