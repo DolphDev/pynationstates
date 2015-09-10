@@ -12,6 +12,7 @@ class Shard(NSback.Shard):
     def name(self):
         return self._get_main_value()
 
+
 class Api(object):
 
     """
@@ -65,9 +66,12 @@ class Api(object):
         self.limit = limit
         self.user_agent = user_agent
         self.parse_args = self.arghandeler(args)
-        self.api_instance = NSback.Api(_type_, value=value, shard=shard,
-                                       limit=limit, user_agent=None,
-                                       parse_args=self.parse_args)
+        self.api_instance = NSback.Api(
+            _type_,
+            value=value,
+            shard=shard,
+            user_agent=None,
+            parse_args=self.parse_args)
 
     def load(self, user_agent=None):
         if not (user_agent or self.user_agent):
@@ -129,11 +133,15 @@ class Telegram:
     def __init__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
                  user_agent=default_useragent):
+
         self.__call__(to, client_key, tgid, secret_key, auto_send)
 
     def __call__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
                  user_agent=default_useragent):
+        """
+        Setups a NSback.Api() instance in a way that will send a telegram.
+        """
 
         self.api_instance = (
             NSback.Api(
@@ -151,6 +159,7 @@ class Telegram:
             self.send
 
     def send(self):
+        """Sends the telegram"""
         self.api_instance.load(telegram_load=True)
         if self.api_instance.data["status"] == "200":
             return True

@@ -3,9 +3,10 @@ try:
     import bs4parser
 except:
     from . import bs4parser
-            
+
 
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
+
 
 class Shard(object):
 
@@ -59,12 +60,12 @@ class Shard(object):
 class Parser(object):
     # Functions Dealing with the parser or parsing
 
-    #Tests for specialcases
+    # Tests for specialcases
     def sctest(self, shard):
         sclist = ["regionsbytag"]
-        #return shard in sclist
+        # return shard in sclist
 
-    #Parses XML
+    # Parses XML
     def xmlparser(self, _type_, xml):
         soup = (bs4parser.BeautifulSoup(xml, "html.parser"))
         parsedsoup = bs4parser.parsetree(soup)
@@ -77,10 +78,9 @@ class Parser(object):
             "regionsbytag": "regions"
         }
         if shard[-1].isdigit():
-            sharddict.update({shard:"censusscore"})
+            sharddict.update({shard: "censusscore"})
 
         return sharddict.get(shard, shard)
-
 
     def collect_gen(self, data, payload, _type_, meta, rText, parse_args):
         """
@@ -113,11 +113,10 @@ class Parser(object):
                 collecter.update({shard: data.get(shard)})
             else:
                 shard = Shard(self.shardcheck(shard._get_main_value()))
-                collecter.update({shard._get_main_value(): data.get(shard._get_main_value())})
+                collecter.update(
+                    {shard._get_main_value(): data.get(shard._get_main_value())})
 
         return collecter
-
-
 
 
 class ApiCall(Parser):
