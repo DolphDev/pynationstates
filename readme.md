@@ -59,10 +59,11 @@ Basic Example
     nationstates.Shard("numnations")
 
 
-To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)
-
+To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)<br>
+To see the complete list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html)
 
 ###### These are the supported Shards *as of version 0.01. 
+
 
 Nations 
 ---
@@ -70,6 +71,8 @@ Nations
 ###Shards
 
 <sub>Note: URLs point to the result the particular shard may return<br>** denots unsupported shards
+
+
 
 
 [`name`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=name)
@@ -150,9 +153,32 @@ Regions
 World
 ---
 
-All Shards that are simply a string can be accessed.
+[`numations`](https://www.nationstates.net/cgi-bin/api.cgi?q=numnations)
+[`numregions`](https://www.nationstates.net/cgi-bin/api.cgi?q=numregions)
+[`census`](https://www.nationstates.net/cgi-bin/api.cgi?q=census)
+[`censusid`](https://www.nationstates.net/cgi-bin/api.cgi?q=censusid)
+[`censussize`](https://www.nationstates.net/cgi-bin/api.cgi?q=censussize)
+[`censusscale`](https://www.nationstates.net/cgi-bin/api.cgi?q=censusscale)
+[`censusmedian`](https://www.nationstates.net/cgi-bin/api.cgi?q=censusmedian)
+[`featuredregion`](https://www.nationstates.net/cgi-bin/api.cgi?q=featuredregion)
+[`newnations`](https://www.nationstates.net/cgi-bin/api.cgi?q=newnations)
+[`regionsbytag`](https://www.nationstates.net/cgi-bin/api.cgi?q=regionsbytag)
+[`poll`](https://www.nationstates.net/cgi-bin/api.cgi?q=poll)
+[`dispatch`](https://www.nationstates.net/cgi-bin/api.cgi?q=dispatch)
+[`dispatchlist`](https://www.nationstates.net/cgi-bin/api.cgi?q=dispatchlist)
+[`happenings`](https://www.nationstates.net/cgi-bin/api.cgi?q=happenings)
 
-Wa
+WA (World Assembly)
 ---
 
-All Shards that are simply a string can be accessed.
+[`numnations`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=numnations)
+[`numdelegates`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=numdelegates)
+[`delegates`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=delegates)
+[`members`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=members)
+[`happenings`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=happenings)
+[`memberlog`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=memberlog)
+[`resolution`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=resolution)
+[`votetrack`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=votetrack)
+[`dellog`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=dellog)
+[`delvotes`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=delvotes)
+[`lastresolution`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=lastresolutionx)
