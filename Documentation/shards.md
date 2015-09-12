@@ -1,16 +1,16 @@
 Shards
 ---
 
-While most shards can be adequately represented via string, some Shards/Requests require more advanced setup. 
+While most shards can be adequately represented via a string, some Shards/Requests require more advanced setup. 
 
-For example the Shard `"dispatchlist"` which require "tags", pratically parameters to a paticular shard.
+For example the Shard `"dispatchlist"` which require additional parameters for more advanced requests.
 
-The shard method was created to prevent `nationstates.Api()` calls like this:
+The Shard object was created to prevent `nationstates.Api()` calls like this:
 
     nationstates.Api("world", shard=["dispatchlist;dispatchcategory=Factbook:History;dispatchsort=best"])
 
 
-This is not viable, since it is a complex mess, and breaks the dynamic nature of the nationstates module. It also would also break the parsing code.
+This is not viable, since it is a complex mess, and breaks the dynamic nature of the nationstates module. It also will also cause an error on nationstates end due to the parameters being in the middle of a request (They must be at the end).
 
 The Equivelant of the above code using the Shard object is:
     
@@ -38,9 +38,9 @@ Parameters:
 * Optional Argument `tags` - Any tags you want to include. See Below
 
 
-Tags:
+Shard Parameters:
 
-To add tags you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. Each dictionary needs the keys "tagtype" and "tagvalue", with them reprenting the param name and the param value.
+To add shard parameters you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. Each dictionary needs the keys "tagtype" and "tagvalue", with them reprenting the param name and the param value.
 
     [
     {

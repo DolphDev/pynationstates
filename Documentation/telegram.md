@@ -1,6 +1,6 @@
 #Telegrams
 
-Telegrams are simply in the nationstates module. Simply give it the information it needs and It will send the message.
+Telegrams are simple in the nationstates module. Simply give it the information it needs and it will do the rest.
 
 Parameters:
 

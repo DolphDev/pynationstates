@@ -71,8 +71,7 @@ class Api(object):
             _type_,
             value=value,
             shard=shard,
-            user_agent=None,
-            parse_args=self.parse_args)
+            user_agent=None)
 
     def shard_handeler(shard):
         if isinstance(shard, str):
@@ -97,7 +96,12 @@ class Api(object):
             return self.collect_data
         else:
             self.collect_data = self.api_instance.collect()
+            self.attributesetter(self.collect_data)
             return self.collect_data
+
+    def attributesetter(self, collect_data):
+        for x in collect_data.keys():
+            setattr(self, x.replace(" ", "_"), collect_data.get(x))
 
     @property
     def data(self):

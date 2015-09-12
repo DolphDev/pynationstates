@@ -1,4 +1,4 @@
-Api Requests
+Api Object
 ---
 
 This document covers the `nationstates.Api` object. 
@@ -9,15 +9,14 @@ Parameters
 * *Positional Argument* `type` - Must be one of these values [`"nation"`, `"region"`, `"world"`, `"wa"`]
 * *Optional argument* `value` - the value of the type. This is required for all type values except world. See below 
 * *Optional argument* `shard` - a list/set of valid shards.
-* *Optional Argument* `limit` - A limit to the request (Deprecation Warning: This is being considered for removement due to being redundent)
-* *Optional Arguments* `args` - A list of special arguments. When passed to the api, it will do an action based on whats in the list
+* *Optional Argument* `limit` - A limit to the request (Deprecation Warning: This is being considered to be removed due to being redundant)
 
 
 ##Putting it all together
 
 Lets start off with a simple request. I simply want the number of nations on Nationstates. For this we are going to need to set `type` to `"world"`, ignore `"value"` (since world doesn't require one) and the shard `"numnations"`.
 
-The resulting Api Request is simple
+The resulting Api Request is simple.
 
     nationstates.Api("world", shard=["numnations"])
 
@@ -30,17 +29,36 @@ I want the following:
 - I want the following shards: ["name", "fullname", "motto", "wa", "population", "currency", "flag"]
 
 
-The resulting Api request (Formated for readibility):
+The resulting Api request (Formatted for readability):
 
-    nationstates.Api(
+    myapicall = nationstates.Api(
     "nation",
-    value = "The United Tribes",
+    value = "The United Island Tribes",
     shard = ["name", "fullname", "motto", "wa", population", "currency", "flag"]
     )
 
+Now we need to actually load the data (Assuming `auto_load` is set to `False`)
 
-### Special Arguments
+    myapicall.load("My Super Cool User-Agent")
 
-Sometimes the nationstates API fails to make dynamic parsing possble. The only current example is the special argument "censusid". When included in the request, the module will send a request to nationstates to retrive the current daily census. This is used to process a regular request where both `censusscore` and `censusscore-N` are shards. If it is not included it will be parsed incorrectly due to the module being unable to tell what the daily census is. 
+`.load()` accepts one argument, the optionally argument `user_agent`. It returns `self` (The instance of the object)
 
-Note: This modules sends a request when the Api object is created, make sure you account for the nationstates API limits when using special arguments
+Now we need to collect the data
+
+    myapicall.collect()
+
+This does some operations of the parsed xml. It returns a dictionary of the parsed data. It also sets attributes to the instance of every shard supplied. Depending on the shard it may return a string or a dictionary. You can access them this way like so.
+
+    myapicall.name # This returns the name shard
+    myapicall.fullname # This returns the fullname shard
+    myapicall.motto # You get the idea
+    myapicall.wa
+    myapicall.population
+    myapicall.currency
+    myapicall.flag
+
+Other Documentation
+---
+
+* `myapicall.data`, this returns a dictionary that contains info about the request to nationstates. It includes the url requested, status code, and the request object (`request.get`).
+
