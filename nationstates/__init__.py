@@ -29,10 +29,11 @@ class Api(object):
         """
         Passes on the arguments to self.__call__()
 
-        Creates the variable self.collect
+        Creates the variable self.collect and self.has_data
         """
 
         self.__call__(_type_, value, shard, limit, user_agent)
+        self.has_data = False
         # To store the last collect() call
         self.collect_data = None
 
@@ -73,23 +74,37 @@ class Api(object):
             shard=shard,
             user_agent=None)
 
+    def __getitem__(self, key):
+        try:
+            if self.collect_data is None:
+                raise Exception(
+                    "Api instance must be collected to be accessed")
+            return self.collect_data[key]
+        except KeyError as err:
+            raise err
+        except Exception as err:
+            raise err
+
     def shard_handeler(shard):
-        if isinstance(shard, str):
+        if not isinstance(shard, list):
             return list(shard)
         else:
             return shard
 
-    def load(self, user_agent=None):
+    def load(self, user_agent=None, auto_collect=True):
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
         if user_agent:
             self.user_agent = user_agent
         if self.api_instance.load(user_agent=self.user_agent):
-            return self
+            self.collect_data = None
+            if auto_collect:
+                self.collect()
+            self.has_data = True
+            return True
         else:
             return False
-        self.collect_data = None
 
     def collect(self):
         if self.collect_data:
@@ -124,7 +139,7 @@ class Telegram:
 
     :param secret_key: Seemily the meta information that Nationstates
         uses to get and send your message. Obtained through sending
-        a message (in nationstates) with tag:api as the recipient
+        a bmessage (in nationstates) with tag:api as the recipient
     """
 
     def __init__(self, to=None, client_key=None, tgid=None,
