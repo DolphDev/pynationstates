@@ -71,7 +71,7 @@ class Parser(object):
         parsedsoup = bs4parser.parsetree(soup)
         if not soup.find("h1") is None:
             raise Exception(soup.h1.text)
-        return parsedsoup
+        return (soup, parsedsoup)
 
     def shardcheck(self, shard):
         sharddict = {
@@ -107,14 +107,8 @@ class Parser(object):
                 "api": _type_,
                 "value": meta,
             }}
-        for shard in payload:
-            if isinstance(shard, str):
-                shard = self.shardcheck(shard)
-                collecter.update({shard: data.get(shard)})
-            else:
-                shard = Shard(self.shardcheck(shard._get_main_value()))
-                collecter.update(
-                    {shard._get_main_value(): data.get(shard._get_main_value())})
+
+        collecter.update(data)
 
         return collecter
 
@@ -123,9 +117,13 @@ class ApiCall(Parser):
 
     # Methods used for creating and sending requests to the api
 
-    def tail_generator(self, _type_, args, limit=None):
-        string = "?" + _type_[0] + "=" + _type_[1] + \
-            "&q=" if not (_type_[0] == "world") else "?q="
+    def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
+        print(_type_)
+        if StandardAPI:
+            return "?" + _type_[0] + ("=" + _type_[1])
+        string = "?" + \
+            _type_[
+                0] + ("=" + _type_[1] + "&q=") if (not _type_[0] == "world") else "?q="
         tailcollecter = ""
         for x in args:
             if not (isinstance(x, str)):  # Shard Objects
@@ -133,6 +131,7 @@ class ApiCall(Parser):
                 tailcollecter += (x.tail_gen() + ";")
             else:  # Strings
                 string += (str(x) + "+")
+
         return string[:-1] + ";" + tailcollecter[:-1]
 
     def request(self, _type_, tail, user_agent=None, limit=None):
@@ -157,9 +156,11 @@ class ApiCall(Parser):
         data = requests.get(
             url=url,
             headers=header)
+        xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
         returnvalue = {
             "status": data.status_code,
-            "data": self.xmlparser(_type_, data.text.encode("utf-8")),
+            "data": xml_parsed[1],
+            "data_bs4": xml_parsed[0],
             "url": data.url,
             "request_instance": data
         }
@@ -255,11 +256,19 @@ class Api(ApiCall):
                 self.type[0], self.tail_generator(
                     self.type, self.shard), self.user_agent)
             return self.data
+
+        if self.shard is None and not telegram_load and self.type[0] in ["nation", "region"]:
+            self.data = self.request(
+                self.type[0], self.tail_generator(
+                    self.type, self.shard, StandardAPI=True), self.user_agent)
+            return self.data
+
         elif telegram_load:
             self.data = self.request(
                 self.type[0], self.type[1], user_agent=user_agent)
+
         else:
-            raise Exception("No Shards were supplied")
+            raise Exception("Invalid Shard(s) supplied: " + str(self.shard))
 
     def all_data(self):
         """

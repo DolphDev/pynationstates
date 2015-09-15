@@ -8,6 +8,7 @@ default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
 class Shard(NSback.Shard):
+
     """Inherits from NSback Shard"""
 
     @property
@@ -134,12 +135,12 @@ class Telegram:
         from the NS Moderators
 
     :param tgid: Seemily the meta information that Nationstates uses
-        to get and send your message. Obtained through
+        to get and send a message. Obtained through
         sending a message (in nationstates) with tag:api as the recipient
 
     :param secret_key: Seemily the meta information that Nationstates
-        uses to get and send your message. Obtained through sending
-        a bmessage (in nationstates) with tag:api as the recipient
+        uses to get and send a message. Obtained through sending
+        a message (in nationstates) with tag:api as the recipient
     """
 
     def __init__(self, to=None, client_key=None, tgid=None,
