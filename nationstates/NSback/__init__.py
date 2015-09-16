@@ -118,7 +118,6 @@ class ApiCall(Parser):
     # Methods used for creating and sending requests to the api
 
     def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
-        print(_type_)
         if StandardAPI:
             return "?" + _type_[0] + ("=" + _type_[1])
         string = "?" + \
