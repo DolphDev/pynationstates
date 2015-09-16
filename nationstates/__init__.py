@@ -34,7 +34,6 @@ class Api(object):
         """
 
         self.__call__(_type_, value, shard, limit, user_agent)
-        self.has_data = False
         # To store the last collect() call
         self.collect_data = None
 
@@ -69,6 +68,7 @@ class Api(object):
         self.shard = shard
         self.limit = limit
         self.user_agent = user_agent
+        self.has_data = False
         self.api_instance = NSback.Api(
             _type_,
             value=value,
@@ -103,9 +103,9 @@ class Api(object):
             if auto_collect:
                 self.collect()
             self.has_data = True
-            return True
+            return self
         else:
-            return False
+            return self
 
     def collect(self):
         if self.collect_data:
