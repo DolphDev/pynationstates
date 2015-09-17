@@ -5,10 +5,11 @@ def arraychild(xml, name):
     return len(xml.findAll(name, recursive=False)) > 1
 
 
-def dictupdate(fd,sd):
+def dictupdate(fd, sd):
     maind = fd
     maind.update(sd)
     return maind
+
 
 def xml2dict(xml, inarray=False):
     atr = xml.attrs
