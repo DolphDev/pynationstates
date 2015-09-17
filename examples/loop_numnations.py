@@ -10,6 +10,6 @@ mycall = nationstates.Api("world", shard=["numnations"])
 
 while True:
     mycall.load("My awesome user_agent")
-    aif mycall.has_data:
+    if mycall.has_data:
         print(mycall.numnations)
         time.sleep(10)
