@@ -1,4 +1,6 @@
 import requests
+from bs4 import BeautifulSoup
+
 if __name__ == "__main__":
     import bs4parser
 else:
@@ -67,8 +69,8 @@ class Parser(object):
 
     # Parses XML
     def xmlparser(self, _type_, xml):
-        soup = (bs4parser.BeautifulSoup(xml, "html.parser"))
-        parsedsoup = bs4parser.parsetree(soup)
+        soup = (BeautifulSoup(xml, "html.parser"))
+        parsedsoup = bs4parser.parsetree(xml)
         if not soup.find("h1") is None:
             raise Exception(soup.h1.text)
         return (soup, parsedsoup)
@@ -156,14 +158,14 @@ class ApiCall(Parser):
             url=url,
             headers=header)
         xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
-        returnvalue = {
+        generated_data = {
             "status": data.status_code,
             "data": xml_parsed[1],
             "data_bs4": xml_parsed[0],
             "url": data.url,
             "request_instance": data
         }
-        return returnvalue
+        return generated_data
 
 
 class Api(ApiCall):

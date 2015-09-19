@@ -1,46 +1,25 @@
-from bs4 import BeautifulSoup
+from xmltodict import parse
 
 
-def arraychild(xml, name):
-    return len(xml.findAll(name, recursive=False)) > 1
+def make_lower(x):
+    if isinstance(x, list):
+        return [make_lower(y) for y in x]
+    if isinstance(x, str):
+        return x
+    if isinstance(x, dict):
+        newdict = {}
+        for key in x.keys():
+            if key[0] == "@":
+                newdict[key[1:].lower()] = make_lower(x[key])
+            else:
+                newdict[key.lower()] = make_lower(x[key])
 
 
-def dictupdate(fd, sd):
-    maind = fd
-    maind.update(sd)
-    return maind
 
-
-def xml2dict(xml, inarray=False):
-    atr = xml.attrs
-    if not inarray:
-        if atr:
-            content = {"content": xml.text if xml.text else None}
-            content.update(atr)
-        else:
-            content = xml.text if xml.text else None
-    else:
-        return {xml.name: xml.text}
-    return {xml.name: content}
-
-
-def readtree(xml, secondlevel=False, inarray=False):
-    masterdict = {}
-    children = xml.findChildren(recursive=False)
-    if not children:
-        return xml2dict(xml, inarray=True)
-    for child in children:
-        if arraychild(xml, child.name) or masterdict.get(child.name, False):
-            masterdict.update(
-                {child.name: [dictupdate(readtree(x, inarray=True), x.attrs) for x in xml.findAll(child.name, recursive=True)]})
-        elif child.findChildren(recursive=False):
-            masterdict.update({child.name: readtree(child, True)})
-        else:
-            masterdict.update(xml2dict(child))
-    return masterdict
+        return newdict
+    if x is None:
+        return None
 
 
 def parsetree(xml):
-    masterdict = {}
-    masterdict.update(readtree(xml))
-    return masterdict
+    return make_lower(parse(xml))
