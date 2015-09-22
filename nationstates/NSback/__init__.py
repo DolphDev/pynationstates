@@ -103,12 +103,7 @@ class Parser(object):
             the wrapper processed.
 
         """
-        data = data[_type_]
-        collecter = {
-            "meta": {
-                "api": _type_,
-                "value": meta,
-            }}
+        collecter = {}
 
         collecter.update(data)
 

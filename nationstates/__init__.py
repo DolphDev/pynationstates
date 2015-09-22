@@ -1,8 +1,11 @@
 if __name__ == "__main__":
-    import NSback  # DEV
+    import NSback
 else:
-    from . import NSback  # Used as a module
+    from . import NSback
 
+
+class SuperDict(NSback.bs4parser.SuperDict):
+    pass
 
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
@@ -80,11 +83,22 @@ class Api(object):
             if self.collect_data is None:
                 raise Exception(
                     "Api instance must be collected to be accessed")
-            return self.collect_data[key]
+            if key is self._type_:
+                return self.collect()
+            return self.collect()[key]
         except KeyError as err:
             raise err
         except Exception as err:
             raise err
+
+    def __getattr__(self, attr):
+        try:
+            if attr is self._type_:
+                return self.collect()
+            else:
+                return self.collect()[attr]
+        except:
+            return self.__dict__[attr]
 
     def shard_handeler(shard):
         if not isinstance(shard, list):
@@ -109,15 +123,17 @@ class Api(object):
 
     def collect(self):
         if self.collect_data:
+            return self.collect_data[self._type_]
+        else:
+            self.collect_data = SuperDict(self.api_instance.collect())
+            return self.collect_data[self._type_]
+
+    def full_collect(self):
+        if self.collect_data:
             return self.collect_data
         else:
-            self.collect_data = self.api_instance.collect()
-            self.attributesetter(self.collect_data)
-            return self.collect_data
-
-    def attributesetter(self, collect_data):
-        for x in collect_data.keys():
-            setattr(self, x.replace(" ", "_"), collect_data.get(x))
+            self.collect()
+        return self.collect_data
 
     @property
     def data(self):
