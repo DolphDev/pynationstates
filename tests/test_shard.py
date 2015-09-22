@@ -8,4 +8,3 @@ class ShardTest(unittest.TestCase):
         self.assertEqual(
             NSback.Shard("numnations")._get_main_value(),
             "numnations")
-
