@@ -1,5 +1,22 @@
 import json
 from xmltodict import parse
+import json
+
+
+class SuperDict(dict):
+
+    def __init__(self, *arg, **kw):
+        super(SuperDict, self).__init__(*arg, **kw)
+
+    def json(self):
+        return json.JSONEncoder().encode(self)
+
+    def __getattr__(self, attr):
+        try:
+            return self.get(attr)
+        except:
+            self.__dict__[attr] = value
+            return value
 
 
 class SuperDict(dict):
