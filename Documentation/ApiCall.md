@@ -9,7 +9,7 @@ Parameters
 * *Positional Argument* `type` - Must be one of these values [`"nation"`, `"region"`, `"world"`, `"wa"`]
 * *Optional argument* `value` - the value of the type. This is required for all type values except world. See below 
 * *Optional argument* `shard` - a list/set of valid shards.
-* *Optional Argument* `limit` - A limit to the request (Deprecation Warning: This is being considered to be removed due to being redundant)
+
 
 
 ##Putting it all together
@@ -47,18 +47,29 @@ Now we need to collect the data
 
     myapicall.collect()
 
-This does some operations of the parsed xml. It returns a dictionary of the parsed data. It also sets attributes to the instance of every shard supplied. Depending on the shard it may return a string or a dictionary. You can access them this way like so.
+This does some operations of the parsed xml. It returns a dictionary of the parsed data. Depending on the shard it may return a string or a dictionary. You can access them in a few ways
 
     myapicall.name # This returns the name shard
+    myapicall["name"] # ^
     myapicall.fullname # This returns the fullname shard
+    myapicall["fullname"]
     myapicall.motto # You get the idea
+    myapicall["motto"]
     myapicall.wa
+    myapicall["wa"]
     myapicall.population
+    myapicall["population"]
     myapicall.currency
+    ["currency"]
     myapicall.flag
+    myapicall["flag"]
+
+
 
 Other Documentation
 ---
 
 * `myapicall.data`, this returns a dictionary that contains info about the request to nationstates. It includes the url requested, status code, and the request object (`request.get`).
+
+* `myapicall.full_collect()`: equivalent to `{myapicall._type_: myapicall.collect()}`. This is what the xml processer actually returns, this method is for those who want the full dictionary.
 

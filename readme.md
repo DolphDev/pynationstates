@@ -6,6 +6,13 @@ Nationstates API wrapper
 
 ### API
 
+##### Installation
+
+To install pynationstates simply use `pip`
+
+    pip install nationstates
+
+
 ##### Making a API request
 
 To make a request, the api request must be set up. For example, to get the amount of nations in the world
@@ -14,13 +21,13 @@ The code
 
     import nationstates
 
-    #Create the API call
+    # Create the API call
     call = nationstates.Api("world", shard=["numnations"])
     
-    #Make the api request
+    # Make the api request
     call.load("Requesting the amount of nations in nationstates for my awesome applicaiton")
 
-    #Collect the shards
+    # Collect the shards
     data = call.collect()
 
     print(data)
@@ -32,16 +39,15 @@ When we run the code (Assuming there were no errors on Nationstates end), The co
 To see more advanced usage, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
 
 
-
 ### Telegrams
 
-Telegrams are simple with the NS api wrapper
+Telegrams are simple with the nationstates api wrapper
 
 To send me a message in game, simply run this code (Replace the client argument with your client key)
 
     message = nationstates.Telegram(
         to="The United Island Tribes",
-        client_key="YOUR_API_CLIENT_KEy",
+        client_key="YOUR_API_CLIENT_KEY",
         tgid="12420908",
         secret_key="155d5c05f9ff")
 
@@ -60,17 +66,16 @@ Basic Example
 
 
 To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)<br>
-To see the complete list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html)
+To see the official list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html) 
 
-###### These are the supported Shards *as of version 0.01. 
-
+###Shard List
 
 Nations 
 ---
 
 ###Shards
 
-<sub>Note: URLs point to the result the particular shard may return<br>** denots unsupported shards
+<sub>Note: URLs point to the result the particular shard may return<br>
 
 
 
@@ -181,4 +186,4 @@ WA (World Assembly)
 [`votetrack`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=votetrack)
 [`dellog`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=dellog)
 [`delvotes`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=delvotes)
-[`lastresolution`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=lastresolutionx)
+[`lastresolution`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=lastresolution)
