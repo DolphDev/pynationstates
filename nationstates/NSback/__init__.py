@@ -3,8 +3,10 @@ from bs4 import BeautifulSoup
 
 if __name__ == "__main__":
     import bs4parser
+    import nsexceptions
 else:
     from . import bs4parser
+    from .nsexceptions import NSError, NotFound, NationNotFound, RegionNotFound, APIError, CollectError, ShardError
 
 
 default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
@@ -30,7 +32,7 @@ class Shard(object):
                     ).format(ShardName=self.shardname,
                              tags=self.tags)
         except:
-            raise Exception("Shard Object Empty")
+            raise ShardError("Shard Object Empty")
 
     def tail_gen(self):
         """
@@ -72,7 +74,7 @@ class Parser(object):
         soup = (BeautifulSoup(xml, "html.parser"))
         parsedsoup = bs4parser.parsetree(xml)
         if not soup.find("h1") is None:
-            raise Exception(soup.h1.text)
+            raise APIError(soup.h1.text)
         return (soup, parsedsoup)
 
     def shardcheck(self, shard):
@@ -264,7 +266,7 @@ class Api(ApiCall):
                 self.type[0], self.type[1], user_agent=user_agent)
 
         else:
-            raise Exception("Invalid Shard(s) supplied: " + str(self.shard))
+            raise APIError("Invalid Shard(s) supplied: " + str(self.shard))
 
     def all_data(self):
         """

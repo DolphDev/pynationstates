@@ -2,6 +2,7 @@ if __name__ == "__main__":
     import NSback
 else:
     from . import NSback
+    from .NSback import nsexceptions
 
 
 class SuperDict(NSback.bs4parser.SuperDict):
@@ -81,14 +82,14 @@ class Api(object):
     def __getitem__(self, key):
         try:
             if self.collect_data is None:
-                raise Exception(
+                raise nsexceptions.CollectError(
                     "Api instance must be collected to be accessed")
             if key is self._type_:
                 return self.collect()
             return self.collect()[key]
         except KeyError as err:
             raise err
-        except Exception as err:
+        except NSError as err:
             raise err
 
     def __getattr__(self, attr):
