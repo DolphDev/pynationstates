@@ -1,10 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-if __name__ == "__main__":
-    import bs4parser
-    import nsexceptions
-else:
+if __name__ != "__main__":
     from . import bs4parser
     from .nsexceptions import NSError, NotFound, NationNotFound, RegionNotFound, APIError, CollectError, ShardError
 
@@ -26,13 +23,16 @@ class Shard(object):
         self.tags = tags
         self.islist = isinstance(self.tags, list)
 
-    def __str__(self):
+    def __repr__(self):
         try:
             return ("(Shard: \'{ShardName}\', tags: {tags})"
                     ).format(ShardName=self.shardname,
                              tags=self.tags)
         except:
             raise ShardError("Shard Object Empty")
+
+    def __str__(self):
+        return self.shardname
 
     def tail_gen(self):
         """
@@ -86,7 +86,7 @@ class Parser(object):
 
         return sharddict.get(shard, shard)
 
-    def collect_gen(self, data, payload, _type_, meta, rText, parse_args):
+    def collect_gen(self, data, payload, _type_, meta, *args):
         """
         Collects the shards (Prepares the generated dictionary for use)
 
@@ -173,8 +173,7 @@ class Api(ApiCall):
             value="NoValue",
             shard=None,
             limit=None,
-            user_agent=None,
-            parse_args=None):
+            user_agent=None):
         """
         Initializes the Api Object, sets up suppied shards for use.
 
@@ -201,7 +200,7 @@ class Api(ApiCall):
             when calling .__call__() on this object
 
         """
-        self.__call__(_type_, value, shard, limit, user_agent, parse_args)
+        self.__call__(_type_, value, shard, limit, user_agent)
 
     def __call__(
             self,
@@ -209,8 +208,7 @@ class Api(ApiCall):
             value="NoValue",
             shard=None,
             limit=None,
-            user_agent=None,
-            parse_args=None):
+            user_agent=None):
         """
         See Api.__init__()
 
@@ -220,7 +218,6 @@ class Api(ApiCall):
         self.set_payload(shard)
         self.data = None
         self.user_agent = user_agent
-        self.parse_args = parse_args
 
     def set_payload(self, shard):
         """
@@ -295,4 +292,4 @@ class Api(ApiCall):
                 self.type[0],
                 value,
                 text_online,
-                self.parse_args))
+            ))

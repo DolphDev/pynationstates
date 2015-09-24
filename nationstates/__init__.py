@@ -1,8 +1,8 @@
-if __name__ == "__main__":
-    import NSback
-else:
+if __name__ != "__main__":
     from . import NSback
     from .NSback import nsexceptions
+else:
+    import NSback
 
 
 class SuperDict(NSback.bs4parser.SuperDict):
@@ -30,7 +30,7 @@ class Api(object):
     """
 
     def __init__(self, _type_, value=None, shard=None,
-                 limit=None, user_agent=None, args=None):
+                 limit=None, user_agent=None):
         """
         Passes on the arguments to self.__call__()
 

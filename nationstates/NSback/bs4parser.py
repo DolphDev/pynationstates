@@ -13,6 +13,9 @@ class SuperDict(dict):
             return self.__dict__[attr]
             
 def make_lower(x):
+    """
+    This loops through the processed xml (now dict) to better suit accessing it.
+    """
     if isinstance(x, list):
         gen_list = [SuperDict(make_lower(y)) if isinstance(
             make_lower(y), dict) else make_lower(y) for y in x]
