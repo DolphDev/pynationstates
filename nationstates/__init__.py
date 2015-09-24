@@ -79,6 +79,8 @@ class Api(object):
             shard=shard,
             user_agent=None)
 
+        return self
+
     def __getitem__(self, key):
         try:
             if self.collect_data is None:
