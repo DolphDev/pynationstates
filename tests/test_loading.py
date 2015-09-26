@@ -17,16 +17,16 @@ class WorldTest(unittest.TestCase):
 
     def test_world(self):
         for x in world.collect().keys():
-            self.assertEqual(world[x], world.__getattr__(x)) 
+            self.assertEqual(world[x], world.__getattribute__(x)) 
 
 class NationTest(unittest.TestCase):
 
     def test_nation(self):
         for x in nation.collect().keys():
-            self.assertEqual(nation[x], nation.__getattr__(x)) 
+            self.assertEqual(nation[x], nation.__getattribute__(x)) 
 
 class RegionTest(unittest.TestCase):
 
     def test_nation(self):
         for x in region.collect().keys():
-            self.assertEqual(region[x], region.__getattr__(x))
+            self.assertEqual(region[x], region.__getattribute__(x))
