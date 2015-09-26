@@ -3,7 +3,7 @@
 from setuptools import setup
 setup(name='nationstates',
       install_requires=["requests", "Beautifulsoup4", "xmltodict"],
-      version='0.12',
+      version='0.13',
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',
@@ -22,5 +22,6 @@ setup(name='nationstates',
                    "Programming Language :: Python :: 3.2",
                    "Programming Language :: Python :: 3.3",
                    "Programming Language :: Python :: 3.4",
-                   "Programming Language :: Python :: 3.5"]
+                   "Programming Language :: Python :: 3.5"],
+      license="MIT"
       )

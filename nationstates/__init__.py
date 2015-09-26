@@ -30,7 +30,7 @@ class Api(object):
     """
 
     def __init__(self, _type_, value=None, shard=None,
-                 limit=None, user_agent=None):
+                 limit=None, user_agent=None, auto_load=False):
         """
         Passes on the arguments to self.__call__()
 
@@ -42,7 +42,7 @@ class Api(object):
         self.collect_data = None
 
     def __call__(self, _type_, value=None, shard=None, limit=None,
-                 user_agent=None):
+                 user_agent=None, auto_load=False):
         """
         Handles the arguments and sends the args to be parsed
 
@@ -79,7 +79,15 @@ class Api(object):
             shard=shard,
             user_agent=None)
 
-        return self
+        if auto_load and self.user_agent:
+            return self.load()
+        else:
+            return self
+
+    def __repr__(self):
+        return "<NS-API(type: {type}, value: {value})>".format(
+            type=self._type_,
+            value=self.value)
 
     def __getitem__(self, key):
         try:
