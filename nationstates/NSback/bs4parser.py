@@ -6,12 +6,13 @@ class SuperDict(dict):
     def __init__(self, *arg, **kw):
         super(SuperDict, self).__init__(*arg, **kw)
 
-    def __getattr__(self, attr):
+    def __getattribute__(self, attr):
         try:
-            return self.get(attr)
+            return self[attr]
         except:
-            return self.__dict__[attr]
-            
+            return super(dict, self).__getattribute__(attr)
+
+
 def make_lower(x):
     """
     This loops through the processed xml (now dict) to better suit accessing it.

@@ -40,6 +40,7 @@ class Api(object):
         self.__call__(_type_, value, shard, limit, user_agent)
         # To store the last collect() call
         self.collect_data = None
+        self.has_attributes = False
 
     def __call__(self, _type_, value=None, shard=None, limit=None,
                  user_agent=None, auto_load=False):
@@ -80,6 +81,8 @@ class Api(object):
             user_agent=None)
 
         if auto_load and self.user_agent:
+            if self.has_attributes:
+                self.attributedeleter()
             return self.load()
         else:
             return self
@@ -102,14 +105,15 @@ class Api(object):
         except NSError as err:
             raise err
 
-    def __getattr__(self, attr):
-        try:
-            if attr is self._type_:
-                return self.collect()
-            else:
-                return self.collect()[attr]
-        except:
-            return self.__dict__[attr]
+    def attributesetter(self):
+        for x in self.collect().keys():
+            self.__setattr__(x, self.collect()[x])
+        self.has_attributes = True
+
+    def attributedeleter(self):
+        for x in self.collect().keys():
+            self.__delattr__(x)
+        self.has_attributes = False
 
     def shard_handeler(shard):
         if not isinstance(shard, list):
@@ -128,6 +132,8 @@ class Api(object):
             if auto_collect:
                 self.collect()
             self.has_data = True
+            if not self.has_attributes:
+                self.attributesetter()
             return self
         else:
             return self
