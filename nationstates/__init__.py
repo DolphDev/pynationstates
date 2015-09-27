@@ -37,10 +37,10 @@ class Api(object):
         Creates the variable self.collect and self.has_data
         """
 
-        self.__call__(_type_, value, shard, limit, user_agent)
-        # To store the last collect() call
-        self.collect_data = None
         self.has_attributes = False
+        self.collect_data = None
+
+        self.__call__(_type_, value, shard, limit, user_agent, auto_load)
 
     def __call__(self, _type_, value=None, shard=None, limit=None,
                  user_agent=None, auto_load=False):
@@ -85,6 +85,8 @@ class Api(object):
                 self.attributedeleter()
             return self.load()
         else:
+            if auto_load and not self.user_agent:
+                raise nsexceptions.NSError("user_agent required for on-creation requests")
             return self
 
     def __repr__(self):
@@ -102,7 +104,7 @@ class Api(object):
             return self.collect()[key]
         except KeyError as err:
             raise err
-        except NSError as err:
+        except nsexceptions.NSError as err:
             raise err
 
     def attributesetter(self):
