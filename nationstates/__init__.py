@@ -1,3 +1,4 @@
+import warnings
 if __name__ != "__main__":
     from . import NSback
     from .NSback import nsexceptions
@@ -18,7 +19,7 @@ class Shard(NSback.Shard):
         return self._get_main_value()
 
 
-class Api(object):
+class Nationstates(object):
 
     """
     Api object
@@ -183,6 +184,12 @@ class Api(object):
     def data(self):
         return self.api_instance.all_data()
 
+class Api(Nationstates):
+
+    def __init__(self, _type_, value=None, shard=None,
+                 user_agent=None, auto_load=False, version=None):
+        warnings.warn("Api has been renamed to Natonstates", DeprecationWarning)
+        super(Api, self).__init__(_type_, value, shard, user_agent, auto_load, version)
 
 class Telegram:
 
