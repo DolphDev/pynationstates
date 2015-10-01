@@ -4,11 +4,8 @@ if __name__ != "__main__":
 else:
     import NSback
 
-
-class SuperDict(NSback.bs4parser.SuperDict):
+class NSDict(NSback.bs4parser.SuperDict):
     pass
-
-default_useragent = "NationStates Python API Wrapper V 0.01 Pre-Release"
 
 
 class Shard(NSback.Shard):
@@ -30,7 +27,7 @@ class Api(object):
     """
 
     def __init__(self, _type_, value=None, shard=None,
-                 limit=None, user_agent=None, auto_load=False):
+                 user_agent=None, auto_load=False, version=None):
         """
         Passes on the arguments to self.__call__()
 
@@ -39,18 +36,19 @@ class Api(object):
 
         self.has_attributes = False
         self.collect_data = None
+        self.has_data = False
 
-        self.__call__(_type_, value, shard, limit, user_agent, auto_load)
+        self.__call__(_type_, value, shard, user_agent, auto_load, version)
 
-    def __call__(self, _type_, value=None, shard=None, limit=None,
-                 user_agent=None, auto_load=False):
+    def __call__(self, _type_, value=None, shard=None,
+                 user_agent=None, auto_load=False, version=None):
         """
         Handles the arguments and sends the args to be parsed
 
         Then sets up a NSback.Api instance (api_instance) that this object
              will interact with
 
-        :param _type_: The type of API being accessed
+        :param _type_: The type of API being accesses
             ("nation", "region", "world", "wa")
 
         :param value: The value of the API type (For the example,
@@ -59,26 +57,26 @@ class Api(object):
         :param shard: A list (preferablly set) of nationstate shards that
             NSback uses to both request and parse data from nationstates)
 
-        :param limit: The Limit that will be appended to the end of the
-            request if a limit is accepted. May be Depreciated due to
-            the Shard object.
-
         :param user_agent: A custom useragent if needed. The Nationstates
             Module has a defualt message if this is left blank.
 
-        """
+        :param auto_load: if a user_agent is supplied and this is set to True
 
+        """
+        if self.has_data:
+            self.collect_data = None
         self._type_ = _type_
         self.value = value
         self.shard = shard
-        self.limit = limit
         self.user_agent = user_agent
         self.has_data = False
+        self._version = version
         self.api_instance = NSback.Api(
             _type_,
             value=value,
             shard=shard,
-            user_agent=None)
+            user_agent=None,
+            version=self._version)
 
         if auto_load and self.user_agent:
             if self.has_attributes:
@@ -86,7 +84,8 @@ class Api(object):
             return self.load()
         else:
             if auto_load and not self.user_agent:
-                raise nsexceptions.NSError("user_agent required for on-creation requests")
+                raise nsexceptions.NSError(
+                    "user_agent required for on-creation requests")
             return self
 
     def __repr__(self):
@@ -107,6 +106,11 @@ class Api(object):
         except nsexceptions.NSError as err:
             raise err
 
+    def version(self, v=None):
+        self._version = v
+        self.api_instance.version = v
+        return self
+
     def attributesetter(self):
         for x in self.collect().keys():
             self.__setattr__(x, self.collect()[x])
@@ -123,7 +127,12 @@ class Api(object):
         else:
             return shard
 
+    def set_shard(shards):
+        self.shard = shard_handeler(shards)
+
     def load(self, user_agent=None, auto_collect=True):
+        if self.has_attributes:
+            self.attributedeleter
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -138,13 +147,17 @@ class Api(object):
                 self.attributesetter()
             return self
         else:
+            raise nsexceptions.APIError(
+                "Nationstates API requested failed.\nStatus Code: {status}"
+                .format(status=self.data["status"])
+            )
             return self
 
     def collect(self):
         if self.collect_data:
             return self.collect_data[self._type_]
         else:
-            self.collect_data = SuperDict(self.api_instance.collect())
+            self.collect_data = NSDict(self.api_instance.collect())
             return self.collect_data[self._type_]
 
     def full_collect(self):

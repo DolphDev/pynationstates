@@ -1,5 +1,6 @@
 
 class NSError(Exception):
+
     """
     BASE Exception
     This should not be called to directly. 
@@ -10,6 +11,7 @@ class NSError(Exception):
 
 
 class NotFound(NSError):
+
     """
     Base Class for a 404 NotFound Exception
     """
@@ -17,6 +19,7 @@ class NotFound(NSError):
 
 
 class NationNotFound(NotFound):
+
     """
     404 NotFound for a nation
     """
@@ -24,6 +27,7 @@ class NationNotFound(NotFound):
 
 
 class RegionNotFound(NotFound):
+
     """
     404 not found for a region
     """
@@ -33,8 +37,10 @@ class RegionNotFound(NotFound):
 class APIError(NSError):
     pass
 
+
 class CollectError(NSError):
     pass
+
 
 class ShardError(NSError):
     pass
