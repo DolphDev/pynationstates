@@ -107,7 +107,7 @@ class Nationstates(object):
             raise err
 
     def __getattr__(self, attr):
-        if collect_data:
+        if self.has_data:
             if attr in self.collect().keys():
                 return self.collect()[attr]
         raise AttributeError('\'%s\' has no attribute \'%s\'' % (type(self),
