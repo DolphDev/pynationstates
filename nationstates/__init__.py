@@ -81,8 +81,6 @@ class Nationstates(object):
             version=self._version)
 
         if auto_load and self.user_agent:
-            if self.has_attributes:
-                self.attributedeleter()
             return self.load()
         else:
             if auto_load and not self.user_agent:
@@ -108,20 +106,17 @@ class Nationstates(object):
         except nsexceptions.NSError as err:
             raise err
 
+    def __getattr__(self, attr):
+        if collect_data:
+            if attr in self.collect().keys():
+                return self.collect()[attr]
+        raise AttributeError('\'%s\' has no attribute \'%s\'' % (type(self),
+                                                                 attr))
+
     def version(self, v=None):
         self._version = v
         self.api_instance.version = v
         return self
-
-    def attributesetter(self):
-        for x in self.collect().keys():
-            self.__setattr__(x, self.collect()[x])
-        self.has_attributes = True
-
-    def attributedeleter(self):
-        for x in self.collect().keys():
-            self.__delattr__(x)
-        self.has_attributes = False
 
     def shard_handeler(self, shard):
         if not isinstance(shard, list):
@@ -144,8 +139,6 @@ class Nationstates(object):
         return self
 
     def load(self, user_agent=None, auto_collect=True):
-        if self.has_attributes:
-            self.attributedeleter
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -156,8 +149,6 @@ class Nationstates(object):
             if auto_collect:
                 self.collect()
             self.has_data = True
-            if not self.has_attributes:
-                self.attributesetter()
             return self
         else:
             raise nsexceptions.APIError(
@@ -184,12 +175,16 @@ class Nationstates(object):
     def data(self):
         return self.api_instance.all_data()
 
+
 class Api(Nationstates):
 
     def __init__(self, _type_, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None):
-        warnings.warn("Api has been renamed to Natonstates", DeprecationWarning)
-        super(Api, self).__init__(_type_, value, shard, user_agent, auto_load, version)
+        warnings.warn(
+            "Api has been renamed to Natonstates", DeprecationWarning)
+        super(Api, self).__init__(
+            _type_, value, shard, user_agent, auto_load, version)
+
 
 class Telegram:
 
