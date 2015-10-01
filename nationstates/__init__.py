@@ -122,14 +122,25 @@ class Api(object):
             self.__delattr__(x)
         self.has_attributes = False
 
-    def shard_handeler(shard):
+    def shard_handeler(self, shard):
         if not isinstance(shard, list):
             return list(shard)
         else:
             return shard
 
-    def set_shard(shards):
-        self.shard = shard_handeler(shards)
+    def set_shard(self, shards):
+        self.shard = self.shard_handeler(shards)
+        self.api_instance.set_payload(shards)
+        return self
+
+    def set_value(self, value):
+        self.value = value
+        self.api_instance.type = (self._type_, value)
+        return self
+
+    def set_useragent(useragent):
+        self.user_agent = useragent
+        return self
 
     def load(self, user_agent=None, auto_collect=True):
         if self.has_attributes:
