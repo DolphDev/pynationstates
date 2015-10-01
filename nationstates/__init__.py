@@ -4,6 +4,7 @@ if __name__ != "__main__":
 else:
     import NSback
 
+
 class NSDict(NSback.bs4parser.SuperDict):
     pass
 
@@ -193,13 +194,13 @@ class Telegram:
 
     def __init__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
-                 user_agent=default_useragent):
+                 user_agent=NSback.default_useragent):
 
         self.__call__(to, client_key, tgid, secret_key, auto_send)
 
     def __call__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
-                 user_agent=default_useragent):
+                 user_agent=NSback.default_useragent):
         """
         Setups a NSback.Api() instance in a way that will send a telegram.
         """
