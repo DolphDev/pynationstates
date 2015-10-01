@@ -122,7 +122,6 @@ class RequestMixin(ParserMixin):
         url = ("https://www.nationstates.net/cgi-bin/api.cgi"
                + (tail[:-1] if tail[-1] == ";" else tail)
                + ("&v={v}".format(v=self.version) if self.version else ""))
-        print(url)
         data = requests.get(
             url=url,
             headers=header)
