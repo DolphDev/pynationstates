@@ -19,10 +19,10 @@ To make a request, the api request must be set up. For example, to get the amoun
 
 The code
 
-    import nationstates
-
+    from nationstates import Nationstates
+	
     # Create the API call
-    call = nationstates.Api("world", shard=["numnations"])
+    call = NationStates("world", shard=["numnations"])
     
     # Make the api request
     call.load("Requesting the amount of nations in nationstates for my awesome applicaiton")
@@ -32,7 +32,7 @@ The code
 
     print(data)
 
-When we run the code (Assuming there were no errors on Nationstates end), The code returned this
+When we run the code (Assuming there were no errors on Nationstates end), The code output this
 
     {'numnations': u'119228'}
 

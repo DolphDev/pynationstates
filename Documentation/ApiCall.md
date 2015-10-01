@@ -1,4 +1,4 @@
-Api Object
+Nationstates Object
 ---
 
 This document covers the `nationstates.Api` object. 
@@ -30,18 +30,31 @@ I want the following:
 
 
 The resulting Api request (Formatted for readability):
+	
+	import nationstates
 
-    myapicall = nationstates.Api(
+    myapicall = nationstates.Nationstates(
     "nation",
     value = "The United Island Tribes",
-    shard = ["name", "fullname", "motto", "wa", population", "currency", "flag"]
+    shard = ["name", "fullname", "motto", "wa", population", "currency", "flag"],
+	version="7"
     )
+
+If you dont like the amount of arguments, you can setup the api this way
+
+   import nationstates
+   
+   myapicall = (nationstates.Nationstates("nation")
+                .set_value("The United Island Tribes")
+				.set_shard(["name", "fullname", "motto", "wa", population", "currency", "flag"])
+				.version("7"))
+				
 
 Now we need to actually load the data (Assuming `auto_load` is set to `False`)
 
     myapicall.load("My Super Cool User-Agent")
 
-`.load()` accepts one argument, the optionally argument `user_agent`. It returns `self` (The instance of the object)
+`.load()` accepts one argument, the optional argument `user_agent`. It returns the instance. If it fails 
 
 Now we need to collect the data
 
