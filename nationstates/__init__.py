@@ -1,18 +1,18 @@
 import warnings
 if __name__ != "__main__":
-    from . import NSback
-    from .NSback import nsexceptions
+    from . import NScore
+    from .NScore import nsexceptions
 else:
-    import NSback
+    import NScore
 
 
-class NSDict(NSback.bs4parser.SuperDict):
+class NSDict(NScore.bs4parser.SuperDict):
     pass
 
 
-class Shard(NSback.Shard):
+class Shard(NScore.Shard):
 
-    """Inherits from NSback Shard"""
+    """Inherits from NScore Shard"""
 
     @property
     def name(self):
@@ -24,7 +24,7 @@ class Nationstates(object):
     """
     Api object
 
-    This Wraps around the NSback.Api Object.
+    This Wraps around the NScore.Api Object.
 
     """
 
@@ -47,7 +47,7 @@ class Nationstates(object):
         """
         Handles the arguments and sends the args to be parsed
 
-        Then sets up a NSback.Api instance (api_instance) that this object
+        Then sets up a NScore.Api instance (api_instance) that this object
              will interact with
 
         :param _type_: The type of API being accesses
@@ -57,7 +57,7 @@ class Nationstates(object):
             the nation to search when using "nation")
 
         :param shard: A list (preferablly set) of nationstate shards that
-            NSback uses to both request and parse data from nationstates)
+            NScore uses to both request and parse data from nationstates)
 
         :param user_agent: A custom useragent if needed. The Nationstates
             Module has a defualt message if this is left blank.
@@ -73,7 +73,7 @@ class Nationstates(object):
         self.user_agent = user_agent
         self.has_data = False
         self._version = version
-        self.api_instance = NSback.Api(
+        self.api_instance = NScore.Api(
             _type_,
             value=value,
             shard=shard,
@@ -134,7 +134,7 @@ class Nationstates(object):
         self.api_instance.type = (self._type_, value)
         return self
 
-    def set_useragent(useragent):
+    def set_useragent(self, useragent):
         self.user_agent = useragent
         return self
 
@@ -189,7 +189,7 @@ class Api(Nationstates):
 class Telegram:
 
     """
-    Telegram uses the NSback.Api object to make a telegram request.
+    Telegram uses the NScore.Api object to make a telegram request.
 
     :param to: The Target nation or recipient
 
@@ -207,19 +207,19 @@ class Telegram:
 
     def __init__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
-                 user_agent=NSback.default_useragent):
+                 user_agent=NScore.default_useragent):
 
         self.__call__(to, client_key, tgid, secret_key, auto_send)
 
     def __call__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
-                 user_agent=NSback.default_useragent):
+                 user_agent=NScore.default_useragent):
         """
-        Setups a NSback.Api() instance in a way that will send a telegram.
+        Setups a NScore.Api() instance in a way that will send a telegram.
         """
 
         self.api_instance = (
-            NSback.Api(
+            NScore.Api(
                 "a",
                 value=+("?a=sendTG" +
                         "&client={}&".format(client_key) +

@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+__version__ = "0.15"
+
 if __name__ != "__main__":
     from . import bs4parser
     from .nsexceptions import (
@@ -13,7 +15,7 @@ if __name__ != "__main__":
         ShardError)
 
 
-default_useragent = "NationStates Python API Wrapper V 0.14"
+default_useragent = "NationStates Python API Wrapper V {version}".format(version=__version__)
 
 
 class Shard(object):
