@@ -1,10 +1,10 @@
 import unittest
 
-from nationstates import NSback
+from nationstates import NScore
 
 class ShardTest(unittest.TestCase):
 
     def test_shard(self):
         self.assertEqual(
-            NSback.Shard("numnations")._get_main_value(),
+            NScore.Shard("numnations")._get_main_value(),
             "numnations")

@@ -2,11 +2,13 @@ import unittest
 import time
 import nationstates
 
-world = nationstates.Api("world", shard=["numnations"]).load("Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman")
+USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman"
+
+world = nationstates.Api("world", shard=["numnations"]).load(USERAGENT)
 time.sleep(0.3)
-nation  = nationstates.Api("nation", "The United Island Tribes").load("Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman")
+nation  = nationstates.Api("nation", "The United Island Tribes").load(USERAGENT)
 time.sleep(0.3)
-region = nationstates.Api("region", "Balder").load("Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman")
+region = nationstates.Api("region", "Balder").load(USERAGENT)
 
 
 
