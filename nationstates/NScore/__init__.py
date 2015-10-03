@@ -15,7 +15,8 @@ if __name__ != "__main__":
         ShardError)
 
 
-default_useragent = "NationStates Python API Wrapper V {version}".format(version=__version__)
+default_useragent = "NationStates Python API Wrapper V {version}".format(
+    version=__version__)
 
 
 class Shard(object):
@@ -103,7 +104,7 @@ class RequestMixin(ParserMixin):
 
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    def request(self, _type_, tail, user_agent=None, limit=None):
+    def request(self, _type_, tail, user_agent=None, telegram_load=False):
         """This handles all requests.
 
         :param _type_: Type of request
@@ -127,6 +128,11 @@ class RequestMixin(ParserMixin):
         data = requests.get(
             url=url,
             headers=header)
+        if telegram_load:
+            return {
+                "status": data.status_code,
+                "request_instance": data
+            }
         xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
         generated_data = {
             "status": data.status_code,
@@ -232,7 +238,7 @@ class Api(RequestMixin):
 
         elif telegram_load:
             self.data = self.request(
-                self.type[0], self.type[1], user_agent=user_agent)
+                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
 
         else:
             raise APIError("Invalid Shard(s) supplied: " + str(self.shard))

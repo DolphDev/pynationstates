@@ -67,7 +67,7 @@ class Nationstates(object):
         """
         if self.has_data:
             self.collect_data = None
-        self._type_ = _type_
+        self.type = _type_
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
@@ -90,7 +90,7 @@ class Nationstates(object):
 
     def __repr__(self):
         return "<NS-API(type: {type}, value: {value})>".format(
-            type=self._type_,
+            type=self.type,
             value=self.value)
 
     def __getitem__(self, key):
@@ -98,7 +98,7 @@ class Nationstates(object):
             if self.collect_data is None:
                 raise nsexceptions.CollectError(
                     "Api instance must be collected to be accessed")
-            if key is self._type_:
+            if key is self.type:
                 return self.collect()
             return self.collect()[key]
         except KeyError as err:
@@ -131,7 +131,7 @@ class Nationstates(object):
 
     def set_value(self, value):
         self.value = value
-        self.api_instance.type = (self._type_, value)
+        self.api_instance.type = (self.type, value)
         return self
 
     def set_useragent(self, useragent):
@@ -159,10 +159,10 @@ class Nationstates(object):
 
     def collect(self):
         if self.collect_data:
-            return self.collect_data[self._type_]
+            return self.collect_data[self.type]
         else:
             self.collect_data = NSDict(self.api_instance.collect())
-            return self.collect_data[self._type_]
+            return self.collect_data[self.type]
 
     def full_collect(self):
         if self.collect_data:
@@ -213,28 +213,39 @@ class Telegram:
 
     def __call__(self, to=None, client_key=None, tgid=None,
                  secret_key=None, auto_send=False,
-                 user_agent=NScore.default_useragent):
+                 user_agent=None):
         """
         Setups a NScore.Api() instance in a way that will send a telegram.
         """
 
+        self._user_agent = user_agent
         self.api_instance = (
             NScore.Api(
                 "a",
-                value=+("?a=sendTG" +
-                        "&client={}&".format(client_key) +
-                        "tgid={}&".format(tgid) +
-                        "key={}&".format(secret_key) +
-                        "to={}".format(to)),
+                value=("?a=sendTG" +
+                       "&client={}&".format(client_key) +
+                       "tgid={}&".format(tgid) +
+                       "key={}&".format(secret_key) +
+                       "to={}".format(to)),
                 shard=[""],
-                user_agent=user_agent
             )
         )
         if auto_send:
             self.send
 
-    def send(self):
+    def user_agent(self, user_agent):
+        self._user_agent = user_agent
+        self.api_instance.user_agent = user_agent
+        return self
+
+    def send(self, user_agent=None, return_meta=False):
         """Sends the telegram"""
+        if user_agent:
+            self.user_agent(user_agent)
+        elif self._user_agent:
+            self.user_agent(self.user_agent)
+        elif not self.user_agent:
+            self.user_agent(NScore.default_useragent)
         self.api_instance.load(telegram_load=True)
         if self.api_instance.data["status"] == "200":
             return True
