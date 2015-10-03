@@ -67,7 +67,7 @@ class Nationstates(object):
         """
         if self.has_data:
             self.collect_data = None
-        self.type = _type_
+        self._type_ = _type_
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
@@ -90,7 +90,7 @@ class Nationstates(object):
 
     def __repr__(self):
         return "<NS-API(type: {type}, value: {value})>".format(
-            type=self.type,
+            type=self._type_,
             value=self.value)
 
     def __getitem__(self, key):
@@ -98,7 +98,7 @@ class Nationstates(object):
             if self.collect_data is None:
                 raise nsexceptions.CollectError(
                     "Api instance must be collected to be accessed")
-            if key is self.type:
+            if key is self._type_:
                 return self.collect()
             return self.collect()[key]
         except KeyError as err:
@@ -131,7 +131,7 @@ class Nationstates(object):
 
     def set_value(self, value):
         self.value = value
-        self.api_instance.type = (self.type, value)
+        self.api_instance.type = (self._type_, value)
         return self
 
     def set_useragent(self, useragent):
@@ -159,10 +159,10 @@ class Nationstates(object):
 
     def collect(self):
         if self.collect_data:
-            return self.collect_data[self.type]
+            return self.collect_data[self._type_]
         else:
             self.collect_data = NSDict(self.api_instance.collect())
-            return self.collect_data[self.type]
+            return self.collect_data[self._type_]
 
     def full_collect(self):
         if self.collect_data:
@@ -174,6 +174,7 @@ class Nationstates(object):
     @property
     def data(self):
         return self.api_instance.all_data()
+
 
 
 class Api(Nationstates):
