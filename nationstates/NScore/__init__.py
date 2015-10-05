@@ -104,7 +104,7 @@ class RequestMixin(ParserMixin):
 
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=True):
+    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=False):
         """This handles all requests.
 
         :param _type_: Type of request
@@ -221,7 +221,7 @@ class Api(RequestMixin):
         else:
             self.shard = None
 
-    def load(self, user_agent=None, telegram_load=False):
+    def load(self, user_agent=None, telegram_load=False, auth_load=False):
         """
         Sends the request for the current _type_, value, and shard. 
 

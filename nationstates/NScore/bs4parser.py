@@ -12,7 +12,6 @@ class SuperDict(dict):
         except:
             return super(dict, self).__getattribute__(attr)
 
-
 def make_lower(x):
     """
     This loops through the processed xml (now dict) to better suit accessing it.
