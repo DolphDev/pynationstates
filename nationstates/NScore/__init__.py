@@ -1,7 +1,7 @@
-import requests
+from requests import get as request
 from bs4 import BeautifulSoup
 
-__version__ = "0.15"
+__version__ = "0.25"
 
 if __name__ != "__main__":
     from . import bs4parser
@@ -104,7 +104,7 @@ class RequestMixin(ParserMixin):
 
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    def request(self, _type_, tail, user_agent=None, telegram_load=False):
+    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=True):
         """This handles all requests.
 
         :param _type_: Type of request
@@ -125,11 +125,18 @@ class RequestMixin(ParserMixin):
         url = ("https://www.nationstates.net/cgi-bin/api.cgi"
                + (tail[:-1] if tail[-1] == ";" else tail)
                + ("&v={v}".format(v=self.version) if self.version else ""))
-        data = requests.get(
+        # request is a request.get() object
+        data = request(
             url=url,
             headers=header)
         if telegram_load:
             return {
+                "status": data.status_code,
+                "request_instance": data
+            }
+        if auth_load:
+            return {
+                "is_auth": bool(int(data.text)) if data.status_code is "200" else False,
                 "status": data.status_code,
                 "request_instance": data
             }
@@ -216,29 +223,33 @@ class Api(RequestMixin):
 
     def load(self, user_agent=None, telegram_load=False):
         """
-        Sends the request for the current _type_, value, and shard. Raises error if no shards are set.
+        Sends the request for the current _type_, value, and shard. 
 
-        Special settings are used for telegram requests
+        Special parameters are used for telegram requests
         """
 
         if self.user_agent is None and user_agent:
             self.user_agent = user_agent
 
-        if self.shard and not telegram_load:
+        if telegram_load:
+            self.data = self.request(
+                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
+
+        if auth_load:
+            self.data = self.request(
+                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
+
+        if self.shard:
             self.data = self.request(
                 self.type[0], self.tail_generator(
                     self.type, self.shard), self.user_agent)
             return self.data
 
-        if self.shard is None and not telegram_load and self.type[0] in ["nation", "region"]:
+        elif self.shard is None and self.type[0] in ["nation", "region"]:
             self.data = self.request(
                 self.type[0], self.tail_generator(
                     self.type, self.shard, StandardAPI=True), self.user_agent)
             return self.data
-
-        elif telegram_load:
-            self.data = self.request(
-                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
 
         else:
             raise APIError("Invalid Shard(s) supplied: " + str(self.shard))

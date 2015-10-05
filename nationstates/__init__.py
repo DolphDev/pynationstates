@@ -6,6 +6,9 @@ else:
     import NScore
 
 
+__apiversion__ = "7"
+
+
 class NSDict(NScore.bs4parser.SuperDict):
     pass
 
@@ -89,7 +92,7 @@ class Nationstates(object):
             return self
 
     def __repr__(self):
-        return "<NS-API(type: {type}, value: {value})>".format(
+        return "Nationstates(type: {type}, value: {value})".format(
             type=self._type_,
             value=self.value)
 
@@ -176,7 +179,6 @@ class Nationstates(object):
         return self.api_instance.all_data()
 
 
-
 class Api(Nationstates):
 
     def __init__(self, _type_, value=None, shard=None,
@@ -251,3 +253,37 @@ class Telegram:
         if self.api_instance.data["status"] == "200":
             return True
         return False
+
+
+def get(_type_, value=None, user_agent=NScore.default_useragent,
+        shard=None, v="7", auto_load=True):
+    return Nationstates(_type_,
+                        value=value,
+                        user_agent=user_agent,
+                        shard=shard,
+                        version=v,
+                        auto_load=auto_load)
+
+
+def get_nation(nation, shard=None, user_agent=NScore.default_useragent,
+               v=__apiversion__, auto_load=True):
+    return get("nation", nation, user_agent, shard,
+               v, auto_load)
+
+
+def get_region(region, shard=None,  user_agent=NScore.default_useragent,
+               v=__apiversion__, auto_load=True):
+    return get("region", region, user_agent, shard,
+               v, auto_load)
+
+
+def get_world(shard=None, user_agent=NScore.default_useragent,
+              v=__apiversion__, auto_load=True):
+    return get("world", None, user_agent, shard,
+               v, auto_load)
+
+
+def get_wa(wa, shard=None, user_agent=NScore.default_useragent,
+           v=__apiversion__, auto_load=True):
+    return get("wa", wa, user_agent, shard,
+               v, auto_load)

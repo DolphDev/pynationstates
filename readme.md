@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Dolphman/pynationstates.svg)](https://travis-ci.org/Dolphman/pynationstates)
+[![Build Status](https://travis-ci.org/Dolphman/pynationstates.svg)](https://travis-ci.org/Dolphman/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates)
 
 
 Nationstates API wrapper
@@ -15,19 +15,15 @@ To install pynationstates simply use `pip`
 
 ##### Making a API request
 
-To make a request, the api request must be set up. For example, to get the amount of nations in the world
+Lets make a request. We want the amount of nations in the world currently. 
 
 The code
 
-    from nationstates import Nationstates
+    import nationstates
 	
-    # Create the API call
-    call = NationStates("world", shard=["numnations"])
-    
-    # Make the api request
-    call.load("Requesting the amount of nations in nationstates for my awesome applicaiton")
+    #This creates a Nationstates Object
+    call = nationstates.get_world(shard=["numnations"])
 
-    # Collect the shards
     data = call.collect()
 
     print(data)
@@ -36,7 +32,7 @@ When we run the code (Assuming there were no errors on Nationstates end), The co
 
     {'numnations': u'119228'}
 
-To see more advanced usage, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
+For more info on the Nationstates Object, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
 
 
 ### Telegrams
