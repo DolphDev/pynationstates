@@ -189,7 +189,7 @@ class Api(Nationstates):
             _type_, value, shard, user_agent, auto_load, version)
 
 
-class Telegram:
+class Telegram(object):
 
     """
     Telegram uses the NScore.Api object to make a telegram request.

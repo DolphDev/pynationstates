@@ -1,7 +1,7 @@
 from requests import get as request
 from bs4 import BeautifulSoup
 
-__version__ = "0.25"
+__version__ = "0.20"
 
 if __name__ != "__main__":
     from . import bs4parser
