@@ -78,7 +78,7 @@ class Nationstates(object):
             self.api,
             value=value,
             shard=shard,
-            user_agent=None,
+            user_agent=self.user_agent,
             version=self._version)
 
         if auto_load and self.user_agent:
@@ -114,16 +114,16 @@ class Nationstates(object):
         raise AttributeError('\'%s\' has no attribute \'%s\'' % (type(self),
                                                                  attr))
 
-    def version(self, v=None):
-        self._version = v
-        self.api_instance.version = v
-        return self
-
     def shard_handeler(self, shard):
         if not isinstance(shard, list):
             return list(shard)
         else:
             return shard
+
+    def version(self, v):
+        self._version = v
+        self.api_instance.version = v
+        return self
 
     def set_shard(self, shards):
         self.shard = self.shard_handeler(shards)
@@ -261,6 +261,8 @@ class Telegram(object):
 
 def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, v="7", auto_load=True):
+    if user_agent == None or user_agent == NScore.default_useragent:
+        print("Warning: No user-agent set, default will be used")
     return Nationstates(api,
                         value=value,
                         user_agent=user_agent,
