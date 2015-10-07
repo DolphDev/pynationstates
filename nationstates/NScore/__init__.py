@@ -23,11 +23,20 @@ class Shard(object):
 
     """Shard Object"""
 
-    def __init__(self, shard, tags=None):
+    def __init__(self, shard, tags=None, **kwargs):
+        if isinstance(tags, dict):
+            temptags = [tags]
+        if isinstance(tags, list) or kwargs:
+            temptags = tags if not tags is None else []
+            if kwargs:
+                for x in kwargs.keys():
+                    temptags.append({"paramtype": x, "paramvalue": kwargs[x]})
+        if tags is None and not kwargs:
+            temptags = tags
         if shard:
-            self.__call__(shard, tags)
+            self.__call__(shard, temptags)
 
-    def __call__(self, shard, tags=None):
+    def __call__(self, shard, tags=None, **kwargs):
 
         self.shardname = shard
         self.tags = tags
@@ -35,7 +44,7 @@ class Shard(object):
 
     def __repr__(self):
         try:
-            return ("(Shard: \'{ShardName}\', tags: {tags})"
+            return ("Shard({ShardName}({tags}))"
                     ).format(ShardName=self.shardname,
                              tags=self.tags)
         except:
@@ -56,9 +65,9 @@ class Shard(object):
             for x in self.tags:
                 string += (self.create_tag_tail((
                     self.shardname,
-                    x["tagtype"],
-                    (str(x["tagvalue"]))))[:-1] + ';' if self.tags else "")
-                setattr(self, x["tagtype"], x["tagvalue"])
+                    x["type"],
+                    (str(x["paramvalue"]))))[:-1] + ';' if self.tags else "")
+                setattr(self, x["paramtype"], x["paramvalue"])
             return string[:-1]
         else:
             return self.shardname
@@ -92,8 +101,9 @@ class RequestMixin(ParserMixin):
         if StandardAPI:
             return "?" + _type_[0] + ("=" + _type_[1])
         string = "?" + \
-            _type_[
-                0] + ("=" + _type_[1] + "&q=") if (not _type_[0] == "world") else "?q="
+            _type_[0] \
+            + ("=" + _type_[1] + "&q=") if (not _type_[0] == "world") else (
+                "?q=")
         tailcollecter = ""
         for x in args:
             if not (isinstance(x, str)):  # Shard Objects
@@ -104,7 +114,7 @@ class RequestMixin(ParserMixin):
 
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=False):
+    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=False, only_url=False):
         """This handles all requests.
 
         :param _type_: Type of request
@@ -114,8 +124,11 @@ class RequestMixin(ParserMixin):
         :param user_agent: (optional) A user_agent.
             Will use the default one if not supplied
 
-        :param limit: If supplied it will append a limit
-            to the request
+        :param telegram_load: Set to True if the request is a telegram
+
+        :param auth_load: Returns True if the request is a auth api
+
+        :param only_url: if True, return the url
 
         """
         if user_agent is None:
@@ -125,6 +138,8 @@ class RequestMixin(ParserMixin):
         url = ("https://www.nationstates.net/cgi-bin/api.cgi"
                + (tail[:-1] if tail[-1] == ";" else tail)
                + ("&v={v}".format(v=self.version) if self.version else ""))
+        if only_url:
+            return url
         # request is a request.get() object
         data = request(
             url=url,
@@ -253,6 +268,19 @@ class Api(RequestMixin):
 
         else:
             raise APIError("Invalid Shard(s) supplied: " + str(self.shard))
+
+    def get_url(self):
+        if self.shard:
+            url = self.request(
+                self.type[0], self.tail_generator(
+                    self.type, self.shard), self.user_agent, only_url=True)
+            return url
+
+        elif self.shard is None and self.type[0] in ["nation", "region"]:
+            url = self.request(
+                self.type[0], self.tail_generator(
+                    self.type, self.shard, StandardAPI=True), self.user_agent, only_url=True)
+            return url
 
     def all_data(self):
         """

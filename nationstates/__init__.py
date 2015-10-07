@@ -177,6 +177,11 @@ class Nationstates(object):
     def data(self):
         return self.api_instance.all_data()
 
+    @property
+    def url(self):
+        return self.api_instance.get_url()
+
+
 
 class Api(Nationstates):
 

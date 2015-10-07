@@ -46,4 +46,3 @@ def parsedict(x):
 
 def parsetree(xml):
     return NSDict(parsedict(parse(xml)))
-
