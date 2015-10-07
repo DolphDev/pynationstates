@@ -1,7 +1,7 @@
 from requests import get as request
 from bs4 import BeautifulSoup
 
-__version__ = "0.20"
+__version__ = "0.21"
 
 if __name__ != "__main__":
     from . import bs4parser
@@ -106,7 +106,7 @@ class RequestMixin(ParserMixin):
                 "?q=")
         tailcollecter = ""
         for x in args:
-            if not (isinstance(x, str)):  # Shard Objects
+            if (isinstance(x, Shard)):  # Shard Objects
                 string += (x._get_main_value() + "+")
                 tailcollecter += (x.tail_gen() + ";")
             else:  # Strings

@@ -5,7 +5,7 @@ if __name__ != "__main__":
 else:
     import NScore
 
-
+# this is used in nationstates get_??? methods
 __apiversion__ = "7"
 
 
