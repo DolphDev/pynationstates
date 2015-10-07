@@ -9,10 +9,6 @@ else:
 __apiversion__ = "7"
 
 
-class NSDict(NScore.bs4parser.SuperDict):
-    pass
-
-
 class Shard(NScore.Shard):
 
     """Inherits from NScore Shard"""
@@ -31,7 +27,7 @@ class Nationstates(object):
 
     """
 
-    def __init__(self, _type_, value=None, shard=None,
+    def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None):
         """
         Passes on the arguments to self.__call__()
@@ -43,9 +39,9 @@ class Nationstates(object):
         self.collect_data = None
         self.has_data = False
 
-        self.__call__(_type_, value, shard, user_agent, auto_load, version)
+        self.__call__(api, value, shard, user_agent, auto_load, version)
 
-    def __call__(self, _type_, value=None, shard=None,
+    def __call__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None):
         """
         Handles the arguments and sends the args to be parsed
@@ -53,7 +49,7 @@ class Nationstates(object):
         Then sets up a NScore.Api instance (api_instance) that this object
              will interact with
 
-        :param _type_: The type of API being accesses
+        :param api: The type of API being accesses
             ("nation", "region", "world", "wa")
 
         :param value: The value of the API type (For the example,
@@ -68,9 +64,11 @@ class Nationstates(object):
         :param auto_load: if a user_agent is supplied and this is set to True
 
         """
+        if not api in ("nation", "region", "world", "wa"):
+            raise nsexceptions.ApiTypeError("Invalid api type")
         if self.has_data:
             self.collect_data = None
-        self._type_ = _type_
+        self.api = _type_
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
@@ -93,7 +91,7 @@ class Nationstates(object):
 
     def __repr__(self):
         return "Nationstates(type: {type}, value: {value})".format(
-            type=self._type_,
+            type=self.api,
             value=self.value)
 
     def __getitem__(self, key):
@@ -101,7 +99,7 @@ class Nationstates(object):
             if self.collect_data is None:
                 raise nsexceptions.CollectError(
                     "Api instance must be collected to be accessed")
-            if key is self._type_:
+            if key is self.api:
                 return self.collect()
             return self.collect()[key]
         except KeyError as err:
@@ -134,11 +132,12 @@ class Nationstates(object):
 
     def set_value(self, value):
         self.value = value
-        self.api_instance.type = (self._type_, value)
+        self.api_instance.type = (self.api, value)
         return self
 
     def set_useragent(self, useragent):
         self.user_agent = useragent
+        self.api_instance.user_agent = self.user_agent
         return self
 
     def load(self, user_agent=None, auto_collect=True):
@@ -162,10 +161,10 @@ class Nationstates(object):
 
     def collect(self):
         if self.collect_data:
-            return self.collect_data[self._type_]
+            return self.collect_data[self.api]
         else:
-            self.collect_data = NSDict(self.api_instance.collect())
-            return self.collect_data[self._type_]
+            self.collect_data = (self.api_instance.collect())
+            return self.collect_data[self.api]
 
     def full_collect(self):
         if self.collect_data:

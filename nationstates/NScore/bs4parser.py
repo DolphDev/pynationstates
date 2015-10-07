@@ -1,24 +1,31 @@
 from xmltodict import parse
 
 
-class SuperDict(dict):
+class NSDict(dict):
 
     def __init__(self, *arg, **kw):
-        super(SuperDict, self).__init__(*arg, **kw)
+        super(NSDict, self).__init__(*arg, **kw)
 
     def __getattribute__(self, attr):
-        try:
+        if attr in super(NSDict, self).keys():
             return self[attr]
-        except:
+        else:
             return super(dict, self).__getattribute__(attr)
 
-def make_lower(x):
+    def __repr__(self):
+        return "{name}({orginaldict})".format(
+            name=self.__class__.__name__,
+            orginaldict=super(NSDict, self).__repr__())
+
+
+def parsedict(x):
     """
-    This loops through the processed xml (now dict) to better suit accessing it.
-    """
+    This function recursive loops through the processed xml (now dict)
+    it unorderers OrderedDicts and converts them to NSDict
+        """
     if isinstance(x, list):
-        gen_list = [SuperDict(make_lower(y)) if isinstance(
-            make_lower(y), dict) else make_lower(y) for y in x]
+        gen_list = [NSDict(parsedict(y)) if isinstance(
+            parsedict(y), dict) else parsedict(y) for y in x]
         return gen_list
     if isinstance(x, str):
         return x
@@ -29,8 +36,8 @@ def make_lower(x):
                 thiskey = key[1:].lower()
             else:
                 thiskey = key.lower()
-            this_lower = make_lower(x[key])
-            newdict[thiskey] = SuperDict(this_lower) if isinstance(
+            this_lower = parsedict(x[key])
+            newdict[thiskey] = NSDict(this_lower) if isinstance(
                 this_lower, dict) else this_lower
         return newdict
     if x is None:
@@ -38,4 +45,5 @@ def make_lower(x):
 
 
 def parsetree(xml):
-    return make_lower(parse(xml))
+    return NSDict(parsedict(parse(xml)))
+

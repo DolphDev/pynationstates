@@ -3,7 +3,7 @@ Shards
 
 While most shards can be adequately represented via a string, some Shards/Requests require more advanced setup. 
 
-For example the Shard `"dispatchlist"` which require additional parameters for more advanced requests.
+For example, the Shard `"dispatchlist"`. To use it, the shard require additional parameters for 
 
 The Shard object was created to prevent `nationstates.Api()` calls like this:
 

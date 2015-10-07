@@ -44,3 +44,7 @@ class CollectError(NSError):
 
 class ShardError(NSError):
     pass
+
+
+class ApiTypeError(NSError):
+    pass
