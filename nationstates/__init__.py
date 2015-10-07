@@ -68,14 +68,14 @@ class Nationstates(object):
             raise nsexceptions.ApiTypeError("Invalid api type")
         if self.has_data:
             self.collect_data = None
-        self.api = _type_
+        self.api = api
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
         self.has_data = False
         self._version = version
         self.api_instance = NScore.Api(
-            _type_,
+            self.api,
             value=value,
             shard=shard,
             user_agent=None,
@@ -180,12 +180,12 @@ class Nationstates(object):
 
 class Api(Nationstates):
 
-    def __init__(self, _type_, value=None, shard=None,
+    def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None):
         warnings.warn(
             "Api has been renamed to Natonstates", DeprecationWarning)
         super(Api, self).__init__(
-            _type_, value, shard, user_agent, auto_load, version)
+            api, value, shard, user_agent, auto_load, version)
 
 
 class Telegram(object):
@@ -254,9 +254,9 @@ class Telegram(object):
         return False
 
 
-def get(_type_, value=None, user_agent=NScore.default_useragent,
+def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, v="7", auto_load=True):
-    return Nationstates(_type_,
+    return Nationstates(api,
                         value=value,
                         user_agent=user_agent,
                         shard=shard,
