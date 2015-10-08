@@ -24,31 +24,35 @@ class Shard(object):
     """Shard Object"""
 
     def __init__(self, shard, tags=None, **kwargs):
+        if shard:
+            self.__call__(shard, tags, kwargs)
+        else:
+            raise ShardError("Shard Object must contain shard")
+
+    def __call__(self, shard, tags=None, kwinit={}, **kwargs):
+        if not shard:
+            raise ShardError("Shard Object must contain shard")
+
+        kwarguments = kwinit
+        kwarguments.update(kwargs)
+
+        if tags is None:
+            temptags = []
         if isinstance(tags, dict):
             temptags = [tags]
-        if isinstance(tags, list) or kwargs:
-            temptags = tags if not tags is None else []
-            if kwargs:
-                for x in kwargs.keys():
-                    temptags.append({"paramtype": x, "paramvalue": kwargs[x]})
-        if tags is None and not kwargs:
-            temptags = tags
-        if shard:
-            self.__call__(shard, temptags)
-
-    def __call__(self, shard, tags=None, **kwargs):
+        if isinstance(tags, list) or kwarguments:
+            temptags = tags if not (tags is None) else []
+            if kwarguments:
+                for x in kwarguments.keys():
+                    temptags.append(
+                        {"paramtype": x, "paramvalue": kwarguments[x]})
 
         self.shardname = shard
-        self.tags = tags
-        self.islist = isinstance(self.tags, list)
+        self.tags = temptags
 
     def __repr__(self):
-        try:
-            return ("Shard({ShardName}({tags}))"
-                    ).format(ShardName=self.shardname,
-                             tags=self.tags)
-        except:
-            raise ShardError("Shard Object Empty")
+
+        return ("Shard({ShardName})").format(ShardName=self.shardname)
 
     def __str__(self):
         return self.shardname
@@ -65,7 +69,7 @@ class Shard(object):
             for x in self.tags:
                 string += (self.create_tag_tail((
                     self.shardname,
-                    x["type"],
+                    x["paramtype"],
                     (str(x["paramvalue"]))))[:-1] + ';' if self.tags else "")
                 setattr(self, x["paramtype"], x["paramvalue"])
             return string[:-1]
@@ -78,6 +82,8 @@ class Shard(object):
 
     def _get_main_value(self):
         return self.shardname
+
+
 
 
 class ParserMixin(object):

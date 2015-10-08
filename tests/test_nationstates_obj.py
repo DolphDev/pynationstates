@@ -6,7 +6,7 @@ nation_obj = nationstates.get_nation(
     "The United Island Tribes", shard=["fullname"], auto_load=False, v="7")
 region_obj = nationstates.get_region("1000 Islands", shard=["numnations"], auto_load=False, v="7")
 world_obj = nationstates.get_world(shard=["numnations"], v="7", auto_load=False)
-wa_obj = nationstates.get_wa("1", v=7, auto_load=False)
+wa_obj = nationstates.get_wa("1", shard=["members"], v=7, auto_load=False)
 
 
 class nationstates_methods_test(unittest.TestCase):
@@ -25,9 +25,11 @@ class nationstates_methods_test(unittest.TestCase):
         nation_obj.set_shard(["name"])
         region_obj.set_shard(["numnations"])
         world_obj.set_shard(["census"])
+        wa_obj.set_shard(["numnations"])
         self.assertEqual(set(nation_obj.shard), nation_obj.api_instance.shard)
         self.assertEqual(set(region_obj.shard), region_obj.api_instance.shard)
         self.assertEqual(set(world_obj.shard), world_obj.api_instance.shard)
+        self.assertEqual(set(wa_obj.shard), wa_obj.api_instance.shard)
 
     def test_set_value_method(self):
         nation_obj.set_value("USA")
@@ -43,11 +45,14 @@ class nationstates_methods_test(unittest.TestCase):
         region_obj.set_useragent("This is my user_agent")
         world_obj.set_useragent("This is my user_agent")
         wa_obj.set_value("This is my user_agent")
-        self.assertEqual(nation_obj.user_agent, nation_obj.api_instance.user_agent)
-        self.assertEqual(region_obj.user_agent, region_obj.api_instance.user_agent)
-        self.assertEqual(world_obj.user_agent, world_obj.api_instance.user_agent)
-        self.assertEqual(wa_obj.user_agent, wa_obj.api_instance.user_agent)
-
+        self.assertEqual(
+            nation_obj.user_agent, nation_obj.api_instance.user_agent)
+        self.assertEqual(
+            region_obj.user_agent, region_obj.api_instance.user_agent)
+        self.assertEqual(
+            world_obj.user_agent, world_obj.api_instance.user_agent)
+        self.assertEqual(
+            wa_obj.user_agent, wa_obj.api_instance.user_agent)
 
 
 class NationstatesTestLoad(unittest.TestCase):

@@ -182,7 +182,6 @@ class Nationstates(object):
         return self.api_instance.get_url()
 
 
-
 class Api(Nationstates):
 
     def __init__(self, api, value=None, shard=None,
@@ -261,6 +260,8 @@ class Telegram(object):
 
 def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, v="7", auto_load=True):
+    if isinstance(shard, str):
+        shard = {shard,}
     if user_agent == None or user_agent == NScore.default_useragent:
         print("Warning: No user-agent set, default will be used")
     return Nationstates(api,

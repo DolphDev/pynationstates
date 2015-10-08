@@ -54,7 +54,7 @@ Now we need to actually load the data (Assuming `auto_load` is set to `False`)
 
     myapicall.load("My Super Cool User-Agent")
 
-`.load()` accepts one argument, the optional argument `user_agent`. It returns the instance. If it fails 
+`.load()` accepts one argument, the optional argument `user_agent`. It returns the instance.
 
 Now we need to collect the data
 
@@ -79,7 +79,7 @@ This does some operations of the parsed xml. It returns a dictionary of the pars
 
 
 
-Other Documentation
+Other method/properties]
 ---
 
 * `myapicall.data`, this returns a dictionary that contains info about the request to nationstates. It includes the url requested, status code, and the request object (`request.get`).
