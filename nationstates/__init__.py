@@ -261,7 +261,7 @@ class Telegram(object):
 def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, v="7", auto_load=True):
     if isinstance(shard, str):
-        shard = {shard,}
+        shard = {shard, }
     if user_agent == None or user_agent == NScore.default_useragent:
         print("Warning: No user-agent set, default will be used")
     return Nationstates(api,
