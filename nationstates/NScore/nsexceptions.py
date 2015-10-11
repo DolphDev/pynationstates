@@ -1,3 +1,5 @@
+from requests.exceptions import ConnectionError
+
 
 class NSError(Exception):
 
@@ -34,10 +36,6 @@ class RegionNotFound(NotFound):
     pass
 
 
-class APIError(NSError):
-    pass
-
-
 class CollectError(NSError):
     pass
 
@@ -46,5 +44,23 @@ class ShardError(NSError):
     pass
 
 
-class ApiTypeError(NSError):
+class APIError(NSError):
+    """All errors caused by interaction with the api (or would trigger such error) inherit this
+    """
+    pass
+
+
+class UnsupportedAPI(APIError):
+    pass
+
+
+class AuthError(APIError):
+    pass
+
+
+class AuthRejected(AuthError):
+    pass
+
+
+class APIRequestError(APIError, ConnectionError):
     pass

@@ -1,7 +1,7 @@
 from requests import get as request
 from bs4 import BeautifulSoup
 
-__version__ = "0.21"
+__version__ = "0.22"
 
 if __name__ != "__main__":
     from . import bs4parser
@@ -12,7 +12,8 @@ if __name__ != "__main__":
         RegionNotFound,
         APIError,
         CollectError,
-        ShardError)
+        ShardError,
+        APIRequestError)
 
 
 default_useragent = "NationStates Python API Wrapper V {version}".format(
@@ -84,8 +85,6 @@ class Shard(object):
         return self.shardname
 
 
-
-
 class ParserMixin(object):
     # Functions Dealing with the parser or parsing
 
@@ -120,7 +119,8 @@ class RequestMixin(ParserMixin):
 
         return string[:-1] + ";" + tailcollecter[:-1]
 
-    def request(self, _type_, tail, user_agent=None, telegram_load=False, auth_load=False, only_url=False):
+    def request(self, _type_, tail, user_agent=None,
+                telegram_load=False, auth_load=False, only_url=False):
         """This handles all requests.
 
         :param _type_: Type of request
@@ -147,9 +147,12 @@ class RequestMixin(ParserMixin):
         if only_url:
             return url
         # request is a request.get() object
-        data = request(
-            url=url,
-            headers=header)
+        try:
+            data = request(
+                url=url,
+                headers=header)
+        except ConnectionError as err:
+            raise APIRequestError(err)
         if telegram_load:
             return {
                 "status": data.status_code,
@@ -157,7 +160,6 @@ class RequestMixin(ParserMixin):
             }
         if auth_load:
             return {
-                "is_auth": bool(int(data.text)) if data.status_code is "200" else False,
                 "status": data.status_code,
                 "request_instance": data
             }
@@ -254,11 +256,13 @@ class Api(RequestMixin):
 
         if telegram_load:
             self.data = self.request(
-                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
+                self.type[0], self.type[1],
+                user_agent=user_agent, telegram_load=True)
 
         if auth_load:
             self.data = self.request(
-                self.type[0], self.type[1], user_agent=user_agent, telegram_load=True)
+                self.type[0], self.type[1],
+                user_agent=user_agent, telegram_load=True)
 
         if self.shard:
             self.data = self.request(
@@ -285,7 +289,8 @@ class Api(RequestMixin):
         elif self.shard is None and self.type[0] in ["nation", "region"]:
             url = self.request(
                 self.type[0], self.tail_generator(
-                    self.type, self.shard, StandardAPI=True), self.user_agent, only_url=True)
+                    self.type, self.shard, StandardAPI=True),
+                self.user_agent, only_url=True)
             return url
 
     def all_data(self):

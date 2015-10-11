@@ -64,8 +64,8 @@ class Nationstates(object):
         :param auto_load: if a user_agent is supplied and this is set to True
 
         """
-        if not api in ("nation", "region", "world", "wa"):
-            raise nsexceptions.ApiTypeError("Invalid api type")
+        if not api in ("nation", "region", "world", "wa", "verify"):
+            raise nsexceptions.ApiTypeError("Invalid api type: {}".format(api))
         if self.has_data:
             self.collect_data = None
         self.api = api
@@ -90,7 +90,7 @@ class Nationstates(object):
             return self
 
     def __repr__(self):
-        return "Nationstates(type: {type}, value: {value})".format(
+        return "Nationstates(API: {type}, value: {value})".format(
             type=self.api,
             value=self.value)
 
@@ -140,7 +140,7 @@ class Nationstates(object):
         self.api_instance.user_agent = self.user_agent
         return self
 
-    def load(self, user_agent=None, auto_collect=True):
+    def load(self, user_agent=None):
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -148,8 +148,6 @@ class Nationstates(object):
             self.user_agent = user_agent
         if self.api_instance.load(user_agent=self.user_agent):
             self.collect_data = None
-            if auto_collect:
-                self.collect()
             self.has_data = True
             return self
         else:
