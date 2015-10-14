@@ -39,5 +39,5 @@ class ParserMixinTest(unittest.TestCase):
 
 class RequestMixinTest(unittest.TestCase):
 
-    def test_ininstance(self):
+    def test_isinstance_url_is_string(self):
         self.assertIsInstance(url_is_string_NScore_object.get_url(), str)
