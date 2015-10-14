@@ -210,20 +210,25 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin):
             attemptsleft = numattempt
             while not self.ratelimitcheck():
                 if numattempt == 0:
-                    raise NScore.RateLimitCatch("Rate Limit Protection Blocked this Request") 
+                    raise NScore.RateLimitCatch(
+                        "Rate Limit Protection Blocked this Request")
                 sleep(retry_after)
                 self.load(
                     user_agent=self.user_agent, numattempt=attemptsleft-1)
                 if self.has_data:
                     return self
-            raise NScore.RateLimitCatch()
+            # In the rare case where the ratelimiterf
+            if self.has_data and self.ratelimitcheck():
+                return self   # is within a narrow error prone zone
+            raise NScore.RateLimitCatch(
+                "Rate Limit Protection Blocked this Request")
 
-    def ratelimitcheck(self, amount_allow=50, within_time = 30):
+    def ratelimitcheck(self, amount_allow=49, within_time=30):
         if len(self.rltime) >= amount_allow:
             currenttime = timestamp()
             while (self.rltime[-1]+within_time) < currenttime:
                 del self.rltime[-1]
-            if len(self.rltime) >= within_time:
+            if len(self.rltime) >= amount_allow:
                 return False
             else:
                 return True

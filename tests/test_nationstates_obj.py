@@ -2,6 +2,7 @@ import unittest
 import nationstates
 
 
+
 # No requests are made for this, this just silences the warning
 ua = ""
 
@@ -26,7 +27,7 @@ class nationstates_methods_version(unittest.TestCase):
 
     def test_version_method_world(self):
         world_obj = nationstates.get_world(
-            shard=["Fake Shard"], auto_load=False, user_agent=ua)
+            shard=["fake_shard"], auto_load=False, user_agent=ua)
         world_obj.set_version("10")
         self.assertEqual(
             world_obj.version, world_obj.api_instance.version, "10")
