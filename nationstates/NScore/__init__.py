@@ -13,7 +13,9 @@ if __name__ != "__main__":
         APIError,
         CollectError,
         ShardError,
-        APIRequestError)
+        APIRequestError,
+        URLError,
+        RateLimitCatch)
 
 
 default_useragent = "NationStates Python API Wrapper V {version}".format(
@@ -280,6 +282,7 @@ class Api(RequestMixin):
             raise APIError("Invalid Shard(s) supplied: " + str(self.shard))
 
     def get_url(self):
+
         if self.shard:
             url = self.request(
                 self.type[0], self.tail_generator(
@@ -292,6 +295,9 @@ class Api(RequestMixin):
                     self.type, self.shard, StandardAPI=True),
                 self.user_agent, only_url=True)
             return url
+
+        else:
+            raise URLError("URL Could Not be Generated: Invalid Parameters")
 
     def all_data(self):
         """

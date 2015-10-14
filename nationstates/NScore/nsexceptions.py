@@ -44,8 +44,17 @@ class ShardError(NSError):
     pass
 
 
+class URLError(NSError):
+    pass
+
+
+class RateLimitCatch(NSError):
+    pass
+
+
 class APIError(NSError):
-    """All errors caused by interaction with the api (or would trigger such error) inherit this
+
+    """Api error
     """
     pass
 
@@ -64,3 +73,5 @@ class AuthRejected(AuthError):
 
 class APIRequestError(APIError, ConnectionError):
     pass
+
+

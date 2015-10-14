@@ -13,29 +13,29 @@ class nationstates_methods_version(unittest.TestCase):
     def test_version_method_nation(self):
         nation_obj = nationstates.get_nation(
             "the_united_island_tribes", auto_load=False, user_agent=ua)
-        nation_obj.version("10")
+        nation_obj.set_version("10")
         self.assertEqual(
-            nation_obj._version, nation_obj.api_instance.version, "10")
+            nation_obj.version, nation_obj.api_instance.version, "10")
 
     def test_version_method_region(self):
         region_obj = nationstates.get_region(
             "the_reject_realms", auto_load=False, user_agent=ua)
-        region_obj.version("10")
+        region_obj.set_version("10")
         self.assertEqual(
-            region_obj._version, region_obj.api_instance.version, "10")
+            region_obj.version, region_obj.api_instance.version, "10")
 
     def test_version_method_world(self):
         world_obj = nationstates.get_world(
             shard=["Fake Shard"], auto_load=False, user_agent=ua)
-        world_obj.version("10")
+        world_obj.set_version("10")
         self.assertEqual(
-            world_obj._version, world_obj.api_instance.version, "10")
+            world_obj.version, world_obj.api_instance.version, "10")
 
     def test_version_method_wa(self):
         wa_obj = nationstates.get_wa(
             "1", shard=['fake_shard'], auto_load=False, user_agent=ua)
-        wa_obj.version("10")
-        self.assertEqual(wa_obj._version, wa_obj.api_instance.version, "10")
+        wa_obj.set_version("10")
+        self.assertEqual(wa_obj.version, wa_obj.api_instance.version, "10")
 
 
 class nationstates_methods_set_shard(unittest.TestCase):

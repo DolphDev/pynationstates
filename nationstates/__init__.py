@@ -1,3 +1,5 @@
+from time import time as timestamp
+from time import sleep
 import warnings
 if __name__ != "__main__":
     from . import NScore
@@ -18,7 +20,71 @@ class Shard(NScore.Shard):
         return self._get_main_value()
 
 
-class Nationstates(object):
+class NSPropertiesMixin(object):
+
+    """Properties for attributes that need
+    extra processing"""
+
+    @property
+    def value(self):
+        return self._value_store
+
+    @value.setter
+    def value(self, val):
+        self._value_store = val
+        self.api_instance.type = (self.api, self.value)
+
+    @property
+    def shard(self):
+        return self._shard_store
+
+    @shard.setter
+    def shard(self, val):
+        self._shard_store = val
+        self.api_instance.set_payload(self.shard)
+
+    @property
+    def user_agent(self):
+        return self._user_agent_store
+
+    @user_agent.setter
+    def user_agent(self, val):
+        self._user_agent_store = val
+        self.api_instance.user_agent = self.user_agent
+
+    @property
+    def version(self):
+        return self._version_store
+
+    @version.setter
+    def version(self, val):
+        self._version_store = val
+        self.api_instance.version = val
+
+
+class NSSettersMixin(object):
+
+    """This allows a more tradition creation and editing of
+    Nationstates Objects"""
+
+    def set_value(self, value):
+        self.value = value
+        return self
+
+    def set_shard(self, shards):
+        self.shard = self.shard_handeler(shards)
+        return self
+
+    def set_useragent(self, useragent):
+        self.user_agent = useragent
+        return self
+
+    def set_version(self, v):
+        self.version = v
+        return self
+
+
+class Nationstates(NSPropertiesMixin, NSSettersMixin):
 
     """
     Api object
@@ -35,9 +101,9 @@ class Nationstates(object):
         Creates the variable self.collect and self.has_data
         """
 
-        self.has_attributes = False
         self.collect_data = None
         self.has_data = False
+        self.rltime = []
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -64,22 +130,23 @@ class Nationstates(object):
         :param auto_load: if a user_agent is supplied and this is set to True
 
         """
+
         if not api in ("nation", "region", "world", "wa", "verify"):
             raise nsexceptions.ApiTypeError("Invalid api type: {}".format(api))
+
+        # NScore
+        # This needs to be created at the start of the run
+        self.api = api
+        self.api_instance = NScore.Api(self.api)
+
         if self.has_data:
             self.collect_data = None
-        self.api = api
+
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
-        self.has_data = False
-        self._version = version
-        self.api_instance = NScore.Api(
-            self.api,
-            value=value,
-            shard=shard,
-            user_agent=self.user_agent,
-            version=self._version)
+        self.has_data = False  # If the .__call__() is called)
+        self.version = version
 
         if auto_load and self.user_agent:
             return self.load()
@@ -120,42 +187,49 @@ class Nationstates(object):
         else:
             return shard
 
-    def version(self, v):
-        self._version = v
-        self.api_instance.version = v
-        return self
-
-    def set_shard(self, shards):
-        self.shard = self.shard_handeler(shards)
-        self.api_instance.set_payload(shards)
-        return self
-
-    def set_value(self, value):
-        self.value = value
-        self.api_instance.type = (self.api, value)
-        return self
-
-    def set_useragent(self, useragent):
-        self.user_agent = useragent
-        self.api_instance.user_agent = self.user_agent
-        return self
-
-    def load(self, user_agent=None):
+    def load(self, user_agent=None, no_ratelimit=False,
+             retry_after=1, numattempt=3):
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
         if user_agent:
             self.user_agent = user_agent
-        if self.api_instance.load(user_agent=self.user_agent):
-            self.collect_data = None
-            self.has_data = True
-            return self
+        if self.ratelimitcheck() or no_ratelimit:
+            self.rltime = [timestamp()] + self.rltime
+            self.has_data = self.api_instance.load(user_agent=self.user_agent)
+            if self.has_data:
+                self.collect_data = None
+                return self
+            else:
+                raise nsexceptions.APIError(
+                    "Nationstates API requested failed.\nStatus Code: {status}"
+                    .format(status=self.data["status"])
+                )
+                return self
+        elif not no_ratelimit:
+            attemptsleft = numattempt
+            while not self.ratelimitcheck():
+                if numattempt == 0:
+                    break
+                sleep(retry_after)
+                self.load(
+                    user_agent=self.user_agent, numattempt=attemptsleft-1)
+                if self.has_data:
+                    return self
+            raise NScore.RateLimitCatch()
+
+    def ratelimitcheck(self):
+        if len(self.rltime) >= 5:
+            currenttime = timestamp()
+            while (self.rltime[-1]+50) < currenttime:
+                del self.rltime[-1]
+            if len(self.rltime) >= 50:
+                raise NScore.RateLimitCatch()
+            else:
+                return True
+
         else:
-            raise nsexceptions.APIError(
-                "Nationstates API requested failed.\nStatus Code: {status}"
-                .format(status=self.data["status"])
-            )
-            return self
+            return True
 
     def collect(self):
         if self.collect_data:
@@ -177,7 +251,10 @@ class Nationstates(object):
 
     @property
     def url(self):
-        return self.api_instance.get_url()
+        if not self.data:
+            return self.api_instance.get_url()
+        else:
+            return self.data["url"]
 
 
 class Api(Nationstates):
