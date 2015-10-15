@@ -2,6 +2,7 @@ from requests import get as request
 from bs4 import BeautifulSoup
 
 __version__ = "0.22"
+_rltracker_ = []
 
 if __name__ != "__main__":
     from . import bs4parser

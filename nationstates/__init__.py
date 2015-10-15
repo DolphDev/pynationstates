@@ -11,6 +11,9 @@ else:
 __apiversion__ = "7"
 
 
+def get_ratelimit():
+    return NScore._rltracker_
+
 class Shard(NScore.Shard):
 
     """Inherits from NScore Shard"""
@@ -18,6 +21,8 @@ class Shard(NScore.Shard):
     @property
     def name(self):
         return self._get_main_value()
+
+
 
 
 class NSPropertiesMixin(object):
@@ -84,7 +89,35 @@ class NSSettersMixin(object):
         return self
 
 
-class Nationstates(NSPropertiesMixin, NSSettersMixin):
+class NSRateLimitMixin(object):
+
+    @property
+    def rltime(self):
+        return NScore._rltracker_
+
+    @rltime.setter
+    def rltime(self, val):
+        NScore._rltracker_ = val
+
+    def ratelimitcheck(self, amount_allow=49, within_time=30):
+        if len(self.rltime) >= amount_allow:
+            currenttime = timestamp()
+            while (self.rltime[-1]+within_time) < currenttime:
+                del self.rltime[-1]
+            if len(self.rltime) >= amount_allow:
+                return False
+            else:
+                return True
+        else:
+            return True
+
+    def add_timestamp(self):
+        NScore._rltracker_ = [timestamp()] + NScore._rltracker_
+
+class BaseNationstates(NSPropertiesMixin, NSSettersMixin, NSRateLimitMixin):
+    pass
+
+class Nationstates(BaseNationstates):
 
     """
     Api object
@@ -103,7 +136,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin):
 
         self.collect_data = None
         self.has_data = False
-        self.rltime = []
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -195,7 +227,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin):
         if user_agent:
             self.user_agent = user_agent
         if self.ratelimitcheck() or no_ratelimit:
-            self.rltime = [timestamp()] + self.rltime
+            self.add_timestamp()
             self.has_data = self.api_instance.load(user_agent=self.user_agent)
             if self.has_data:
                 self.collect_data = None
@@ -223,18 +255,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin):
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
 
-    def ratelimitcheck(self, amount_allow=49, within_time=30):
-        if len(self.rltime) >= amount_allow:
-            currenttime = timestamp()
-            while (self.rltime[-1]+within_time) < currenttime:
-                del self.rltime[-1]
-            if len(self.rltime) >= amount_allow:
-                return False
-            else:
-                return True
-
-        else:
-            return True
 
     def collect(self):
         if self.collect_data:
