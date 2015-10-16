@@ -1,12 +1,20 @@
 from time import time as timestamp
 from time import sleep
 import warnings
+
 if __name__ != "__main__":
     from . import NScore
     from .NScore import nsexceptions
+    from .mixins import (
+        NSPropertiesMixin,
+        NSSettersMixin,
+    )
 else:
     import NScore
-
+    from mixins import (
+        NSPropertiesMixin,
+        NSSettersMixin
+    )
 # this is used in nationstates get_??? methods
 __apiversion__ = "7"
 
@@ -14,82 +22,15 @@ __apiversion__ = "7"
 def get_ratelimit():
     return NScore._rltracker_
 
-class Shard(NScore.Shard):
 
-    """Inherits from NScore Shard"""
-
-    @property
-    def name(self):
-        return self._get_main_value()
+def clear_ratelimit():
+    NScore._rltracker_ = list()
 
 
-
-
-class NSPropertiesMixin(object):
-
-    """Properties for attributes that need
-    extra processing"""
-
-    @property
-    def value(self):
-        return self._value_store
-
-    @value.setter
-    def value(self, val):
-        self._value_store = val
-        self.api_instance.type = (self.api, self.value)
-
-    @property
-    def shard(self):
-        return self._shard_store
-
-    @shard.setter
-    def shard(self, val):
-        self._shard_store = val
-        self.api_instance.set_payload(self.shard)
-
-    @property
-    def user_agent(self):
-        return self._user_agent_store
-
-    @user_agent.setter
-    def user_agent(self, val):
-        self._user_agent_store = val
-        self.api_instance.user_agent = self.user_agent
-
-    @property
-    def version(self):
-        return self._version_store
-
-    @version.setter
-    def version(self, val):
-        self._version_store = val
-        self.api_instance.version = val
-
-
-class NSSettersMixin(object):
-
-    """This allows a more tradition creation and editing of
-    Nationstates Objects"""
-
-    def set_value(self, value):
-        self.value = value
-        return self
-
-    def set_shard(self, shards):
-        self.shard = self.shard_handeler(shards)
-        return self
-
-    def set_useragent(self, useragent):
-        self.user_agent = useragent
-        return self
-
-    def set_version(self, v):
-        self.version = v
-        return self
 
 
 class NSRateLimitMixin(object):
+    # This Mixin needs to be in the main file due to NScore._rltracker_
 
     @property
     def rltime(self):
@@ -114,8 +55,19 @@ class NSRateLimitMixin(object):
     def add_timestamp(self):
         NScore._rltracker_ = [timestamp()] + NScore._rltracker_
 
+
+class Shard(NScore.Shard):
+
+    """Inherits from NScore Shard"""
+
+    @property
+    def name(self):
+        return self._get_main_value()
+
+
 class BaseNationstates(NSPropertiesMixin, NSSettersMixin, NSRateLimitMixin):
     pass
+
 
 class Nationstates(BaseNationstates):
 
@@ -189,9 +141,8 @@ class Nationstates(BaseNationstates):
             return self
 
     def __repr__(self):
-        return "Nationstates(API: {type}, value: {value})".format(
-            type=self.api,
-            value=self.value)
+        return "NS({type})".format(
+            type=self.api)
 
     def __getitem__(self, key):
         try:
@@ -254,7 +205,6 @@ class Nationstates(BaseNationstates):
                 return self   # is within a narrow error prone zone
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
-
 
     def collect(self):
         if self.collect_data:

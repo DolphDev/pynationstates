@@ -2,7 +2,7 @@ from requests import get as request
 from bs4 import BeautifulSoup
 
 __version__ = "0.22"
-_rltracker_ = []
+_rltracker_ = list()
 
 if __name__ != "__main__":
     from . import bs4parser
@@ -298,7 +298,7 @@ class Api(RequestMixin):
             return url
 
         else:
-            raise URLError("URL Could Not be Generated: Invalid Parameters")
+            raise URLError("URL Could Not be Generated: Missing parameters")
 
     def all_data(self):
         """
