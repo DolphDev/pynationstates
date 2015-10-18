@@ -1,7 +1,7 @@
 from requests import get as request
 from bs4 import BeautifulSoup
 
-__version__ = "0.22"
+__version__ = "0.23"
 _rltracker_ = list()
 
 if __name__ != "__main__":
@@ -27,13 +27,13 @@ class Shard(object):
 
     """Shard Object"""
 
-    def __init__(self, shard, tags=None, **kwargs):
+    def __init__(self, shard, st_tags=None, **kwargs):
         if shard:
-            self.__call__(shard, tags, kwargs)
+            self.__call__(shard, st_tags, kwargs)
         else:
             raise ShardError("Shard Object must contain shard")
 
-    def __call__(self, shard, tags=None, kwinit={}, **kwargs):
+    def __call__(self, shard, st_tags=None, kwinit={}, **kwargs):
         if not shard:
             raise ShardError("Shard Object must contain shard")
 
@@ -55,8 +55,19 @@ class Shard(object):
         self.tags = temptags
 
     def __repr__(self):
-
-        return ("Shard({ShardName})").format(ShardName=self.shardname)
+        if self.tags:
+            gen_repr = [
+                "{pn}={pv}".format(
+                    pn=x["paramtype"], pv=x["paramvalue"]) for x in self.tags]
+            repl_text = ",".join(gen_repr)
+            return ("{classname}({ShardName},{tags})").format(
+                classname = self.__class__.__name__,
+                ShardName=self.shardname,
+                tags=repl_text)
+        else:
+            return ("{classname}({ShardName})".format(
+                classname = self.__class__.__name__,
+                ShardName=self.shardname))
 
     def __str__(self):
         return self.shardname
@@ -128,7 +139,7 @@ class RequestMixin(ParserMixin):
 
         :param _type_: Type of request
 
-        :param tail: The result of ApiCall.tail_generator()
+        :param tail: The result of .tail_generator()
 
         :param user_agent: (optional) A user_agent.
             Will use the default one if not supplied

@@ -11,6 +11,7 @@ if __name__ != "__main__":
     )
 else:
     import NScore
+    from NScore import nsexceptions
     from mixins import (
         NSPropertiesMixin,
         NSSettersMixin
@@ -19,18 +20,18 @@ else:
 __apiversion__ = "7"
 
 
-def get_ratelimit():
-    return NScore._rltracker_
+class RateLimit(object):
 
+    """
+    This object wraps around the ratelimiting system
 
-def clear_ratelimit():
-    NScore._rltracker_ = list()
+    Classes that use the rate-limiter must inherit this.
 
+    If a function needs to use the rate limiter, it must create
+    a RateLimit() obj and use its methods. This protect the 
+    global state of the Rate Limiter from side effects.
 
-
-
-class NSRateLimitMixin(object):
-    # This Mixin needs to be in the main file due to NScore._rltracker_
+    """
 
     @property
     def rltime(self):
@@ -53,7 +54,7 @@ class NSRateLimitMixin(object):
             return True
 
     def add_timestamp(self):
-        NScore._rltracker_ = [timestamp()] + NScore._rltracker_
+        self.rltime = [timestamp()] + self.rltime
 
 
 class Shard(NScore.Shard):
@@ -65,11 +66,7 @@ class Shard(NScore.Shard):
         return self._get_main_value()
 
 
-class BaseNationstates(NSPropertiesMixin, NSSettersMixin, NSRateLimitMixin):
-    pass
-
-
-class Nationstates(BaseNationstates):
+class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     """
     Api object
@@ -300,7 +297,6 @@ class Telegram(object):
             self.user_agent(user_agent)
         elif self._user_agent:
             self.user_agent(self.user_agent)
-        elif not self.user_agent:
             self.user_agent(NScore.default_useragent)
         self.api_instance.load(telegram_load=True)
         if self.api_instance.data["status"] == "200":
@@ -308,39 +304,59 @@ class Telegram(object):
         return False
 
 
+def get_ratelimit():
+    # To prevent dependencies
+    RatelimitObj = RateLimit()
+    return RatelimitObj.rltime
+
+
+def clear_ratelimit():
+    RatelimitObj = RateLimit()
+    RatelimitObj.rltime = list()
+
+
 def get(api, value=None, user_agent=NScore.default_useragent,
-        shard=None, v="7", auto_load=True):
-    if isinstance(shard, str):
-        shard = {shard, }
+        shard=None, version="7", auto_load=True):
     if user_agent == None or user_agent == NScore.default_useragent:
         print("Warning: No user-agent set, default will be used")
     return Nationstates(api,
                         value=value,
                         user_agent=user_agent,
                         shard=shard,
-                        version=v,
+                        version=version,
                         auto_load=auto_load)
 
 
 def get_nation(nation, shard=None, user_agent=NScore.default_useragent,
-               v=__apiversion__, auto_load=True):
+               version=__apiversion__, auto_load=True):
     return get("nation", nation, user_agent, shard,
-               v, auto_load)
+               version, auto_load)
 
 
 def get_region(region, shard=None,  user_agent=NScore.default_useragent,
-               v=__apiversion__, auto_load=True):
+               version=__apiversion__, auto_load=True):
     return get("region", region, user_agent, shard,
-               v, auto_load)
+               version, auto_load)
 
 
 def get_world(shard=None, user_agent=NScore.default_useragent,
-              v=__apiversion__, auto_load=True):
+              version=__apiversion__, auto_load=True):
     return get("world", None, user_agent, shard,
-               v, auto_load)
+               version, auto_load)
 
 
-def get_wa(wa, shard=None, user_agent=NScore.default_useragent,
-           v=__apiversion__, auto_load=True):
-    return get("wa", wa, user_agent, shard,
-               v, auto_load)
+def get_wa(council, shard=None, user_agent=NScore.default_useragent,
+           version=__apiversion__, auto_load=True):
+    return get("wa", council, user_agent, shard,
+               version, auto_load)
+
+
+def get_poll(id, user_agent=NScore.default_useragent):
+    shard_obj = Shard("poll", pollid=str(id))
+    return get_world(shard=[shard_obj], user_agent=user_agent).collect()
+
+
+def gen_url(api, value=None, shard=None, version=None):
+    return get(api, value=value, shard=shard,
+               version=version, user_agent="", auto_load=False).url
+
