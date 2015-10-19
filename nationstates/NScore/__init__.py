@@ -40,12 +40,12 @@ class Shard(object):
         kwarguments = kwinit
         kwarguments.update(kwargs)
 
-        if tags is None:
+        if st_tags is None:
             temptags = []
-        if isinstance(tags, dict):
-            temptags = [tags]
-        if isinstance(tags, list) or kwarguments:
-            temptags = tags if not (tags is None) else []
+        if isinstance(st_tags, dict):
+            temptags = [st_tags]
+        if isinstance(st_tags, list) or kwarguments:
+            temptags = tags if not (st_tags is None) else []
             if kwarguments:
                 for x in kwarguments.keys():
                     temptags.append(
