@@ -29,23 +29,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-
-
 """
 
 from setuptools import setup
 setup(name='nationstates',
       install_requires=["requests", "Beautifulsoup4", "xmltodict"],
-      version='0.22',
+      version='0.23',
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',
       url='https://github.com/Dolphman/pynationstates',
       packages=['nationstates', 'nationstates.NScore'],
-      download_url='https://github.com/Dolphman/pynationstates/tarball/0.22',
+      download_url='https://github.com/Dolphman/pynationstates/tarball/0.23',
       keywords=['nationstates', 'api wrapper', 'api',
-                "Nationstates API", "Nationstates API Wrapper", "Wrapper"],
+                "Nationstates API", "Nationstates API Wrapper", "Wrapper",
+                "nationstates python bindings", "web api", "web wrapper"],
       classifiers=["License :: OSI Approved :: MIT License",
                    "Operating System :: OS Independent",
                    "Topic :: Utilities",

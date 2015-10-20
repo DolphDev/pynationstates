@@ -86,3 +86,5 @@ Other method/properties]
 
 * `myapicall.full_collect()`: equivalent to `{myapicall._type_: myapicall.collect()}`. This is what the xml processer actually returns, this method is for those who want the full dictionary.
 
+* `myapicall.set_value()`: accecpts one argument, a str representing the value of the Nationstates Object
+

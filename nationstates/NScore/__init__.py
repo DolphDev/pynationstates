@@ -23,6 +23,14 @@ default_useragent = "NationStates Python API Wrapper V {version}".format(
     version=__version__)
 
 
+def error_catch(bs4):
+    """
+    This function checks the returned xml for NS api errors
+
+    """
+    if not bs4.find("h1") is None:
+        raise APIError(bs4.h1.text)
+
 class Shard(object):
 
     """Shard Object"""
@@ -100,13 +108,13 @@ class Shard(object):
 
 
 class ParserMixin(object):
-    # Functions Dealing with the parser or parsing
+    """Methods Dealing with the parser or parsing
+    """
 
     # Parses XML
     def xmlparser(self, _type_, xml):
         soup = (BeautifulSoup(xml, "html.parser"))
-        if not soup.find("h1") is None:
-            raise APIError(soup.h1.text)
+        error_catch(soup)
         parsedsoup = bs4parser.parsetree(xml)
 
         return (soup, parsedsoup)
@@ -309,7 +317,7 @@ class Api(RequestMixin):
             return url
 
         else:
-            raise URLError("URL Could Not be Generated: Missing parameters")
+            raise URLError("URL Could Not be Generated: Missing or Invalid parameters")
 
     def all_data(self):
         """

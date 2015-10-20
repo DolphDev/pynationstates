@@ -138,8 +138,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self
 
     def __repr__(self):
-        return "NS({type})".format(
-            type=self.api)
+        return "NS({type}, {value})".format(
+            type=self.api, value=self.value)
 
     def __getitem__(self, key):
         try:
@@ -359,4 +359,3 @@ def get_poll(id, user_agent=NScore.default_useragent):
 def gen_url(api, value=None, shard=None, version=None):
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
-

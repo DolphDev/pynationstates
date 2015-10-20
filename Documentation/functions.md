@@ -18,7 +18,7 @@ This Document specifies (and in turn documents) how the nationstates api binds t
 <br>   • *optional* - `user_agent` - `str` - The user_agent of this NS obj
 <br>   • *optional* - `version` - `str` - The version
 <br>   • *optional* - `auto_load` - `bool`- If True the module will request the API on creation of the Obj
-<br> Creates a `Nationstates` Object with the prefered settings. 
+<br> Creates a `Nationstates` Object with the supplied arguments. 
 <br> Returns: `Nationstates` Obj
 
 **Function** - *`get_nation`*
@@ -27,7 +27,7 @@ This Document specifies (and in turn documents) how the nationstates api binds t
 <br>   • *optional* - `shard` - `list` - list of str or Shard obj represting shards
 <br>   • *optional* - `user_agent` - `str` - The user_agent of this NS obj
 <br>   • *optional* - `version` - `str` - The version
-<br>   • *optional* - `auto_load` - `bool` - if True, the object load on during its creation
+<br>   • *optional* - `auto_load` - `bool` - if True, the object requests the api during its creation
 <br> Creates a `Nationstates` Object with the supplied arguments 
 <br> Returns: `Nationstates` Obj
 
@@ -69,8 +69,8 @@ This Document specifies (and in turn documents) how the nationstates api binds t
 
 **Function** - *`gen_url`*
 <br> *args*:
-<br>   • *positional* - `api` - `str` - The API being requested.
+<br>   • *positional* - `api` - `str` - The API.
 <br>   • *optional* - `value` - `None` or `str` - The value of the api
 <br>   • *optional* - `shard` - `list` - list of str or Shard obj represting shards
 <br>   • *optional* - `version` - `str` - The version
-<br> Returns: Returns: The generated URL.
+<br> Returns: Returns: The generated URL
