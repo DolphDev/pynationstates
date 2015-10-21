@@ -1,4 +1,4 @@
-from requests import get as request
+import requests
 from bs4 import BeautifulSoup
 
 __version__ = "0.23"
@@ -30,6 +30,7 @@ def error_catch(bs4):
     """
     if not bs4.find("h1") is None:
         raise APIError(bs4.h1.text)
+
 
 class Shard(object):
 
@@ -69,12 +70,12 @@ class Shard(object):
                     pn=x["paramtype"], pv=x["paramvalue"]) for x in self.tags]
             repl_text = ",".join(gen_repr)
             return ("{classname}({ShardName},{tags})").format(
-                classname = self.__class__.__name__,
+                classname=self.__class__.__name__,
                 ShardName=self.shardname,
                 tags=repl_text)
         else:
             return ("{classname}({ShardName})".format(
-                classname = self.__class__.__name__,
+                classname=self.__class__.__name__,
                 ShardName=self.shardname))
 
     def __str__(self):
@@ -108,6 +109,7 @@ class Shard(object):
 
 
 class ParserMixin(object):
+
     """Methods Dealing with the parser or parsing
     """
 
@@ -159,10 +161,9 @@ class RequestMixin(ParserMixin):
         :param only_url: if True, return the url
 
         """
-        if user_agent is None:
-            header = {"User-Agent": default_useragent}
-        else:
-            header = {"User-Agent": user_agent}
+        use_default = user_agent is None and self.user_agent is None
+        use_temp_useragent = (user_agent != self.user_agent) and user_agent
+
         url = ("https://www.nationstates.net/cgi-bin/api.cgi"
                + (tail[:-1] if tail[-1] == ";" else tail)
                + ("&v={v}".format(v=self.version) if self.version else ""))
@@ -170,9 +171,14 @@ class RequestMixin(ParserMixin):
             return url
         # request is a request.get() object
         try:
-            data = request(
-                url=url,
-                headers=header)
+            if use_default:
+                data = self.session.get(
+                    url=url, headers={"User-Agent": default_useragent})
+            elif use_temp_useragent:
+                data = self.session.get(
+                    url=url, headers={"User-Agent": user_agent})
+            else:
+                data = self.session.get(url=url)
         except ConnectionError as err:
             raise APIRequestError(err)
         if telegram_load:
@@ -246,8 +252,13 @@ class Api(RequestMixin):
         self.type = (_type_, value)
         self.set_payload(shard)
         self.data = None
-        self.user_agent = user_agent
         self.version = version
+        self.session = requests.Session()
+        self.handle_user_agent(user_agent)
+
+    def handle_user_agent(self, user_agent):
+        self.user_agent = user_agent
+        self.session.headers.update({"User-Agent": self.user_agent})
 
     def set_payload(self, shard):
         """
@@ -274,7 +285,7 @@ class Api(RequestMixin):
         """
 
         if self.user_agent is None and user_agent:
-            self.user_agent = user_agent
+            self.handle_user_agent(user_agent)
 
         if telegram_load:
             self.data = self.request(
@@ -317,7 +328,8 @@ class Api(RequestMixin):
             return url
 
         else:
-            raise URLError("URL Could Not be Generated: Missing or Invalid parameters")
+            raise URLError(
+                "URL Could Not be Generated: Missing or Invalid parameters")
 
     def all_data(self):
         """

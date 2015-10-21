@@ -33,7 +33,7 @@ class NSPropertiesMixin(object):
     @user_agent.setter
     def user_agent(self, val):
         self._user_agent_store = val
-        self.api_instance.user_agent = self.user_agent
+        self.api_instance.handle_user_agent(self.user_agent)
 
     @property
     def version(self):
