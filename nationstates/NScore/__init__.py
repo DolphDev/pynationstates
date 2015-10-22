@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 
 __version__ = "0.23"
 _rltracker_ = list()
-
 if __name__ != "__main__":
     from . import bs4parser
     from .nsexceptions import (
@@ -15,6 +14,7 @@ if __name__ != "__main__":
         CollectError,
         ShardError,
         APIRequestError,
+        APIRateLimitBan,
         URLError,
         RateLimitCatch)
 
@@ -23,24 +23,15 @@ default_useragent = "NationStates Python API Wrapper V {version}".format(
     version=__version__)
 
 
-def error_catch(bs4):
-    """
-    This function checks the returned xml for NS api errors
-
-    """
-    if not bs4.find("h1") is None:
-        raise APIError(bs4.h1.text)
-
-
 class Shard(object):
 
     """Shard Object"""
 
     def __init__(self, shard, st_tags=None, **kwargs):
-        if shard:
+        if  isinstance(shard, str):
             self.__call__(shard, st_tags, kwargs)
         else:
-            raise ShardError("Shard Object must contain shard")
+            raise ShardError("Shard Object must contain shard") from None
 
     def __call__(self, shard, st_tags=None, kwinit={}, **kwargs):
         if not shard:
@@ -113,13 +104,13 @@ class ParserMixin(object):
     """Methods Dealing with the parser or parsing
     """
 
+    def xml2bs4(self, xml):
+        return (BeautifulSoup(xml, "html.parser"))
     # Parses XML
-    def xmlparser(self, _type_, xml):
-        soup = (BeautifulSoup(xml, "html.parser"))
-        error_catch(soup)
-        parsedsoup = bs4parser.parsetree(xml)
 
-        return (soup, parsedsoup)
+    def xmlparser(self, _type_, xml):
+        parsedsoup = bs4parser.parsetree(xml)
+        return (parsedsoup)
 
 
 class RequestMixin(ParserMixin):
@@ -142,6 +133,16 @@ class RequestMixin(ParserMixin):
                 string += (str(x) + "+")
 
         return string[:-1] + ";" + tailcollecter[:-1]
+
+    def response_check(self, data):
+        if data["status"] == 400:
+            raise APIError(data["data_bs4"].h1.text)
+        if data["status"] == 429:
+            message = ("Nationstates API has temporary banned this IP"
+                       " for Breaking the Rate Limit." +
+                       " Retry-After: {seconds}".format(
+                           seconds=data["request_instance"].headers["Retry-After"]))
+            raise APIRateLimitBan(message)
 
     def request(self, _type_, tail, user_agent=None,
                 telegram_load=False, auth_load=False, only_url=False):
@@ -181,6 +182,7 @@ class RequestMixin(ParserMixin):
                 data = self.session.get(url=url)
         except ConnectionError as err:
             raise APIRequestError(err)
+
         if telegram_load:
             return {
                 "status": data.status_code,
@@ -191,15 +193,21 @@ class RequestMixin(ParserMixin):
                 "status": data.status_code,
                 "request_instance": data
             }
-        xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
+
+        data_bs4 = self.xml2bs4(data.text.encode("utf-8"))
         generated_data = {
             "status": data.status_code,
-            "data": xml_parsed[1],
-            "data_bs4": xml_parsed[0],
             "url": data.url,
             "request_instance": data,
-            "version": self.version
+            "version": self.version,
+            "data_bs4": data_bs4
         }
+
+        self.response_check(generated_data)
+        xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
+        generated_data.update({
+            "data": xml_parsed,
+        })
         return generated_data
 
 

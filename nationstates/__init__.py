@@ -3,8 +3,8 @@ from time import sleep
 import warnings
 
 if __name__ != "__main__":
-    from . import NScore
-    from .NScore import nsexceptions
+    from . import NScore, exceptions
+  
     from .mixins import (
         NSPropertiesMixin,
         NSSettersMixin,
@@ -41,7 +41,7 @@ class RateLimit(object):
     def rltime(self, val):
         NScore._rltracker_ = val
 
-    def ratelimitcheck(self, amount_allow=49, within_time=30):
+    def ratelimitcheck(self, amount_allow=48, within_time=30):
         if len(self.rltime) >= amount_allow:
             currenttime = timestamp()
             while (self.rltime[-1]+within_time) < currenttime:
@@ -168,7 +168,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return shard
 
     def load(self, user_agent=None, no_ratelimit=False,
-             retry_after=1, numattempt=3):
+             retry_after=2, numattempt=3):
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -182,7 +182,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 return self
             else:
                 raise nsexceptions.APIError(
-                    "Nationstates API requested failed.\nStatus Code: {status}"
+                    "Nationstates API request failed.\nStatus Code: {status}"
                     .format(status=self.data["status"])
                 )
                 return self
@@ -194,12 +194,16 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                         "Rate Limit Protection Blocked this Request")
                 sleep(retry_after)
                 self.load(
-                    user_agent=self.user_agent, numattempt=attemptsleft-1)
+                    user_agent=self.user_agent,
+                    numattempt=(attemptsleft-1) if (not attemptsleft is None)
+                    else None)
                 if self.has_data:
                     return self
-            # In the rare case where the ratelimiterf
+            # In the rare case where the ratelimiter
             if self.has_data and self.ratelimitcheck():
                 return self   # is within a narrow error prone zone
+            if not self.has_data and self.ratelimitcheck():
+                return self.load()
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
 

@@ -24,10 +24,6 @@ url_is_string_NScore_object = ns.get_world(
 
 class ParserMixinTest(unittest.TestCase):
 
-    def test_xml_exception(self):
-        self.assertRaises(
-            APIError, ParserMixin().xmlparser, "nation", errorxml)
-
     def test_xmlparser(self):
         try:
             ParserMixin().xmlparser("nation", standardapixml)
@@ -41,3 +37,5 @@ class RequestMixinTest(unittest.TestCase):
 
     def test_isinstance_url_is_string(self):
         self.assertIsInstance(url_is_string_NScore_object.get_url(), str)
+
+

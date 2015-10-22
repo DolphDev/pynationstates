@@ -26,14 +26,14 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         a rate limit break """
         nsinstance = Nationstates("nation")
         ct = time()
-        nsinstance.rltime = [(ct+x) for x in range(55)]
+        nsinstance.rltime = [(ct+x) for x in range(50)]
         self.assertFalse(nsinstance.ratelimitcheck())
         nationstates.clear_ratelimit()
 
     def test_rate_limiting_check_isTrue(self):
         nsinstance = Nationstates("nation")
         ct = time()
-        nsinstance.rltime = [(ct+x) for x in range(48)]
+        nsinstance.rltime = [(ct+x) for x in range(47)]
         self.assertTrue(nsinstance.ratelimitcheck())
 
     def test_rate_limiting_check_RaisesCatch(self):

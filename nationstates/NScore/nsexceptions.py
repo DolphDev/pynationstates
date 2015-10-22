@@ -1,6 +1,7 @@
 from requests.exceptions import ConnectionError
 
 
+
 class NSError(Exception):
 
     """
@@ -74,4 +75,6 @@ class AuthRejected(AuthError):
 class APIRequestError(APIError, ConnectionError):
     pass
 
+class APIRateLimitBan(APIError):
+    pass
 

@@ -12,10 +12,14 @@ To install pynationstates simply use `pip`
 
     pip install nationstates
 
+The NS module currently updates weekly. Once the module is stable, it 
+will move to a monthly/bi-monthly release. 
 
-##### Making a API request
+#####Examples
+###### Making a API request
 
-Lets make a request. We want the amount of nations in the world currently. 
+Lets start with a simple example. The number of nations in the world 
+currently. 
 
 The code
 
@@ -39,7 +43,10 @@ For more info on the Nationstates Object, click [here](https://github.com/Dolphm
 
 Telegrams are simple with the nationstates api wrapper
 
-To send me a message in game, simply run this code (Replace the client argument with your client key)
+To send me a message in game, simply use the Telegram Wrapper (Replace 
+the client 
+argument 
+with your client key)
 
     message = nationstates.Telegram(
         to="The United Island Tribes",
@@ -74,15 +81,13 @@ Nations
 <sub>Note: URLs point to the result the particular shard may return<br>
 
 
-
-
 [`name`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=name)
 [`fullname`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=fullname)
 [`type`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=type)
 [`category`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=category)
 [`wa`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=wa)
-[`gavote`**](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=gavote)
-[`scvote`\*\*](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=scvote)
+[`gavote`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=gavote)
+[`scvote`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=scvote)
 [`freedom`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=freedom)
 [`region`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=region)
 [`population`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=population)
@@ -183,3 +188,5 @@ WA (World Assembly)
 [`dellog`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=dellog)
 [`delvotes`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=delvotes)
 [`lastresolution`](https://www.nationstates.net/cgi-bin/api.cgi?wa=1&q=lastresolution)
+
+
