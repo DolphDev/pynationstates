@@ -3,7 +3,7 @@ from time import sleep
 import warnings
 
 if __name__ != "__main__":
-    from . import NScore, exceptions
+    from . import NScore
   
     from .mixins import (
         NSPropertiesMixin,

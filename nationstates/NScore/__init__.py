@@ -28,10 +28,10 @@ class Shard(object):
     """Shard Object"""
 
     def __init__(self, shard, st_tags=None, **kwargs):
-        if  isinstance(shard, str):
+        if isinstance(shard, str):
             self.__call__(shard, st_tags, kwargs)
         else:
-            raise ShardError("Shard Object must contain shard") from None
+            raise ShardError("Shard Object must contain shard")
 
     def __call__(self, shard, st_tags=None, kwinit={}, **kwargs):
         if not shard:
@@ -141,7 +141,8 @@ class RequestMixin(ParserMixin):
             message = ("Nationstates API has temporary banned this IP"
                        " for Breaking the Rate Limit." +
                        " Retry-After: {seconds}".format(
-                           seconds=data["request_instance"].headers["Retry-After"]))
+                           seconds=(data["request_instance"]
+                                    .headers["Retry-After"])))
             raise APIRateLimitBan(message)
 
     def request(self, _type_, tail, user_agent=None,
