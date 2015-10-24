@@ -21,22 +21,6 @@ class NotFound(NSError):
     pass
 
 
-class NationNotFound(NotFound):
-
-    """
-    404 NotFound for a nation
-    """
-    pass
-
-
-class RegionNotFound(NotFound):
-
-    """
-    404 not found for a region
-    """
-    pass
-
-
 class CollectError(NSError):
     pass
 

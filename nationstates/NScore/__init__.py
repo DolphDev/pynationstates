@@ -8,8 +8,6 @@ if __name__ != "__main__":
     from .nsexceptions import (
         NSError,
         NotFound,
-        NationNotFound,
-        RegionNotFound,
         APIError,
         CollectError,
         ShardError,

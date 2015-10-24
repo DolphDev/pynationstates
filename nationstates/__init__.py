@@ -4,7 +4,6 @@ import warnings
 
 if __name__ != "__main__":
     from . import NScore
-  
     from .mixins import (
         NSPropertiesMixin,
         NSSettersMixin,
@@ -233,14 +232,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.data["url"]
 
 
-class Api(Nationstates):
-
-    def __init__(self, api, value=None, shard=None,
-                 user_agent=None, auto_load=False, version=None):
-        warnings.warn(
-            "Api has been renamed to Natonstates", DeprecationWarning)
-        super(Api, self).__init__(
-            api, value, shard, user_agent, auto_load, version)
+def Api(api, value=None, shard=None,
+        user_agent=None, auto_load=False, version=None):
+    warnings.warn(
+        "Api has been renamed to Natonstates", DeprecationWarning)
+    return Nationstates(
+        api, value, shard, user_agent, auto_load, version)
 
 
 class Telegram(object):
@@ -361,5 +358,7 @@ def get_poll(id, user_agent=NScore.default_useragent):
 
 
 def gen_url(api, value=None, shard=None, version=None):
+    if value is None and not api == "world":
+        raise nsexceptions.NSError("")
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url

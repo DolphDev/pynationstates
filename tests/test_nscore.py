@@ -6,8 +6,6 @@ from nationstates.NScore import (
     RequestMixin,
     NSError,
     NotFound,
-    NationNotFound,
-    RegionNotFound,
     APIError,
     CollectError,
     ShardError)
