@@ -15,38 +15,31 @@ This is not viable, since it is a complex mess, and breaks the dynamic nature of
 The Equivelant of the above code using the Shard object is:
     
     nationstates.Shard(
-        "dispatchlist", 
-         tags=[
-         {
-            "tagtype":"dispatchcategory",
-            "tagvalue":"Factbook:History"
-         },
-         {
-            "tagtype":"dispatchsort",
-            "tagvalue":"best"
-         }
-         ])
+        dispatchcategory="Factbook:History",
+        dispatchsort="best" 
+    )
 
 
 
-While you could have all this code inside of a `nationstates.Api()`, its better to assign this to a variable and include it in the `shard` list when setting up the request.
+While you could have all this code inside of a `nationstates.Api()`, its better more readable to create the shard outside the request.
 
 
 Parameters:
 
 * Postional Argument `shard` - The shard this Shard object is representing
-* Optional Argument `tags` - Any tags you want to include. See Below
+* Optional Argument `st_tags` - Any tags you want to include. See Below
+* kwargs: Will automatically handle parameters for you. See example above.
 
 
-Shard Parameters:
+Shard Parameters (obsolete, kwargs does this for you):
 
-To add shard parameters you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. Each dictionary needs the keys "tagtype" and "tagvalue", with them reprenting the param name and the param value.
+To add shard parameters you need to format the tags argument in a paticular way. In essence it is a list of dictionaries. Each dictionary needs the keys "paramtype" and "paramvalue", with them reprenting the param name and the param value. When instantiating a new Shard, you can assign a `list`/`dict` to the optional argument  
 
     [
     {
-    "tagtype": "offset",
-    "tagvalue": "1"
+    "paramtype": "offset",
+    "paramvalue": "1"
     },
-    "tagtype": "limit",
-    "tagvalue": "14"
+    "paramtype": "limit",
+    "paramvalue": "14"
     ]

@@ -82,7 +82,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         Creates the variable self.collect and self.has_data
         """
 
-        self.collect_data = None
         self.has_data = False
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
@@ -112,20 +111,17 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         if not api in ("nation", "region", "world", "wa", "verify"):
-            raise nsexceptions.ApiTypeError("Invalid api type: {}".format(api))
+            raise nsexceptions.APIError("Invalid api type: {}".format(api))
 
         # NScore
         # This needs to be created at the start of the run
         self.api = api
         self.api_instance = NScore.Api(self.api)
 
-        if self.has_data:
-            self.collect_data = None
-
         self.value = value
         self.shard = shard
         self.user_agent = user_agent
-        self.has_data = False  # If the .__call__() is called)
+        self.has_data = False
         self.version = version
 
         if auto_load and self.user_agent:
@@ -177,7 +173,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             self.add_timestamp()
             self.has_data = self.api_instance.load(user_agent=self.user_agent)
             if self.has_data:
-                self.collect_data = None
                 return self
             else:
                 raise nsexceptions.APIError(
@@ -193,7 +188,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                         "Rate Limit Protection Blocked this Request")
                 sleep(retry_after)
                 self.load(
-                    user_agent=self.user_agent,
+                    user_agent=user_agent,
                     numattempt=(attemptsleft-1) if (not attemptsleft is None)
                     else None)
                 if self.has_data:
@@ -207,18 +202,14 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 "Rate Limit Protection Blocked this Request")
 
     def collect(self):
-        if self.collect_data:
-            return self.collect_data[self.api]
-        else:
-            self.collect_data = (self.api_instance.collect())
-            return self.collect_data[self.api]
+        if not self.has_data:
+            raise nsexceptions.NSError(
+                "Nationstates Object cannot collect without requesting API"
+                + " first")
+        return self.api_instance.collect()[self.api]
 
     def full_collect(self):
-        if self.collect_data:
-            return self.collect_data
-        else:
-            self.collect()
-        return self.collect_data
+        return {self.api: self.collect()}
 
     @property
     def data(self):
@@ -290,6 +281,7 @@ class Telegram(object):
     def user_agent(self, user_agent):
         self._user_agent = user_agent
         self.api_instance.user_agent = user_agent
+        self.api_instance.handle_user_agent(self.user_agent)
         return self
 
     def send(self, user_agent=None, return_meta=False):
@@ -318,7 +310,8 @@ def clear_ratelimit():
 
 def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, version="7", auto_load=True):
-    if user_agent == None or user_agent == NScore.default_useragent:
+    if ((user_agent == None or user_agent == NScore.default_useragent)
+            and auto_load):
         print("Warning: No user-agent set, default will be used")
     return Nationstates(api,
                         value=value,
@@ -359,6 +352,7 @@ def get_poll(id, user_agent=NScore.default_useragent):
 
 def gen_url(api, value=None, shard=None, version=None):
     if value is None and not api == "world":
-        raise nsexceptions.NSError("")
+        raise nsexceptions.NSError("{} requires parameters to generate url."
+                                   .format(value))
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
