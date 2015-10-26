@@ -138,7 +138,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def __getitem__(self, key):
         try:
-            if self.collect_data is None:
+            if self.has_data is False:
                 raise nsexceptions.CollectError(
                     "Api instance must be collected to be accessed")
             if key is self.api:
