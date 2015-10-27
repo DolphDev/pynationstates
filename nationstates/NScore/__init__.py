@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-__version__ = "0.23"
+__version__ = "0.24"
 _rltracker_ = list()
 if __name__ != "__main__":
     from . import bs4parser
