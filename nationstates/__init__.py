@@ -4,6 +4,7 @@ import warnings
 
 if __name__ != "__main__":
     from . import NScore
+    from .NScore import nsexceptions
     from .mixins import (
         NSPropertiesMixin,
         NSSettersMixin,
@@ -170,16 +171,13 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         if user_agent:
             self.user_agent = user_agent
         if self.ratelimitcheck() or no_ratelimit:
-            self.add_timestamp()
-            self.has_data = self.api_instance.load(user_agent=self.user_agent)
-            if self.has_data:
-                return self
-            else:
-                raise nsexceptions.APIError(
-                    "Nationstates API request failed.\nStatus Code: {status}"
-                    .format(status=self.data["status"])
-                )
-                return self
+            try:
+                self.add_timestamp()
+                self.has_data = self.api_instance.load(user_agent=self.user_agent)
+                if self.has_data:
+                    return self
+            except nsexceptions.NSError as err:
+                raise err
         elif not no_ratelimit:
             attemptsleft = numattempt
             while not self.ratelimitcheck():
@@ -221,14 +219,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.api_instance.get_url()
         else:
             return self.data["url"]
-
-
-def Api(api, value=None, shard=None,
-        user_agent=None, auto_load=False, version=None):
-    warnings.warn(
-        "Api has been renamed to Natonstates", DeprecationWarning)
-    return Nationstates(
-        api, value, shard, user_agent, auto_load, version)
 
 
 class Telegram(object):
