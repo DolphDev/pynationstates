@@ -12,12 +12,6 @@ class NSDict(dict):
         else:
             return super(dict, self).__getattribute__(attr)
 
-    def __repr__(self):
-        return "{name}({orginaldict})".format(
-            name=self.__class__.__name__,
-            orginaldict=super(NSDict, self).__repr__())
-
-
 def parsedict(x):
     """
     This function recursive loops through the processed xml (now dict)
