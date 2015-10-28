@@ -164,22 +164,24 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return shard
 
     def load(self, user_agent=None, no_ratelimit=False,
-             retry_after=2, numattempt=3):
-
+             retry_after=2, numattempt=3, no_loop=False):
+        # These next three if statements handle user_agents
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
         if user_agent and not self.user_agent:
             self.user_agent = user_agent
+        if not user_agent and self.user_agent:
+            user_agent = self.user_agent
         if self.ratelimitcheck() or no_ratelimit:
             try:
                 self.add_timestamp()
-                self.has_data = self.api_instance.load(
-                    user_agent=self.user_agent)
+                self.has_data = bool(self.api_instance.load(
+                    user_agent=user_agent))
                 if self.has_data:
                     return self
             except nsexceptions.NSError as err:
                 raise err
-        elif not no_ratelimit:
+        elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
             while not self.ratelimitcheck():
                 if numattempt == 0:
@@ -188,15 +190,17 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 sleep(retry_after)
                 self.load(
                     user_agent=user_agent,
-                    numattempt=(attemptsleft-1) if (not attemptsleft is None)
-                    else None)
+                    numattempt=(
+                        attemptsleft-1) if (
+                        not attemptsleft is None) else None,
+                    no_loop=True)
                 if self.has_data:
                     return self
             # In the rare case where the ratelimiter
             if self.has_data and self.ratelimitcheck():
                 return self   # is within a narrow error prone zone
             if not self.has_data and self.ratelimitcheck():
-                return self.load(no_ratelimit=True)
+                return self.load(user_agent=user_agent, no_ratelimit=True)
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
 
@@ -254,7 +258,8 @@ class Telegram(object):
         Setups a NScore.Api() instance in a way that will send a telegram.
         """
         if not (to and client_key and tgid and secret_key):
-            raise nsexceptions.APIError("All arguments for Telegrams were not supplied")
+            raise nsexceptions.APIError(
+                "All arguments for Telegrams were not supplied")
         self._user_agent = user_agent
         self.api_instance = (
             NScore.Api(

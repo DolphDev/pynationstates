@@ -199,10 +199,12 @@ class RequestMixin(ParserMixin):
             "url": data.url,
             "request_instance": data,
             "version": self.version,
-            "data_bs4": data_bs4
+            "data_bs4": data_bs4,
+            "data_xml": data.text
         }
 
         self.response_check(generated_data)
+        
         xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
         generated_data.update({
             "data": xml_parsed,
@@ -263,6 +265,12 @@ class Api(RequestMixin):
         self.session = requests.Session()
         self.handle_user_agent(user_agent)
 
+    def __nonzero__(self):
+        return bool(self.data)
+
+    def __bool__(self):
+        return self.__nonzero__()
+
     def handle_user_agent(self, user_agent):
         self.user_agent = user_agent
         self.session.headers.update({"User-Agent": self.user_agent})
@@ -294,15 +302,19 @@ class Api(RequestMixin):
         if self.user_agent is None and user_agent:
             self.handle_user_agent(user_agent)
 
+
         if telegram_load:
             self.data = self.request(
                 self.type[0], self.type[1],
                 user_agent=user_agent, telegram_load=True)
+            return self
 
         if auth_load:
             self.data = self.request(
                 self.type[0], self.type[1],
                 user_agent=user_agent, telegram_load=True)
+            return self
+
 
         if self.shard:
             self.data = self.request(
