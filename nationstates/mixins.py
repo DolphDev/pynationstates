@@ -1,12 +1,12 @@
 """
 This file contains mixins that don't have dependencies
+
 """
 
 
-class NSPropertiesMixin(object):
+class NSValueMixin(object):
 
-    """Properties for attributes that need
-    extra processing"""
+    """Mixin for value attribute"""
 
     @property
     def value(self):
@@ -17,6 +17,11 @@ class NSPropertiesMixin(object):
         self._value_store = val
         self.api_instance.type = (self.api, self.value)
 
+
+class NSShardMixin(object):
+
+    """Mixin for shard attribute"""
+
     @property
     def shard(self):
         return self._shard_store
@@ -25,6 +30,11 @@ class NSPropertiesMixin(object):
     def shard(self, val):
         self._shard_store = val
         self.api_instance.set_payload(self.shard)
+
+
+class NSUserAgentMixin(object):
+
+    """Mixin for User-Agent attribute"""
 
     @property
     def user_agent(self):
@@ -35,6 +45,11 @@ class NSPropertiesMixin(object):
         self._user_agent_store = val
         self.api_instance.handle_user_agent(self.user_agent)
 
+
+class NSVersionMixin(object):
+
+    """Mixin for version attribute"""
+
     @property
     def version(self):
         return self._version_store
@@ -43,6 +58,16 @@ class NSPropertiesMixin(object):
     def version(self, val):
         self._version_store = val
         self.api_instance.version = val
+
+
+class NSPropertiesMixin(NSValueMixin,
+                        NSShardMixin,
+                        NSUserAgentMixin,
+                        NSVersionMixin):
+
+    """Properties for attributes that need
+    extra processing"""
+    pass
 
 
 class NSSettersMixin(object):

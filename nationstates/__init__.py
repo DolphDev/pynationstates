@@ -168,12 +168,13 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
-        if user_agent:
+        if user_agent and not self.user_agent:
             self.user_agent = user_agent
         if self.ratelimitcheck() or no_ratelimit:
             try:
                 self.add_timestamp()
-                self.has_data = self.api_instance.load(user_agent=self.user_agent)
+                self.has_data = self.api_instance.load(
+                    user_agent=self.user_agent)
                 if self.has_data:
                     return self
             except nsexceptions.NSError as err:
@@ -195,7 +196,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             if self.has_data and self.ratelimitcheck():
                 return self   # is within a narrow error prone zone
             if not self.has_data and self.ratelimitcheck():
-                return self.load()
+                return self.load(no_ratelimit=True)
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
 
@@ -204,10 +205,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             raise nsexceptions.NSError(
                 "Nationstates Object cannot collect without requesting API"
                 + " first")
-        return self.api_instance.collect()[self.api]
+        return self.full_collect()[self.api]
 
     def full_collect(self):
-        return {self.api: self.collect()}
+        return self.api_instance.collect()
 
     @property
     def data(self):
@@ -252,7 +253,8 @@ class Telegram(object):
         """
         Setups a NScore.Api() instance in a way that will send a telegram.
         """
-
+        if not (to and client_key and tgid and secret_key):
+            raise nsexceptions.APIError("All arguments for Telegrams were not supplied")
         self._user_agent = user_agent
         self.api_instance = (
             NScore.Api(
@@ -300,6 +302,15 @@ def clear_ratelimit():
 
 def get(api, value=None, user_agent=NScore.default_useragent,
         shard=None, version="7", auto_load=True):
+    """
+    Wraps around the Nationstates Object by using sensible defaults
+
+    :param api: The api being accessed
+    :param value: The "value" of the api. Such as a nation/region name.
+    :param user_agent: The user_agent the program
+
+    """
+
     if ((user_agent == None or user_agent == NScore.default_useragent)
             and auto_load):
         print("Warning: No user-agent set, default will be used")
