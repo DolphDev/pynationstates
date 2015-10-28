@@ -14,5 +14,5 @@ install:
   - pip install coveralls
 # command to run tests
 script:
-  py.test tests --pep8
+  coveralls --source=py.test tests --pep8
 after_success: coveralls
