@@ -173,12 +173,12 @@ class RequestMixin(ParserMixin):
         try:
             if use_default:
                 data = self.session.get(
-                    url=url, headers={"User-Agent": default_useragent})
+                    url=url, headers={"User-Agent": default_useragent}, verify=True)
             elif use_temp_useragent:
                 data = self.session.get(
-                    url=url, headers={"User-Agent": user_agent})
+                    url=url, headers={"User-Agent": user_agent}, verify=True)
             else:
-                data = self.session.get(url=url)
+                data = self.session.get(url=url, verify=True)
         except ConnectionError as err:
             raise APIRequestError(err)
 

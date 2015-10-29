@@ -16,7 +16,7 @@ def parsedict(x):
     """
     This function recursive loops through the processed xml (now dict)
     it unorderers OrderedDicts and converts them to NSDict
-        """
+    """
     if isinstance(x, list):
         gen_list = [NSDict(parsedict(y)) if isinstance(
             parsedict(y), dict) else parsedict(y) for y in x]
