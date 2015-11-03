@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-__version__ = "0.24"
+__version__ = "0.26"
 _rltracker_ = list()
 if __name__ != "__main__":
     from . import bs4parser
@@ -135,6 +135,8 @@ class RequestMixin(ParserMixin):
     def response_check(self, data):
         if data["status"] == 400:
             raise APIError(data["data_bs4"].h1.text)
+        if data["status"] == 404:
+            raise NotFound(data["data_bs4"].h1.text)
         if data["status"] == 429:
             message = ("Nationstates API has temporary banned this IP"
                        " for Breaking the Rate Limit." +
@@ -173,7 +175,8 @@ class RequestMixin(ParserMixin):
         try:
             if use_default:
                 data = self.session.get(
-                    url=url, headers={"User-Agent": default_useragent}, verify=True)
+                    url=url, headers={"User-Agent": default_useragent},
+                    verify=True)
             elif use_temp_useragent:
                 data = self.session.get(
                     url=url, headers={"User-Agent": user_agent}, verify=True)
@@ -182,18 +185,15 @@ class RequestMixin(ParserMixin):
         except ConnectionError as err:
             raise APIRequestError(err)
 
-        if telegram_load:
+        if data.text == "0":
             return {
+                "is_verify": bool(int(data.text)),
                 "status": data.status_code,
-                "request_instance": data
-            }
-        if auth_load:
-            return {
-                "status": data.status_code,
-                "request_instance": data
+                "url": data.url,
+                "request_instance": data,
             }
 
-        data_bs4 = self.xml2bs4(data.text.encode("utf-8"))
+        data_bs4 = self.xml2bs4(data.text)
         generated_data = {
             "status": data.status_code,
             "url": data.url,
@@ -204,7 +204,18 @@ class RequestMixin(ParserMixin):
         }
 
         self.response_check(generated_data)
-        
+
+        if telegram_load:
+            return {
+                "status": generated_data["status"],
+                "request_instance": generated_data["data"]
+            }
+        if auth_load:
+            return {
+                "status": generated_data["status"],
+                "request_instance": generated_data["data"]
+            }
+
         xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
         generated_data.update({
             "data": xml_parsed,
@@ -302,7 +313,6 @@ class Api(RequestMixin):
         if self.user_agent is None and user_agent:
             self.handle_user_agent(user_agent)
 
-
         if telegram_load:
             self.data = self.request(
                 self.type[0], self.type[1],
@@ -315,14 +325,13 @@ class Api(RequestMixin):
                 user_agent=user_agent, telegram_load=True)
             return self
 
-
         if self.shard:
             self.data = self.request(
                 self.type[0], self.tail_generator(
                     self.type, self.shard), self.user_agent)
             return self.data
 
-        elif self.shard is None and self.type[0] in ["nation", "region"]:
+        elif self.shard is None and self.type[0] in ["nation", "region", "a"]:
             self.data = self.request(
                 self.type[0], self.tail_generator(
                     self.type, self.shard, StandardAPI=True), self.user_agent)

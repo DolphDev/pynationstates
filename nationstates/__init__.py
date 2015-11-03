@@ -28,7 +28,7 @@ class RateLimit(object):
     Classes that use the rate-limiter must inherit this.
 
     If a function needs to use the rate limiter, it must create
-    a RateLimit() obj and use its methods. This protect the 
+    a RateLimit() obj and use its methods. This protect the
     global state of the Rate Limiter from side effects.
 
     """
@@ -294,6 +294,104 @@ class Telegram(object):
         return False
 
 
+class AuthNationstates(Nationstates):
+
+    def __init__(self, api=None, value=None, shard=None, token=None,
+                 user_agent=None, auto_load=False, version=None,
+                 checksum=None):
+        """
+        Passes on the arguments to self.__call__()
+
+        Creates the variable self.collect and self.has_data
+        """
+
+        self.has_data = False
+
+        self.__call__(
+            api, value, shard, token, user_agent, auto_load, version, checksum)
+
+    def __call__(self, api=None, value=None, shard=[""], token=None,
+                 user_agent=None, auto_load=False,
+                 version=None, checksum=None):
+
+        if api != "nation":
+            raise NScore.APIError("Auth only supports nation checking")
+
+        if not checksum:
+            raise nsexceptions.NSError("Checksum required")
+
+        self.checksum = checksum
+        self.token = token
+        self.api = api
+        self.update_instance(self.api, value, self.token, self.checksum,
+                             shard, user_agent, version)
+
+        self.value = value
+        self.shard = shard
+        self.user_agent = user_agent
+        self.has_data = False
+        self.version = version
+
+        if auto_load and self.user_agent:
+            return self.load()
+        else:
+            if auto_load and not self.user_agent:
+                raise nsexceptions.NSError(
+                    "user_agent required for on-creation requests")
+            return self
+
+    def update_instance(self, api, value=None, token=None,
+                        checksum=None, shard=None,
+                        user_agent=None, version=None):
+        "This just creates a new instance of NScore.Api"
+        is_token = bool(token)
+        self.api_instance = NScore.Api(
+            "a",
+            value=("verify&{apitype}".format(apitype=(
+                "{api}={value}"
+                .format(api=api, value=value))) +
+                "&checksum={chs}{token}".format(chs=self.checksum, token=(
+                    "" if not is_token else "&token={token}".format(
+                        token=self.token)
+                ))))
+        self.shard = shard
+        self.user_agent = user_agent
+        self.version = version
+
+    def collect(self):
+        if self.has_data:
+            if not self.shard:
+                return NScore.bs4parser.NSDict(self.api_instance.data)
+            else:
+                return super(
+                    AuthNationstates, self).collect()
+        else:
+            raise NScore.CollectError("Request must be loaded to collect")
+
+    def is_verified(self):
+        if self.has_data:
+            if not self.shard:
+                return bool(int(self.collect()["is_verify"]))
+            else:
+                return bool(int(self.collect().verify))
+        else:
+            return False
+
+    @property
+    def value(self):
+        return self._value_store
+
+    @value.setter
+    def value(self, value):
+        self._value_store = value
+        self.update_instance(self.api, self.value,
+                             self.token, self.checksum,
+                             self.shard, self.user_agent,
+                             self.version)
+
+    def shard_bool_check(self):
+        pass
+
 def get_ratelimit():
     # To prevent dependencies
     RatelimitObj = RateLimit()
@@ -358,7 +456,7 @@ def get_poll(id, user_agent=NScore.default_useragent):
 
 def gen_url(api, value=None, shard=None, version=None):
     if value is None and not api == "world":
-        raise nsexceptions.NSError("{} requires parameters to generate url."
-                                   .format(value))
+        raise nsexceptions.NSError(
+            "gen_url requires parameters to generate url.")
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
