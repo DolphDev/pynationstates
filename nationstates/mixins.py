@@ -1,6 +1,7 @@
 """
 This file contains mixins that don't have dependencies
 
+These classes should only be inherited
 """
 
 

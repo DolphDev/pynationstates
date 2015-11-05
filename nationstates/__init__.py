@@ -6,6 +6,7 @@ if __name__ != "__main__":
     from . import NScore
     from .NScore import nsexceptions
     from .mixins import (
+        NSUserAgentMixin,
         NSPropertiesMixin,
         NSSettersMixin,
     )
@@ -13,6 +14,7 @@ else:
     import NScore
     from NScore import nsexceptions
     from mixins import (
+        NSUserAgentMixin,
         NSPropertiesMixin,
         NSSettersMixin
     )
@@ -76,7 +78,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     """
 
     def __init__(self, api, value=None, shard=None,
-                 user_agent=None, auto_load=False, version=None):
+                 user_agent=None, auto_load=False, version=None,
+                 disable_ratelimit=False):
         """
         Passes on the arguments to self.__call__()
 
@@ -84,6 +87,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
+        self.no_ratelimit = not disable_ratelimit
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -165,6 +169,11 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def load(self, user_agent=None, no_ratelimit=False,
              retry_after=2, numattempt=3, no_loop=False):
+        
+        #Decides if the ratelimiter.
+        no_ratelimit = self.no_ratelimit and no_ratelimit
+
+
         # These next three if statements handle user_agents
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -226,7 +235,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.data["url"]
 
 
-class Telegram(object):
+class Telegram(NSUserAgentMixin):
 
     """
     Telegram uses the NScore.Api object to make a telegram request.
@@ -274,12 +283,6 @@ class Telegram(object):
         )
         if auto_send:
             self.send
-
-    def user_agent(self, user_agent):
-        self._user_agent = user_agent
-        self.api_instance.user_agent = user_agent
-        self.api_instance.handle_user_agent(self.user_agent)
-        return self
 
     def send(self, user_agent=None, return_meta=False):
         """Sends the telegram"""
@@ -457,6 +460,6 @@ def get_poll(id, user_agent=NScore.default_useragent):
 def gen_url(api, value=None, shard=None, version=None):
     if value is None and not api == "world":
         raise nsexceptions.NSError(
-            "gen_url requires parameters to generate url.")
+            "{} requires parameters to generate url.".format(api))
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
