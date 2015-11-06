@@ -348,7 +348,7 @@ class Api(RequestMixin):
                     self.type, self.shard), self.user_agent, only_url=True)
             return url
 
-        elif self.shard is None and self.type[0] in ["nation", "region"]:
+        elif self.shard is None and self.type[0] in ["nation", "region", "a"]:
             url = self.request(
                 self.type[0], self.tail_generator(
                     self.type, self.shard, StandardAPI=True),

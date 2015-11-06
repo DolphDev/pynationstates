@@ -87,7 +87,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
-        self.no_ratelimit = not disable_ratelimit
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -169,10 +168,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def load(self, user_agent=None, no_ratelimit=False,
              retry_after=2, numattempt=3, no_loop=False):
-        
-        #Decides if the ratelimiter.
-        no_ratelimit = self.no_ratelimit and no_ratelimit
-
 
         # These next three if statements handle user_agents
         if not (user_agent or self.user_agent):
@@ -313,7 +308,7 @@ class AuthNationstates(Nationstates):
         self.__call__(
             api, value, shard, token, user_agent, auto_load, version, checksum)
 
-    def __call__(self, api=None, value=None, shard=[""], token=None,
+    def __call__(self, api=None, value=None, shard=None, token=None,
                  user_agent=None, auto_load=False,
                  version=None, checksum=None):
 
@@ -346,17 +341,22 @@ class AuthNationstates(Nationstates):
     def update_instance(self, api, value=None, token=None,
                         checksum=None, shard=None,
                         user_agent=None, version=None):
-        "This just creates a new instance of NScore.Api"
+        """Creates a new instance of NScore.Api
+        This method should only be used internally by this
+        Object
+        """
         is_token = bool(token)
         self.api_instance = NScore.Api(
             "a",
             value=("verify&{apitype}".format(apitype=(
                 "{api}={value}"
                 .format(api=api, value=value))) +
-                "&checksum={chs}{token}".format(chs=self.checksum, token=(
-                    "" if not is_token else "&token={token}".format(
-                        token=self.token)
-                ))))
+                "&checksum={chs}{token}"
+                .format(chs=self.checksum,
+                        token=(
+                            "" if not is_token else "&token={token}".format(
+                                token=self.token)
+                        ))))
         self.shard = shard
         self.user_agent = user_agent
         self.version = version
@@ -392,8 +392,7 @@ class AuthNationstates(Nationstates):
                              self.shard, self.user_agent,
                              self.version)
 
-    def shard_bool_check(self):
-        pass
+
 
 def get_ratelimit():
     # To prevent dependencies
@@ -414,6 +413,9 @@ def get(api, value=None, user_agent=NScore.default_useragent,
     :param api: The api being accessed
     :param value: The "value" of the api. Such as a nation/region name.
     :param user_agent: The user_agent the program
+    :param shard: list of strings or Shard() objects
+    :param version: the version
+    :param auto_load: If the instance should request the api on creation
 
     """
 
@@ -426,6 +428,21 @@ def get(api, value=None, user_agent=NScore.default_useragent,
                         shard=shard,
                         version=version,
                         auto_load=auto_load)
+
+
+def get_auth(nation, checksum, shard=None, token=None,
+             user_agent=NScore.default_useragent, version=__apiversion__,
+             auto_load=True):
+    if ((user_agent == None or user_agent == NScore.default_useragent)
+            and auto_load):
+        print("Warning: No user-agent set, default will be used")
+    return AuthNationstates("nation",
+                            value=nation,
+                            checksum=checksum,
+                            shard=shard,
+                            token=token,
+                            user_agent=user_agent,
+                            auto_load=auto_load)
 
 
 def get_nation(nation, shard=None, user_agent=NScore.default_useragent,
@@ -457,9 +474,15 @@ def get_poll(id, user_agent=NScore.default_useragent):
     return get_world(shard=[shard_obj], user_agent=user_agent).collect()
 
 
-def gen_url(api, value=None, shard=None, version=None):
+def gen_url(api, value=None, shard=None, version=None,
+            checksum=None, token=None):
     if value is None and not api == "world":
         raise nsexceptions.NSError(
             "{} requires parameters to generate url.".format(api))
+    if checksum and api == "nation":
+        return get_auth(value, shard=shard, version=version,
+                        user_agent="", checksum=checksum, token=token,
+                        auto_load=False).url
+
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
