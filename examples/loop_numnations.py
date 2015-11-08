@@ -6,7 +6,7 @@ This example prints the number of nations in the world every 10 seconds
 import time
 import nationstates
 
-mycall = nationstates.get_world(shard=["numnations"])
+mycall = nationstates.get_world(shard=["numnations"], auto_load=False)
 while True:
     mycall.load("My awesome user_agent | By The United Island Tribes")
     if mycall.has_data:
