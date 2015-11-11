@@ -12,6 +12,8 @@ region = nationstates.Nationstates("region", "Balder").load(USERAGENT)
 
 
 
+
+
 """
 These Test Makes sure that data accesses is consistant. (and that it can be accessed)
 """
