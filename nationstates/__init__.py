@@ -210,7 +210,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def collect(self):
         if not self.has_data:
-            raise nsexceptions.NSError(
+            raise NScore.NSError(
                 "Nationstates Object cannot collect without requesting API"
                 + " first")
         return self.full_collect()[self.api]
