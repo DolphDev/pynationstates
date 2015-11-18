@@ -16,7 +16,7 @@ if __name__ != "__main__":
         URLError,
         RateLimitCatch)
 
-
+API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
 default_useragent = "NationStates Python API Wrapper V {version}".format(
     version=__version__)
 
@@ -166,8 +166,7 @@ class RequestMixin(ParserMixin):
         use_default = user_agent is None and self.user_agent is None
         use_temp_useragent = (user_agent != self.user_agent) and user_agent
 
-        url = ("https://www.nationstates.net/cgi-bin/api.cgi"
-               + (tail[:-1] if tail[-1] == ";" else tail)
+        url = (API_URL + (tail[:-1] if tail[-1] == ";" else tail)
                + ("&v={v}".format(v=self.version) if self.version else ""))
         if only_url:
             return url
@@ -183,7 +182,7 @@ class RequestMixin(ParserMixin):
             else:
                 data = self.session.get(url=url, verify=True)
         except ConnectionError as err:
-            raise APIRequestError(err)
+            raise (err)
 
         if data.text == "0":
             return {
