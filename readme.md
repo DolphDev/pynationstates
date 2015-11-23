@@ -32,7 +32,7 @@ The code
 
     print(data)
 
-When we run the code (Assuming there were no errors on Nationstates end), The code output this
+Output
 
     {'numnations': u'119228'}
 
