@@ -104,11 +104,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         :param value: The value of the API type (For the example,
             the nation to search when using "nation")
 
-        :param shard: A list (preferablly set) of nationstate shards that
-            NScore uses to both request and parse data from nationstates)
+        :param shard: A list of nationstates shard(s)
 
-        :param user_agent: A custom useragent if needed. The Nationstates
-            Module has a defualt message if this is left blank.
+        :param user_agent: A custom useragent. To be used my this module.
+            if not set, it will use a default message.
 
         :param auto_load: if a user_agent is supplied and this is set to True
 
@@ -341,7 +340,8 @@ class AuthNationstates(Nationstates):
     def update_instance(self, api, value=None, token=None,
                         checksum=None, shard=None,
                         user_agent=None, version=None):
-        """Creates a new instance of NScore.Api
+        """
+        Creates a new instance of NScore.Api
         This method should only be used internally by this
         Object
         """
@@ -411,10 +411,10 @@ def get(api, value=None, user_agent=NScore.default_useragent,
     Wraps around the Nationstates Object by using sensible defaults
 
     :param api: The api being accessed
-    :param value: The "value" of the api. Such as a nation/region name.
-    :param user_agent: The user_agent the program
+    :param value: The value of the api. Such as a nation/region name.
+    :param user_agent: The User-Agent the program
     :param shard: list of strings or Shard() objects
-    :param version: the version
+    :param version: The version
     :param auto_load: If the instance should request the api on creation
 
     """

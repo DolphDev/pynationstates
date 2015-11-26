@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import quote as escape_url
 from bs4 import BeautifulSoup
 
 __version__ = "0.26"
@@ -116,12 +117,13 @@ class RequestMixin(ParserMixin):
     # Methods used for creating and sending requests to the api
 
     def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
+        api = _type_[0]
+        value = escape_url(_type_[1])
         if StandardAPI:
-            return "?" + _type_[0] + ("=" + _type_[1])
-        string = "?" + \
-            _type_[0] \
-            + ("=" + _type_[1] + "&q=") if (not _type_[0] == "world") else (
-                "?q=")
+            return "?" + api + ("=" + value)
+        string = ("?" + api + ("=" + value + "&q=")
+                  if (not api == "world") else ("?q=")
+                  )
         tailcollecter = ""
         for x in args:
             if (isinstance(x, Shard)):  # Shard Objects
@@ -246,7 +248,7 @@ class Api(RequestMixin):
             The set/list itself can include either strings and/or the
             Shard Object to represent shards
 
-        :param version: (optional) a str that specify the version of the API to request.        
+        :param version: (optional) a str that specify the version of the API to request.
 
         calls __call__ method to make these values creatable during
             Initialization and also accept any changes
@@ -304,7 +306,7 @@ class Api(RequestMixin):
 
     def load(self, user_agent=None, telegram_load=False, auth_load=False):
         """
-        Sends the request for the current _type_, value, and shard. 
+        Sends the request for the current _type_, value, and shard.
 
         Special parameters are used for telegram requests
         """
