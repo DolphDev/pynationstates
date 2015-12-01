@@ -6,7 +6,10 @@ from bs4 import BeautifulSoup
 __version__ = "0.26"
 _rltracker_ = list()
 if __name__ != "__main__":
-    from . import bs4parser
+    try:
+        from . import bs4parser
+    except ImportError:
+        import bs4parser
     from .nsexceptions import (
         NSError,
         NotFound,
@@ -21,7 +24,7 @@ if __name__ != "__main__":
 try:
     from urllib.parse import quote as escape_url
 except:
-    import urllib.quote as escape_url
+    from urllib import quote as escape_url
 
 API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
 default_useragent = "NationStates Python API Wrapper V {version}".format(
