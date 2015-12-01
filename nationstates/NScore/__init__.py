@@ -127,7 +127,8 @@ class RequestMixin(ParserMixin):
 
     def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
         api = _type_[0]
-        value = (escape_url(("" if not _type_[1] else _type_[1]).encode("ascii")))
+        value = (
+            escape_url(("" if not _type_[1] else _type_[1]).encode("ascii")))
         if StandardAPI:
             return "?" + api + ("=" + value)
         string = ("?" + api + ("=" + value + "&q=")

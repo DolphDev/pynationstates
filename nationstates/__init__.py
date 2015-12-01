@@ -393,7 +393,6 @@ class AuthNationstates(Nationstates):
                              self.version)
 
 
-
 def get_ratelimit():
     # To prevent dependencies
     RatelimitObj = RateLimit()
