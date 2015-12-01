@@ -9,6 +9,8 @@ if __name__ != "__main__":
         NSUserAgentMixin,
         NSPropertiesMixin,
         NSSettersMixin,
+        escape_url
+
     )
 else:
     import NScore
@@ -16,7 +18,8 @@ else:
     from mixins import (
         NSUserAgentMixin,
         NSPropertiesMixin,
-        NSSettersMixin
+        NSSettersMixin,
+        escape_url
     )
 # this is used in nationstates get_??? methods
 __apiversion__ = "7"
@@ -387,7 +390,9 @@ class AuthNationstates(Nationstates):
     @value.setter
     def value(self, value):
         self._value_store = value
-        self.update_instance(self.api, self.value,
+        value = (None if self.api == "world" else escape_url(
+            value.encode("ascii")))  # To escape the value
+        self.update_instance(self.api, value,
                              self.token, self.checksum,
                              self.shard, self.user_agent,
                              self.version)

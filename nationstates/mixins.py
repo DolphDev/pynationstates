@@ -1,8 +1,13 @@
 """
 This file contains mixins that don't have dependencies
+    (outside of python stlb)
 
 These classes should only be inherited
 """
+try:
+    from urllib.parse import quote as escape_url
+except:
+    from urllib import quote as escape_url
 
 
 class NSValueMixin(object):
@@ -16,7 +21,9 @@ class NSValueMixin(object):
     @value.setter
     def value(self, val):
         self._value_store = val
-        self.api_instance.type = (self.api, self.value)
+        self.api_instance.type = (self.api, (
+            (None if self.api == "world" else escape_url(
+                val.encode("ascii")))))
 
 
 class NSShardMixin(object):

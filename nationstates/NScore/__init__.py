@@ -21,10 +21,7 @@ if __name__ != "__main__":
         URLError,
         RateLimitCatch)
 
-try:
-    from urllib.parse import quote as escape_url
-except:
-    from urllib import quote as escape_url
+
 
 API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
 default_useragent = "NationStates Python API Wrapper V {version}".format(
@@ -127,8 +124,7 @@ class RequestMixin(ParserMixin):
 
     def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
         api = _type_[0]
-        value = (
-            escape_url(("" if not _type_[1] else _type_[1]).encode("ascii")))
+        value = _type_[1]
         if StandardAPI:
             return "?" + api + ("=" + value)
         string = ("?" + api + ("=" + value + "&q=")
