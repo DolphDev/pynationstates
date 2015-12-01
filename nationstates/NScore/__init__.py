@@ -1,5 +1,6 @@
 import requests
-from urllib.parse import quote as escape_url
+
+
 from bs4 import BeautifulSoup
 
 __version__ = "0.26"
@@ -16,6 +17,11 @@ if __name__ != "__main__":
         APIRateLimitBan,
         URLError,
         RateLimitCatch)
+
+try:
+    from urllib.parse import quote as escape_url
+except:
+    import urllib.quote as escape_url
 
 API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
 default_useragent = "NationStates Python API Wrapper V {version}".format(
@@ -118,7 +124,7 @@ class RequestMixin(ParserMixin):
 
     def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
         api = _type_[0]
-        value = escape_url(_type_[1])
+        value = (escape_url(("" if not _type_[1] else _type_[1]).encode("ascii")))
         if StandardAPI:
             return "?" + api + ("=" + value)
         string = ("?" + api + ("=" + value + "&q=")
