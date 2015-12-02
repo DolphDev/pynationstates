@@ -109,10 +109,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         :param shard: A list of nationstates shard(s)
 
-        :param user_agent: A custom useragent. To be used my this module.
+        :param user_agent: A custom useragent.
             if not set, it will use a default message.
 
-        :param auto_load: if a user_agent is supplied and this is set to True
+        :param auto_load: If True, This object will load on creation
 
         """
 
@@ -130,13 +130,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.version = version
 
-        if auto_load and self.user_agent:
+        if auto_load:
             return self.load()
-        else:
-            if auto_load and not self.user_agent:
-                raise nsexceptions.NSError(
-                    "user_agent required for on-creation requests")
-            return self
 
     def __repr__(self):
         return "NS({type}, {value})".format(

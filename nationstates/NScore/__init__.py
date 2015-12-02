@@ -22,9 +22,8 @@ if __name__ != "__main__":
         RateLimitCatch)
 
 
-
 API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
-default_useragent = "NationStates Python API Wrapper V {version}".format(
+default_useragent = "python-nationstates\{version}".format(
     version=__version__)
 
 
