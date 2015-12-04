@@ -3,7 +3,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-__version__ = "0.27"
+__version__ = "0.1.27.27"
 _rltracker_ = list()
 if __name__ != "__main__":
     try:
@@ -64,7 +64,7 @@ class Shard(object):
                 "{pn}={pv}".format(
                     pn=x["paramtype"], pv=x["paramvalue"]) for x in self.tags]
             repl_text = ",".join(gen_repr)
-            return ("{classname}({ShardName},{tags})").format(
+            return ("\{classname}({ShardName},{tags})").format(
                 classname=self.__class__.__name__,
                 ShardName=self.shardname,
                 tags=repl_text)
