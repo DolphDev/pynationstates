@@ -1,14 +1,14 @@
 """
 Nationstates API Wrapper.
 
-This example prints the number of nations in the world every 10 seconds
+This example prints the number of nations in the world every 30 seconds
 """
 import time
 import nationstates
 
 mycall = nationstates.get_world(shard=["numnations"], auto_load=False)
 while True:
-    mycall.load("My awesome user_agent | By The United Island Tribes")
+    mycall.load("Collecting the number of nations in the world | By UIT")
     if mycall.has_data:
         print(mycall.numnations)
-        time.sleep(0.5)
+        time.sleep(30)
