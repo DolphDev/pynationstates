@@ -1,6 +1,5 @@
 from time import time as timestamp
 from time import sleep
-import warnings
 
 if __name__ != "__main__":
     from . import NScore
