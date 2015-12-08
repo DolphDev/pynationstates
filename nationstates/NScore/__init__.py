@@ -23,7 +23,7 @@ if __name__ != "__main__":
 
 
 API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
-default_useragent = "python-nationstates\{version}".format(
+default_useragent = "python-nationstates\\{version}".format(
     version=__version__)
 
 
@@ -284,6 +284,9 @@ class Api(RequestMixin):
 
     def __nonzero__(self):
         return bool(self.data)
+
+    def __del__(self):
+        self.session.close()
 
     def __bool__(self):
         return self.__nonzero__()
