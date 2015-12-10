@@ -3,11 +3,11 @@ import nationstates
 
 
 
-# No requests are made for this, this just silences the warning
+# No requests are made for this, this just silences the ua warning
 ua = ""
 
 
-# These Tests make sure that Nationstates obj isnt affected by accepted values
+# These Tests make sure that Nationstates obj keeps concurrent all object values
 
 class nationstates_methods_version(unittest.TestCase):
 
@@ -113,6 +113,6 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         wa_obj = nationstates.get_wa("1", shard=["no_shard"], auto_load=False, user_agent=ua)
         wa_obj.set_useragent(new_useragent)
         self.assertEqual(
-            wa_obj.user_agent, wa_obj.api_instance.user_agent)
+            wa_obj.user_agent, wa_obj.api_instance.user_agent, new_useragent)
         self.assertEqual(new_useragent, wa_obj.api_instance.session.headers["User-Agent"])
 

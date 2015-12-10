@@ -1,7 +1,7 @@
 import unittest
 import nationstates as ns
 
-USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman."
+USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by The United Island Tribes."
 
 
 

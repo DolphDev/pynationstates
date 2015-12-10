@@ -21,7 +21,7 @@ class nationstates_rate_limiting_handeling(unittest.TestCase):
 
 class nationstates_rate_limiting_checking(unittest.TestCase):
 
-    def test_rate_limiting_check_isFall(self):
+    def test_rate_limiting_check_isFalse(self):
         """This Tests whether or Not the rate limiter catches
         a rate limit break """
         nsinstance = Nationstates("world")
