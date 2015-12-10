@@ -89,6 +89,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
+        self.connection_closed = True
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -133,8 +134,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.load()
 
     def __repr__(self):
-        return "NS({type}, {value})".format(
-            type=self.api, value=self.value)
+        if self.api != "world":
+            return "<ns:{type}:{value}>)".format(
+                type=self.api, value=self.value)
+        else:
+            return "<ns:world:shard({shardlen})".format(
+                shardlen=len(self.shard))
 
     def __getitem__(self, key):
         try:
@@ -213,6 +218,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def full_collect(self):
         return self.api_instance.collect()
+
+    def close_connection(self):
+        self.api_instance.__del__()
+        self.connection_closed = True
 
     @property
     def data(self):
