@@ -89,7 +89,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
-        self.connection_closed = True
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -218,10 +217,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def full_collect(self):
         return self.api_instance.collect()
-
-    def close_connection(self):
-        self.api_instance.__del__()
-        self.connection_closed = True
 
     @property
     def data(self):
