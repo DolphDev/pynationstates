@@ -1,6 +1,9 @@
 from time import time as timestamp
 from time import sleep
 
+import copy
+
+
 if __name__ != "__main__":
     from . import NScore
     from .NScore import exceptions
@@ -22,6 +25,7 @@ else:
     )
 # this is used in nationstates get_??? methods
 __apiversion__ = "7"
+
 
 class RateLimit(object):
 
@@ -88,6 +92,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
+        self.api_instance = NScore.Api(api)
 
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
@@ -122,7 +127,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         # NScore
         # This needs to be created at the start of the run
         self.api = api
-        self.api_instance = NScore.Api(self.api)
 
         self.value = value
         self.shard = shard
@@ -149,13 +153,19 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.collect()
         return self.collect()[key]
 
-
     def __getattr__(self, attr):
         if self.has_data:
             if attr in self.collect().keys():
                 return self.collect()[attr]
         raise AttributeError('\'%s\' has no attribute \'%s\'' % (type(self),
                                                                  attr))
+
+    def __copy__(self):
+        proto_copy = Nationstates(
+            self.api, self.value, self.shard, self.user_agent, self.version)
+        proto_copy.has_data = self.has_data
+        proto_copy.api_instance = copy.copy(self.api_instance)
+        return proto_copy
 
     def shard_handeler(self, shard):
         if not isinstance(shard, list):
@@ -393,6 +403,28 @@ class AuthNationstates(Nationstates):
                              self.version)
 
 
+class Api(object):
+
+    def __init__(self):
+        self.nsobj = Nationstates("world")
+
+    def call(self, api, value, shard, user_agent, auto_load, version):
+        self.nsobj(api, value=value, shard=shard,
+                   user_agent=user_agent, auto_load=auto_load, version=version)
+        return self.nsobj
+
+    def request(self, api, value=None, shard=None,
+                user_agent=None, auto_load=False,
+                version="7"):
+        req = copy.copy(self.call(api, value, shard, user_agent, auto_load, version))
+        req.api_instance.__del__()
+        return req
+
+a = Api().request("nation", "The United Island Tribes")
+
+
+
+
 def get_ratelimit():
     # To prevent dependencies
     RatelimitObj = RateLimit()
@@ -485,4 +517,3 @@ def gen_url(api, value=None, shard=None, version=None,
 
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
-

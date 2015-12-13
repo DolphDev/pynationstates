@@ -1,8 +1,5 @@
 from xmltodict import parse
-if __name__ != "__main__":
-    from . import exceptions
-else:
-    import exceptions
+
 
 class NSDict(dict):
 
@@ -15,7 +12,6 @@ class NSDict(dict):
         else:
             return super(dict, self).__getattribute__(attr)
 
-
 def parsedict(x):
     """
     This function recursive loops through the processed xml (now dict)
@@ -25,8 +21,8 @@ def parsedict(x):
         gen_list = [NSDict(parsedict(y)) if isinstance(
             parsedict(y), dict) else parsedict(y) for y in x]
         return gen_list
-        if isinstance(x, str):
-            return x
+    if isinstance(x, str):
+        return x
     if isinstance(x, dict):
         newdict = {}
         for key in x.keys():
@@ -43,7 +39,4 @@ def parsedict(x):
 
 
 def parsetree(xml):
-    try:
-        return NSDict(parsedict(parse(xml)))
-    except exceptions.GarbageXMLerror as err:
-        raise exceptions.GarbageXMLError(err)
+    return NSDict(parsedict(parse(xml)))
