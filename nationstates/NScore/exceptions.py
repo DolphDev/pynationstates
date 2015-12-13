@@ -1,6 +1,5 @@
 from requests.exceptions import ConnectionError
-
-
+from xml.parsers.expat import ExpatError
 
 class NSError(Exception):
 
@@ -62,3 +61,6 @@ class APIRequestError(APIError, ConnectionError):
 class APIRateLimitBan(APIError):
     pass
 
+
+class GarbageXMLerror(APIError, ExpatError):
+    pass

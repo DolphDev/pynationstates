@@ -286,7 +286,11 @@ class Api(RequestMixin):
         return bool(self.data)
 
     def __del__(self):
-        self.session.close()
+        try:
+            self.session.close()
+        except ReferenceError:
+            """GC Fix"""
+            pass
 
     def __bool__(self):
         return self.__nonzero__()

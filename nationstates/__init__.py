@@ -23,7 +23,6 @@ else:
 # this is used in nationstates get_??? methods
 __apiversion__ = "7"
 
-
 class RateLimit(object):
 
     """
