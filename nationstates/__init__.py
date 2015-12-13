@@ -420,9 +420,6 @@ class Api(object):
         req.api_instance.__del__()
         return req
 
-a = Api().request("nation", "The United Island Tribes")
-
-
 
 
 def get_ratelimit():
