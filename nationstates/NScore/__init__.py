@@ -10,7 +10,7 @@ if __name__ != "__main__":
         from . import bs4parser
     except ImportError:
         import bs4parser
-    from .nsexceptions import (
+    from .exceptions import (
         NSError,
         NotFound,
         APIError,

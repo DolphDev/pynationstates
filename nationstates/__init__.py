@@ -3,7 +3,7 @@ from time import sleep
 
 if __name__ != "__main__":
     from . import NScore
-    from .NScore import nsexceptions
+    from .NScore import exceptions
     from .mixins import (
         NSUserAgentMixin,
         NSPropertiesMixin,
@@ -13,7 +13,7 @@ if __name__ != "__main__":
     )
 else:
     import NScore
-    from NScore import nsexceptions
+    from NScore import exceptions
     from mixins import (
         NSUserAgentMixin,
         NSPropertiesMixin,
@@ -113,10 +113,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         :param auto_load: If True, This object will load on creation
 
+        :param version: The Api version to request.
+
         """
 
         if not api in ("nation", "region", "world", "wa", "verify"):
-            raise nsexceptions.APIError("Invalid api type: {}".format(api))
+            raise exceptions.APIError("Invalid api type: {}".format(api))
 
         # NScore
         # This needs to be created at the start of the run
@@ -141,17 +143,13 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 shardlen=len(self.shard))
 
     def __getitem__(self, key):
-        try:
-            if self.has_data is False:
-                raise nsexceptions.CollectError(
-                    "Api instance must be collected to be accessed")
-            if key is self.api:
-                return self.collect()
-            return self.collect()[key]
-        except KeyError as err:
-            raise err
-        except nsexceptions.NSError as err:
-            raise err
+        if self.has_data is False:
+            raise exceptions.CollectError(
+                "Request Required to access getitem")
+        if key is self.api:
+            return self.collect()
+        return self.collect()[key]
+
 
     def __getattr__(self, attr):
         if self.has_data:
@@ -183,7 +181,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     user_agent=user_agent))
                 if self.has_data:
                     return self
-            except nsexceptions.NSError as err:
+            except exceptions.NSError as err:
                 raise err
         elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
@@ -262,7 +260,7 @@ class Telegram(NSUserAgentMixin):
         Setups a NScore.Api() instance in a way that will send a telegram.
         """
         if not (to and client_key and tgid and secret_key):
-            raise nsexceptions.APIError(
+            raise exceptions.APIError(
                 "All arguments for Telegrams were not supplied")
         self._user_agent = user_agent
         self.api_instance = (
@@ -316,7 +314,7 @@ class AuthNationstates(Nationstates):
             raise NScore.APIError("Auth only supports nation checking")
 
         if not checksum:
-            raise nsexceptions.NSError("Checksum required")
+            raise exceptions.NSError("Checksum required")
 
         self.checksum = checksum
         self.token = token
@@ -334,7 +332,7 @@ class AuthNationstates(Nationstates):
             return self.load()
         else:
             if auto_load and not self.user_agent:
-                raise nsexceptions.NSError(
+                raise exceptions.NSError(
                     "user_agent required for on-creation requests")
             return self
 
@@ -479,7 +477,7 @@ def get_poll(id, user_agent=NScore.default_useragent):
 def gen_url(api, value=None, shard=None, version=None,
             checksum=None, token=None):
     if value is None and not api == "world":
-        raise nsexceptions.NSError(
+        raise exceptions.NSError(
             "{} requires parameters to generate url.".format(api))
     if checksum and api == "nation":
         return get_auth(value, shard=shard, version=version,
@@ -488,3 +486,4 @@ def gen_url(api, value=None, shard=None, version=None,
 
     return get(api, value=value, shard=shard,
                version=version, user_agent="", auto_load=False).url
+
