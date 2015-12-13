@@ -136,7 +136,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def __repr__(self):
         if self.api != "world":
-            return "<ns:{type}:{value}>)".format(
+            return "<ns:{type}:{value}>".format(
                 type=self.api, value=self.value)
         else:
             return "<ns:world:shard({shardlen})".format(
