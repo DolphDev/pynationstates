@@ -405,8 +405,9 @@ class AuthNationstates(Nationstates):
 
 class Api(object):
 
-    def __init__(self):
-        self.nsobj = Nationstates("world")
+    def __init__(self, user_agent=None):
+        self.nsobj = Nationstates("world", auto_load=False)
+        self.user_agent = user_agent if user_agent else None
 
     def call(self, api, value, shard, user_agent, auto_load, version):
         self.nsobj(api, value=value, shard=shard,
@@ -414,13 +415,38 @@ class Api(object):
         return self.nsobj
 
     def request(self, api, value=None, shard=None,
-                user_agent=None, auto_load=False,
-                version="7"):
-        req = copy.copy(self.call(api, value, shard, user_agent, auto_load, version))
-        req.api_instance.__del__()
+                user_agent=None, auto_load=True,
+                version=__apiversion__):
+        useragent = self.user_agent if not user_agent else user_agent
+        req = copy.copy(
+            self.call(api, value, shard, useragent, auto_load, version))
+        req.api_instance.session = self.api_instance.session
         return req
 
+    def get_nation(self, value=None, shard=None,
+                   user_agent=None, auto_load=True,
+                   version=__apiversion__):
+        return self.request("nation", value, shard, user_agent,
+                            auto_load, version)
 
+    def get_region(self, value=None, shard=None,
+                   user_agent=None, auto_load=True,
+                   version=__apiversion__):
+        return self.request("region", value, shard, user_agent,
+                            auto_load, version)
+
+    def get_world(self, shard=None,
+                  user_agent=None, auto_load=True,
+                  version=__apiversion__):
+        return self.request("world", None, shard, user_agent,
+                            auto_load, version)
+
+
+    def get_region(self, council, shard=None,
+                   user_agent=None, auto_load=True,
+                   version=__apiversion__):
+        return self.request("region", council, shard, user_agent,
+                            auto_load, version)
 
 def get_ratelimit():
     # To prevent dependencies

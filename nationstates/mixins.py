@@ -80,8 +80,7 @@ class NSPropertiesMixin(NSValueMixin,
 
 class NSSettersMixin(object):
 
-    """This allows a more tradition creation and editing of
-    Nationstates Objects"""
+    """Methods for changing attributes"""
 
     def set_value(self, value):
         self.value = value
