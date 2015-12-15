@@ -132,9 +132,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.shard = shard
         self.user_agent = user_agent
         self.has_data = False
+        self.auto_load_bool = auto_load
         self.version = version
 
-        if auto_load:
+        if auto_load is True:
             return self.load()
 
     def __repr__(self):
@@ -162,7 +163,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def __copy__(self):
         proto_copy = Nationstates(
-            self.api, self.value, self.shard, self.user_agent, self.version)
+            self.api, self.value, self.shard, self.user_agent, self.auto_load_bool, self.version)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
         return proto_copy
@@ -405,6 +406,7 @@ class AuthNationstates(Nationstates):
 
 class Api(object):
 
+
     def __init__(self, user_agent=None):
         self.nsobj = Nationstates("world", auto_load=False)
         self.user_agent = user_agent if user_agent else None
@@ -420,7 +422,7 @@ class Api(object):
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self.call(api, value, shard, useragent, auto_load, version))
-        req.api_instance.session = self.api_instance.session
+        req.api_instance.session = self.nsobj.api_instance.session
         return req
 
     def get_nation(self, value=None, shard=None,
@@ -439,13 +441,6 @@ class Api(object):
                   user_agent=None, auto_load=True,
                   version=__apiversion__):
         return self.request("world", None, shard, user_agent,
-                            auto_load, version)
-
-
-    def get_region(self, council, shard=None,
-                   user_agent=None, auto_load=True,
-                   version=__apiversion__):
-        return self.request("region", council, shard, user_agent,
                             auto_load, version)
 
 def get_ratelimit():

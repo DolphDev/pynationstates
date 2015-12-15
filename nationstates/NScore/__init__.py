@@ -243,8 +243,8 @@ class Api(RequestMixin):
 
         :param _type_: Supplies the type of request.
             (accepts "nation", "region", "world", "wa")
-
         :param value: (optional) Value for the api type.
+
             (Required for "nation", "region", "wa")
             No default value. If not supplied, it will return an error
             (unless _type_ is "world")
