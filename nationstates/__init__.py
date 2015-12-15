@@ -443,6 +443,14 @@ class Api(object):
         return self.request("world", None, shard, user_agent,
                             auto_load, version)
 
+
+    def get_wa(self, council=None, shard=None,
+                   user_agent=None, auto_load=True,
+                   version=__apiversion__):
+        return self.request("nation", council, shard, user_agent,
+                            auto_load, version)
+
+
 def get_ratelimit():
     # To prevent dependencies
     RatelimitObj = RateLimit()
