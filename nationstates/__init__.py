@@ -413,7 +413,7 @@ class Api(object):
 
 
     def __init__(self, user_agent=None):
-        self.nsobj = Nationstates("world", shard=[], auto_load=False)
+        self.nsobj = Nationstates("world", shard=None, auto_load=False)
         self.user_agent = user_agent if user_agent else None
 
 

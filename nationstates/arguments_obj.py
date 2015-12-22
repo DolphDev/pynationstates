@@ -1,5 +1,7 @@
-from NScore import exceptions
-
+try:
+    from .NScore import exceptions
+except ImportError:
+    from NScore import exceptions
 
 class NSArgs(object):
 
@@ -10,7 +12,7 @@ class NSArgs(object):
             raise exceptions.NSError("value must be type(str)")
         if (not isinstance(shard, list)) != (shard is None):
             raise exceptions.NSError("shard must be type(list)")
-        if not isinstance(user_agent, str):
+        if not isinstance(user_agent, str) != (user_agent is None):
             raise exceptions.NSError("user_agent must be type(str)")
         if not isinstance(auto_load, bool):
             raise exceptions.NSError("auto_load must be type(bool)")
