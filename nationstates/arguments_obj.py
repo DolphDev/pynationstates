@@ -1,6 +1,6 @@
 try:
     from .NScore import exceptions
-except ImportError:
+except (ImportError, SystemError):
     from NScore import exceptions
 
 class NSArgs(object):

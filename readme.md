@@ -26,7 +26,8 @@ The code
     import nationstates
 	
     #This creates a Nationstates Object
-    call = nationstates.get_world(shard=["numnations"])
+    api = nationstates.Api("My Awesome Application")
+    call = api.get_world(shard=["numnations"])
 
     data = call.collect()
 
