@@ -110,7 +110,6 @@ class ParserMixin(object):
 
     def xml2bs4(self, xml):
         return (BeautifulSoup(xml, "html.parser"))
-    # Parses XML
 
     def xmlparser(self, _type_, xml):
         parsedsoup = bs4parser.parsetree(xml)
@@ -286,6 +285,7 @@ class Api(RequestMixin):
         return bool(self.data)
 
     def __del__(self):
+        
         try:
             self.session.close()
         except ReferenceError:
@@ -327,12 +327,6 @@ class Api(RequestMixin):
             self.handle_user_agent(user_agent)
 
         if telegram_load:
-            self.data = self.request(
-                self.type[0], self.type[1],
-                user_agent=user_agent, telegram_load=True)
-            return self
-
-        if auth_load:
             self.data = self.request(
                 self.type[0], self.type[1],
                 user_agent=user_agent, telegram_load=True)

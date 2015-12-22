@@ -6,6 +6,7 @@ import copy
 
 if __name__ != "__main__":
     from . import NScore
+    from .arguments_obj import NSArgs
     from .NScore import exceptions
     from .mixins import (
         NSUserAgentMixin,
@@ -17,6 +18,7 @@ if __name__ != "__main__":
 else:
     import NScore
     from NScore import exceptions
+    from arguments_obj import NSArgs
     from mixins import (
         NSUserAgentMixin,
         NSPropertiesMixin,
@@ -121,21 +123,22 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         """
 
-        if not api in ("nation", "region", "world", "wa", "verify"):
+        args = NSArgs(api, value, shard, user_agent, auto_load,version)
+        if not args.api in ("nation", "region", "world", "wa", "verify"):
             raise exceptions.APIError("Invalid api type: {}".format(api))
 
         # NScore
         # This needs to be created at the start of the run
-        self.api = api
+        self.api = args.api
 
-        self.value = value
-        self.shard = shard
-        self.user_agent = user_agent
+        self.value = args.value
+        self.shard = args.shard
+        self.user_agent = args.user_agent
         self.has_data = False
-        self.auto_load_bool = auto_load
-        self.version = version
+        self.auto_load_bool = args.auto_load
+        self.version = args.version
 
-        if auto_load is True:
+        if args.auto_load is True:
             return self.load()
 
     def __repr__(self):
@@ -302,9 +305,9 @@ class Telegram(NSUserAgentMixin):
 
 class AuthNationstates(Nationstates):
 
-    def __init__(self, api=None, value=None, shard=None, token=None,
+    def __init__(self, api=None, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
-                 checksum=None):
+                 checksum=None, token=None):
         """
         Passes on the arguments to self.__call__()
 
@@ -314,12 +317,13 @@ class AuthNationstates(Nationstates):
         self.has_data = False
 
         self.__call__(
-            api, value, shard, token, user_agent, auto_load, version, checksum)
+            api, value, shard, user_agent, auto_load, version, checksum, token)
 
-    def __call__(self, api=None, value=None, shard=None, token=None,
+    def __call__(self, api=None, value=None, shard=None,
                  user_agent=None, auto_load=False,
-                 version=None, checksum=None):
+                 version=None, checksum=None, token=None):
 
+        NSArgs(api, value, shard, user_agent, auto_load, version)
         if api != "nation":
             raise NScore.APIError("Auth only supports nation checking")
 
@@ -404,12 +408,14 @@ class AuthNationstates(Nationstates):
                              self.version)
 
 
+
 class Api(object):
 
 
     def __init__(self, user_agent=None):
-        self.nsobj = Nationstates("world", auto_load=False)
+        self.nsobj = Nationstates("world", shard=[], auto_load=False)
         self.user_agent = user_agent if user_agent else None
+
 
     def call(self, api, value, shard, user_agent, auto_load, version):
         self.nsobj(api, value=value, shard=shard,
@@ -437,7 +443,7 @@ class Api(object):
         return self.request("region", value, shard, user_agent,
                             auto_load, version)
 
-    def get_world(self, shard=None,
+    def get_world(self, shard=[],
                   user_agent=None, auto_load=True,
                   version=__apiversion__):
         return self.request("world", None, shard, user_agent,

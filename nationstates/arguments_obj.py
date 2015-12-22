@@ -1,0 +1,30 @@
+from NScore import exceptions
+
+
+class NSArgs(object):
+
+    def __init__(self, api, value, shard, user_agent, auto_load, version):
+        if not isinstance(api, str):
+            raise exceptions.NSError("api must be type(str)")
+        if not isinstance(value, str) != (value is None):
+            raise exceptions.NSError("value must be type(str)")
+        if (not isinstance(shard, list)) != (shard is None):
+            raise exceptions.NSError("shard must be type(list)")
+        if not isinstance(user_agent, str):
+            raise exceptions.NSError("user_agent must be type(str)")
+        if not isinstance(auto_load, bool):
+            raise exceptions.NSError("auto_load must be type(bool)")
+        if not isinstance(version, str) != (version is None):
+            raise exceptions.NSError("version must be type(str)")
+        if isinstance(value, str):
+            if len(value) == 0:
+                raise exceptions.NSError("value cannot be empty string")
+        if isinstance(shard, list):
+            if len(shard) == 0:
+                raise exceptions.NSError("shard cannot be empty list")
+        self.api = api
+        self.value = value
+        self.shard = shard
+        self.user_agent = user_agent
+        self.auto_load = auto_load
+        self.version = version
