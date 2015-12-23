@@ -513,7 +513,7 @@ class Api(object):
     def get_region(self, value=None, shard=None,
                    user_agent=None, auto_load=True,
                    version=__apiversion__):
-         """region requests
+        """region requests
 
         :param api: The api being requested
         :param value: The value of the api
@@ -522,12 +522,10 @@ class Api(object):
         :param auto_load: If true the Nationstates instance will request the api on creation
         :param version: version to use.
         """
-
         return self.request("region", value, shard, user_agent,
                             auto_load, version)
 
-    def get_world(self, shard=[],
-                  user_agent=None, auto_load=True,
+    def get_world(self, shard=[], user_agent=None, auto_load=True,
                   version=__apiversion__):
         """World requests
 
@@ -538,7 +536,7 @@ class Api(object):
         :param version: version to use.
         """
         return self.request("world", None, shard, user_agent,
-                            auto_load, version)
+            auto_load, version)
 
     def get_wa(self, council=None, shard=None,
                user_agent=None, auto_load=True,
