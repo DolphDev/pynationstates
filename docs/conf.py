@@ -14,6 +14,7 @@
 # serve to show the default.
 
 import sys
+sys.path.insert(0, "..")
 import os
 import shlex
 
