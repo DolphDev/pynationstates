@@ -9,7 +9,7 @@ objects attributes which are generated dynamically by pynationstates.
 :mod:`nationstates` Package
 -------------------
 
-.. automodule:: nationstates.__init__
+.. automodule:: nationstates
     :members:
     :undoc-members:
     :show-inheritance:
