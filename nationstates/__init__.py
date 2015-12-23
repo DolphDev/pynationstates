@@ -146,7 +146,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return "<ns:{type}:{value}>".format(
                 type=self.api, value=self.value)
         else:
-            return "<ns:world:shard({shardlen})".format(
+            return "<ns:world:shard({shardlen})>".format(
                 shardlen=len(self.shard))
 
     def __getitem__(self, key):
@@ -416,8 +416,17 @@ class Api(object):
         self.nsobj = Nationstates("world", shard=None, auto_load=False)
         self.user_agent = user_agent if user_agent else None
 
+    @property
+    def user_agent(self):
+        return self._user_agent_store
+    
+    @user_agent.setter
+    def user_agent(self, val):
+        self._user_agent_store = val
+        self.nsobj.set_user_agent(val)
 
-    def call(self, api, value, shard, user_agent, auto_load, version):
+
+    def _call(self, api, value, shard, user_agent, auto_load, version):
         self.nsobj(api, value=value, shard=shard,
                    user_agent=user_agent, auto_load=auto_load, version=version)
         return self.nsobj
@@ -427,9 +436,16 @@ class Api(object):
                 version=__apiversion__):
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
-            self.call(api, value, shard, useragent, auto_load, version))
+            self._call(api, value, shard, useragent, auto_load, version))
         req.api_instance.session = self.nsobj.api_instance.session
         return req
+
+    def req_auth(self, api, value=None, shard=None,
+                user_agent=None, auto_load=True, 
+                version=__apiversion__, token=None, checksum=None):
+        if token is None:
+            raise exceptions.NSError("token cant be type(None)")
+        raise NotImplementedError
 
     def get_nation(self, value=None, shard=None,
                    user_agent=None, auto_load=True,
@@ -453,7 +469,7 @@ class Api(object):
     def get_wa(self, council=None, shard=None,
                    user_agent=None, auto_load=True,
                    version=__apiversion__):
-        return self.request("nation", council, shard, user_agent,
+        return self.request("wa", council, shard, user_agent,
                             auto_load, version)
 
 
@@ -481,6 +497,7 @@ def get(api, value=None, user_agent=NScore.default_useragent,
     :param auto_load: If the instance should request the api on creation
 
     """
+    print("Depreciation Warning: All methods that build off nationstates.get() (Including get()) are Depreciated, and will be removed")
 
     if ((user_agent == None or user_agent == NScore.default_useragent)
             and auto_load):
