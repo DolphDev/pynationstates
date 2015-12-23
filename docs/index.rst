@@ -1,19 +1,13 @@
 .. _main_page:
 
-Welcome to Pynationstates's documentation!
-==========================================
+Pynationstates
+===================================
 
-
-Contents:
+Content Pages
+-------------
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 1
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    pages/api
+    pages/nationstates
