@@ -221,9 +221,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def collect(self):
         if not self.has_data:
-            raise NScore.NSError(
-                "Nationstates Object cannot collect without requesting API"
-                + " first")
+            raise NScore.CollectError(
+                "collect requires request to collect data")
         return self.full_collect()[self.api]
 
     def full_collect(self):
@@ -423,7 +422,7 @@ class Api(object):
     @user_agent.setter
     def user_agent(self, val):
         self._user_agent_store = val
-        self.nsobj.set_user_agent(val)
+        self.nsobj.set_useragent(val)
 
 
     def _call(self, api, value, shard, user_agent, auto_load, version):
