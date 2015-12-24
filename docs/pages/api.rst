@@ -5,7 +5,7 @@ Requesting the API
 
 The Nationstates package includes a simple interface for developers.
 
-For example, the following code::
+For example, for the following code::
 
     >>> import nationstates as ns
     >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
