@@ -480,7 +480,8 @@ class Api(object):
     def req_auth(self, api, value=None, shard=None,
                  user_agent=None, auto_load=True,
                  version=__apiversion__, checksum=None, token=None):
-        """Auth Requests
+        """
+        Auth Requests
 
         :param api: The api being requested
         :param value: The value of the api
@@ -498,7 +499,8 @@ class Api(object):
     def get_nation(self, value=None, shard=None,
                    user_agent=None, auto_load=True,
                    version=__apiversion__):
-        """nation requests
+        """
+        Handle Nation requests
 
         :param api: The api being requested
         :param value: The value of the api
@@ -513,7 +515,8 @@ class Api(object):
     def get_region(self, value=None, shard=None,
                    user_agent=None, auto_load=True,
                    version=__apiversion__):
-        """region requests
+        """
+        Handles Region requests
 
         :param api: The api being requested
         :param value: The value of the api
@@ -525,9 +528,10 @@ class Api(object):
         return self.request("region", value, shard, user_agent,
                             auto_load, version)
 
-    def get_world(self, shard=[], user_agent=None, auto_load=True,
+    def get_world(self, shard=nOTiMPLEMENTEDeRRORcxacsxa    `1 v;6grfk=q[o139ojm, user_agent=None, auto_load=True,
                   version=__apiversion__):
-        """World requests
+        """
+        Handles world requests
 
         :param api: The api being requested
         :param shard: Shards to be requested
@@ -541,7 +545,8 @@ class Api(object):
     def get_wa(self, council=None, shard=None,
                user_agent=None, auto_load=True,
                version=__apiversion__):
-        """Wa requests
+        """
+        Handles WA requests
 
         :param api: The api being requested
         :param council: The council being requested
