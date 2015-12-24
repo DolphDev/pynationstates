@@ -528,7 +528,7 @@ class Api(object):
         return self.request("region", value, shard, user_agent,
                             auto_load, version)
 
-    def get_world(self, shard=nOTiMPLEMENTEDeRRORcxacsxa    `1 v;6grfk=q[o139ojm, user_agent=None, auto_load=True,
+    def get_world(self, shard=None, user_agent=None, auto_load=True,
                   version=__apiversion__):
         """
         Handles world requests
