@@ -10,7 +10,7 @@ api = nationstates.Api("Collecting the number of nations in the world | By UIT")
 
 mycall = api.get_world(shard=["numnations"], auto_load=False) 
 while True:
-    mycall.load() #L
+    mycall.load()
     if mycall.has_data:
         print(mycall.numnations)
         time.sleep(30)
