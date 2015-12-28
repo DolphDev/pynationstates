@@ -12,8 +12,7 @@ To install pynationstates simply use `pip`
 
     pip install nationstates
 
-The NS module currently updates weekly. Once the module is stable, it 
-will move to a monthly/bi-monthly release. 
+The NS module usaully updates weekly to biweekly to either fix bugs or to add features.  
 
 #####Examples
 ###### Making a API request
@@ -25,7 +24,7 @@ The code
 
     import nationstates
 	
-    #This creates a Nationstates Object
+    #This creates a Api Object
     api = nationstates.Api("My Awesome Application")
     call = api.get_world(shard=["numnations"])
 
