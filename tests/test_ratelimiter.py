@@ -19,6 +19,7 @@ class nationstates_rate_limiting_handeling(unittest.TestCase):
             nationstates.get_ratelimit(), nationstates.NScore._rltracker_)
 
 
+
 class nationstates_rate_limiting_checking(unittest.TestCase):
 
     def test_rate_limiting_check_isFalse(self):
@@ -48,3 +49,11 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         # To assure that data was not requested, so the rate-limit will not be
         # broken
         self.assertFalse(nsinstance.has_data)
+
+    def test_rate_limiter_handles_IndexError(self):
+        nsinstance = Nationstates("world")
+        nsinstance.rltime = list(range(50))
+        try:
+            nsinstance.ratelimitcheck()
+        except IndexError as err:
+            self.fail(str(err))
