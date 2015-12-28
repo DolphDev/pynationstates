@@ -200,7 +200,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return shard
 
     def load(self, user_agent=None, no_ratelimit=False,
-             retry_after=2, numattempt=3, no_loop=False):
+             retry_after=0.5, numattempt=3, no_loop=False):
         """Requests/Refreshs the data
 
         :param user_agent: parameter
