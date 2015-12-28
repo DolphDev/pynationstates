@@ -34,7 +34,7 @@ SOFTWARE.
 from setuptools import setup
 setup(name='nationstates',
       install_requires=["requests", "Beautifulsoup4", "xmltodict"],
-      version='1.1.28.46',
+      version='1.1.28.47',
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',

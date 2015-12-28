@@ -3,7 +3,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-__version__ = "1.1.28.46"
+__version__ = "1.1.28.47"
 _rltracker_ = list()
 if __name__ != "__main__":
     try:
