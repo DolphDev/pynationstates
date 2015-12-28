@@ -63,10 +63,14 @@ class RateLimit(object):
 
         if len(self.rltime) >= amount_allow:
             currenttime = timestamp()
-            while (self.rltime[-1]+within_time) < currenttime:
-                del self.rltime[-1]
-            if len(self.rltime) >= amount_allow:
-                return False
+            try:
+                while (self.rltime[-1]+within_time) < currenttime:
+                    del self.rltime[-1]
+                if len(self.rltime) >= amount_allow:
+                    return False
+            except IndexError as err:
+                if len(self.rltime) == 0:
+                    return True
             else:
                 return True
         else:
