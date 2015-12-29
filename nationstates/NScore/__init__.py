@@ -37,7 +37,9 @@ class Shard(object):
         else:
             raise ShardError("Shard Object must contain shard")
 
-    def __call__(self, shard, st_tags=None, kwinit={}, **kwargs):
+    def __call__(self, shard, st_tags=None, kwinit=None, **kwargs):
+        if kwinit is None:
+            kwinit = {}
         if not shard:
             raise ShardError("Shard Object must contain shard")
 
