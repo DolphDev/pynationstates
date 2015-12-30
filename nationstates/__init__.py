@@ -544,7 +544,7 @@ class Api(object):
         :param version: version to use.
         """
         return self.request("world", None, shard, user_agent,
-            auto_load, version)
+                            auto_load, version)
 
     def get_wa(self, council=None, shard=None,
                user_agent=None, auto_load=True,
@@ -659,6 +659,6 @@ def gen_url(api, value=None, shard=None, version=None,
                         auto_load=False).url
 
     instance = get(api, value=value, shard=shard,
-                   version=version, user_agent="", auto_load=False).url
+                   version=version, user_agent="", auto_load=False)
     instance.api_instance.session.close()
-    return instance
+    return instance.url
