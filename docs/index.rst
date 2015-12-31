@@ -10,4 +10,6 @@ Content Pages
     :maxdepth: 1
 
     pages/api
+    pages/shard
     pages/code_overview
+

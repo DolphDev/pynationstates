@@ -13,6 +13,6 @@ For example, for the following code::
 
 The :class:`.Api` object centralizes API use. It preforms the necessary handeling of :class:`Nationstates` objects
 to create objects that share certain attributes (Such as **requests's** :class:`.Session` object). The :method:`.get_nation` method 
-creates a :ref:`Nationstates` object for the `'The United Island Tribes'`
+creates a :ref:`Nationstates` object for the `'The United Island Tribes'`. 
 
 
