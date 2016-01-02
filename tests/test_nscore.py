@@ -26,9 +26,6 @@ from nationstates.NScore import (
     CollectError,
     ShardError)
 
-url_is_string_NScore_object = ns.get_world(
-    shard=["numnations"], auto_load=False).api_instance
-
 
 class ParserMixinTest(unittest.TestCase):
 
@@ -44,6 +41,6 @@ class ParserMixinTest(unittest.TestCase):
 class RequestMixinTest(unittest.TestCase):
 
     def test_isinstance_url_is_string(self):
+        url_is_string_NScore_object = ns.Nationstates("world", 
+            shard=["numnations"], auto_load=False).api_instance
         self.assertIsInstance(url_is_string_NScore_object.get_url(), str)
-
-

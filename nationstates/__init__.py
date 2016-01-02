@@ -574,78 +574,6 @@ def clear_ratelimit():
     RatelimitObj.rltime = list()
 
 
-def get(api, value=None, user_agent=NScore.default_useragent,
-        shard=None, version="7", auto_load=True):
-    """
-    Wraps around the Nationstates Object by using sensible defaults
-
-    :param api: The api being accessed
-    :param value: The value of the api. Such as a nation/region name.
-    :param user_agent: The User-Agent the program
-    :param shard: list of strings or Shard() objects
-    :param version: The version
-    :param auto_load: If the instance should request the api on creation
-
-    """
-    print(
-        "Depreciation Warning: All methods that build off nationstates.get()",
-        "(Including get()) are Depreciated, and will be removed")
-
-    if ((user_agent == None or user_agent == NScore.default_useragent)
-            and auto_load):
-        print("Warning: No user-agent set, default will be used")
-    return Nationstates(api,
-                        value=value,
-                        user_agent=user_agent,
-                        shard=shard,
-                        version=version,
-                        auto_load=auto_load)
-
-
-def get_auth(nation, checksum, shard=None, token=None,
-             user_agent=NScore.default_useragent, version=__apiversion__,
-             auto_load=True):
-    if ((user_agent == None or user_agent == NScore.default_useragent)
-            and auto_load):
-        print("Warning: No user-agent set, default will be used")
-    return AuthNationstates("nation",
-                            value=nation,
-                            checksum=checksum,
-                            shard=shard,
-                            token=token,
-                            user_agent=user_agent,
-                            auto_load=auto_load)
-
-
-def get_nation(nation, shard=None, user_agent=NScore.default_useragent,
-               version=__apiversion__, auto_load=True):
-    return get("nation", nation, user_agent, shard,
-               version, auto_load)
-
-
-def get_region(region, shard=None,  user_agent=NScore.default_useragent,
-               version=__apiversion__, auto_load=True):
-    return get("region", region, user_agent, shard,
-               version, auto_load)
-
-
-def get_world(shard=None, user_agent=NScore.default_useragent,
-              version=__apiversion__, auto_load=True):
-    return get("world", None, user_agent, shard,
-               version, auto_load)
-
-
-def get_wa(council, shard=None, user_agent=NScore.default_useragent,
-           version=__apiversion__, auto_load=True):
-    return get("wa", council, user_agent, shard,
-               version, auto_load)
-
-
-def get_poll(id, user_agent=NScore.default_useragent):
-    shard_obj = Shard("poll", pollid=str(id))
-    return get_world(shard=[shard_obj], user_agent=user_agent).collect()
-
-
 def gen_url(api, value=None, shard=None, version=None,
             checksum=None, token=None):
     """Generates a url based on the parameters"""
@@ -654,11 +582,33 @@ def gen_url(api, value=None, shard=None, version=None,
         raise exceptions.NSError(
             "{} requires parameters to generate url.".format(api))
     if checksum and api == "nation":
-        return get_auth(value, shard=shard, version=version,
+        instance = AuthNationstates(api, value, shard=shard, version=version,
                         user_agent="", checksum=checksum, token=token,
                         auto_load=False).url
+        instance.api_instance.session.close()
+        return instance.url
 
-    instance = get(api, value=value, shard=shard,
+    instance = Nationstates(api, value=value, shard=shard,
                    version=version, user_agent="", auto_load=False)
     instance.api_instance.session.close()
     return instance.url
+
+
+def get(*args, **kwargs):
+    raise NotImplementedError("This functionality has been removed. use Nationstates.Api() instead")
+
+def get_auth(*args, **kwargs):
+    return get()
+
+def get_nation(*args, **kwargs):
+    return get()
+
+def get_region(*args, **kwargs):
+    return get()
+
+def get_world(*args, **kwargs):
+    return get()
+
+def get_poll(*args, **kwargs)
+
+    return get()

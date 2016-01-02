@@ -16,3 +16,4 @@ to create objects that share certain attributes (Such as **requests's** :class:`
 creates a :ref:`Nationstates` object for the `'The United Island Tribes'`. 
 
 
+
