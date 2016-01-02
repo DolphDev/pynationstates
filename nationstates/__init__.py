@@ -584,7 +584,7 @@ def gen_url(api, value=None, shard=None, version=None,
     if checksum and api == "nation":
         instance = AuthNationstates(api, value, shard=shard, version=version,
                         user_agent="", checksum=checksum, token=token,
-                        auto_load=False).url
+                        auto_load=False)
         instance.api_instance.session.close()
         return instance.url
 
@@ -609,6 +609,5 @@ def get_region(*args, **kwargs):
 def get_world(*args, **kwargs):
     return get()
 
-def get_poll(*args, **kwargs)
-
+def get_poll(*args, **kwargs):
     return get()
