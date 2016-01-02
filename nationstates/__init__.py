@@ -369,6 +369,7 @@ class AuthNationstates(Nationstates):
         self.shard = shard
         self.user_agent = user_agent
         self.has_data = False
+        self.auto_load_bool = auto_load
         self.version = version
 
         if auto_load and self.user_agent:
@@ -378,6 +379,15 @@ class AuthNationstates(Nationstates):
                 raise exceptions.NSError(
                     "user_agent required for on-creation requests")
             return self
+
+    def __copy__(self):
+        """Copies the Nationstates Object"""
+        proto_copy = AuthNationstates(
+            "nation", self.value, self.shard, self.user_agent,
+            self.auto_load_bool, self.version, self.checksum, self.token)
+        proto_copy.has_data = self.has_data
+        proto_copy.api_instance = copy.copy(self.api_instance)
+        return proto_copy
 
     def update_instance(self, api, value=None, token=None,
                         checksum=None, shard=None,
@@ -481,9 +491,9 @@ class Api(object):
         req.api_instance.session = self.nsobj.api_instance.session
         return req
 
-    def req_auth(self, api, value=None, shard=None,
+    def req_auth(self, value=None, checksum=None, shard=None,
                  user_agent=None, auto_load=True,
-                 version=__apiversion__, checksum=None, token=None):
+                 version=__apiversion__, token=None):
         """
         Auth Requests
 
@@ -496,9 +506,15 @@ class Api(object):
         :param checksum: The Checksum for auth
         :param token: Token for auth
         """
-        if token is None:
-            raise exceptions.NSError("token cant be type(None)")
-        raise NotImplementedError
+        if not isinstance(checksum, str):
+            raise exceptions.NSError("checksum must be type(str)")
+        if not isinstance(token, str) != (token is None):
+            raise exceptions.NSError("token must be type(str) or type(None)")
+        useragent = self.user_agent if not user_agent else user_agent
+        req = copy.copy(
+            AuthNationstates("nation", value, shard, useragent, auto_load, version, checksum, token))
+        req.api_instance.session = self.nsobj.api_instance.session
+        return req
 
     def get_nation(self, value=None, shard=None,
                    user_agent=None, auto_load=True,
@@ -583,31 +599,37 @@ def gen_url(api, value=None, shard=None, version=None,
             "{} requires parameters to generate url.".format(api))
     if checksum and api == "nation":
         instance = AuthNationstates(api, value, shard=shard, version=version,
-                        user_agent="", checksum=checksum, token=token,
-                        auto_load=False)
+                                    user_agent="", checksum=checksum, token=token,
+                                    auto_load=False)
         instance.api_instance.session.close()
         return instance.url
 
     instance = Nationstates(api, value=value, shard=shard,
-                   version=version, user_agent="", auto_load=False)
+                            version=version, user_agent="", auto_load=False)
     instance.api_instance.session.close()
     return instance.url
 
 
 def get(*args, **kwargs):
-    raise NotImplementedError("This functionality has been removed. use Nationstates.Api() instead")
+    raise NotImplementedError(
+        "This functionality has been removed. use Nationstates.Api() instead")
+
 
 def get_auth(*args, **kwargs):
     return get()
 
+
 def get_nation(*args, **kwargs):
     return get()
+
 
 def get_region(*args, **kwargs):
     return get()
 
+
 def get_world(*args, **kwargs):
     return get()
+
 
 def get_poll(*args, **kwargs):
     return get()
