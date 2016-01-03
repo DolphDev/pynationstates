@@ -30,18 +30,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import nationstates
+version = (nationstates.NScore.__version__)
 
 from setuptools import setup
 setup(name='nationstates',
       install_requires=["requests", "Beautifulsoup4", "xmltodict"],
-      version='1.1.28.48',
+      version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',
       url='https://github.com/Dolphman/pynationstates',
       packages=['nationstates', 'nationstates.NScore'],
       package_data={'': ['LICENSE.txt', "readme.md"]},
-      download_url='https://github.com/Dolphman/pynationstates/releases/tag/1.1.28.41',
+      download_url='https://github.com/Dolphman/pynationstates/releases/tag/'+version,
       keywords=['nationstates', 'api wrapper', 'api',
                 "Nationstates API", "Nationstates API Wrapper", "Wrapper",
                 "nationstates python bindings", "web api", "web wrapper"],
