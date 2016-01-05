@@ -187,7 +187,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Copies the Nationstates Object"""
         proto_copy = Nationstates(
             self.api, self.value, self.shard, self.user_agent,
-            self.auto_load_bool, self.version)
+            False, self.version)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
         return proto_copy
@@ -244,6 +244,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 return self.load(user_agent=user_agent, no_ratelimit=True)
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
+
+    def __dir__(self):
+        if self.has_data:
+            return super(object, Nationstates).__dir__() + list(self.collect().keys())
+        return super(object, Nationstates).__dir__()
+
 
     def collect(self):
         """Returns a Dictionary of the collected shards"""
