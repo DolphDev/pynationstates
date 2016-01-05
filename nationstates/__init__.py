@@ -387,10 +387,10 @@ class AuthNationstates(Nationstates):
             return self
 
     def __copy__(self):
-        """Copies the Nationstates Object"""
+        """Copies the AuthNationstates Object"""
         proto_copy = AuthNationstates(
             "nation", self.value, self.shard, self.user_agent,
-            self.auto_load_bool, self.version, self.checksum, self.token)
+            False, self.version, self.checksum, self.token)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
         return proto_copy
