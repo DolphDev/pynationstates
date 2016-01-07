@@ -40,3 +40,8 @@ nosetests.xml
 
 # virtualenv
 venv/
+*.js
+*.png
+*.css
+*.txt
+*.html
