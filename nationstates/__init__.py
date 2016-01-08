@@ -455,8 +455,9 @@ class AuthNationstates(Nationstates):
 
 class Api(object):
 
-    def __init__(self, user_agent=None):
+    def __init__(self, user_agent=None, v=__apiversion__):
         """Creates Api Instance"""
+        self.instance_version = (v, (v != __apiversion__))
         self.nsobj = Nationstates("world", shard=None, auto_load=False)
         self.user_agent = user_agent if user_agent else None
 
@@ -490,7 +491,7 @@ class Api(object):
         :param version: version to use.
 
         """
-
+        version = (self.instance_version[0] if self.instance_version[1] else version)
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self._call(api, value, shard, useragent, auto_load, version))
