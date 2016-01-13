@@ -2,6 +2,7 @@ import requests
 
 
 from bs4 import BeautifulSoup
+from ezurl import Url
 
 __version__ = "1.1.29.54"
 _rltracker_ = list()
@@ -22,9 +23,27 @@ if __name__ != "__main__":
         RateLimitCatch)
 
 
-API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
+API_URL = "www.nationstates.net/cgi-bin/api.cgi"
 default_useragent = "python-nationstates\\{version}".format(
     version=__version__)
+
+
+def shard_generator(shards):
+    for shard in shards:
+        if isinstance(shard, str):
+            yield shard
+        elif isinstance(shard, Shard):
+            yield shard._get_main_value()
+        else:
+            raise ShardError("Shard Cant be type: {}".format(type(shard)))
+
+
+def shard_object_extract(shards):
+    store = dict()
+    for shard in shards:
+        if isinstance(shard, Shard):
+            store.update(shard.tail_gen())
+    return store
 
 
 class Shard(object):
@@ -66,13 +85,11 @@ class Shard(object):
                 "{pn}={pv}".format(
                     pn=x["paramtype"], pv=x["paramvalue"]) for x in self.tags]
             repl_text = ",".join(gen_repr)
-            return ("\{classname}({ShardName},{tags})").format(
-                classname=self.__class__.__name__,
+            return ("<shard:({ShardName},{tags})>").format(
                 ShardName=self.shardname,
                 tags=repl_text)
         else:
-            return ("{classname}({ShardName})".format(
-                classname=self.__class__.__name__,
+            return ("<shard:{ShardName}>".format(
                 ShardName=self.shardname))
 
     def __str__(self):
@@ -86,16 +103,13 @@ class Shard(object):
         if isinstance(self.tags, dict):
             self.tags = [self.tags]
         if self.tags is not None and isinstance(self.tags, list):
-            string = ""
+            store = dict()
             for x in self.tags:
-                string += (self.create_tag_tail((
-                    self.shardname,
-                    x["paramtype"],
-                    (str(x["paramvalue"]))))[:-1] + ';' if self.tags else "")
+                store.update({x["paramtype"]: str(x["paramvalue"])})
                 setattr(self, x["paramtype"], x["paramvalue"])
-            return string[:-1]
+            return store
         else:
-            return self.shardname
+            return {}
 
     def create_tag_tail(self, tag_tuple):
         _shard_, tag, tagvalue = tag_tuple
@@ -122,26 +136,10 @@ class RequestMixin(ParserMixin):
 
     # Methods used for creating and sending requests to the api
 
-    def tail_generator(self, _type_, args, limit=None, StandardAPI=False):
-        api = _type_[0]
-        value = _type_[1]
-        if StandardAPI:
-            return "?" + api + ("=" + value)
-        string = ("?" + api + ("=" + value + "&q=")
-                  if (not api == "world") else ("?q=")
-                  )
-        tailcollecter = ""
-        for x in args:
-            if (isinstance(x, Shard)):  # Shard Objects
-                string += (x._get_main_value() + "+")
-                tailcollecter += (x.tail_gen() + ";")
-            else:  # Strings
-                string += (str(x) + "+")
-
-        return string[:-1] + ";" + tailcollecter[:-1]
-
     def response_check(self, data):
         if data["status"] == 400:
+            raise APIError(data["data_bs4"].h1.text)
+        if data["status"] == 403:
             raise APIError(data["data_bs4"].h1.text)
         if data["status"] == 404:
             raise NotFound(data["data_bs4"].h1.text)
@@ -153,13 +151,9 @@ class RequestMixin(ParserMixin):
                                     .headers["Retry-After"])))
             raise APIRateLimitBan(message)
 
-    def request(self, _type_, tail, user_agent=None,
-                telegram_load=False, auth_load=False, only_url=False):
+    def request(self, user_agent=None, telegram_load=False):
         """This handles all requests.
 
-        :param _type_: Type of request
-
-        :param tail: The result of .tail_generator()
 
         :param user_agent: (optional) A user_agent.
             Will use the default one if not supplied
@@ -174,10 +168,9 @@ class RequestMixin(ParserMixin):
         use_default = user_agent is None and self.user_agent is None
         use_temp_useragent = (user_agent != self.user_agent) and user_agent
 
-        url = (API_URL + (tail[:-1] if tail[-1] == ";" else tail)
-               + ("&v={v}".format(v=self.version) if self.version else ""))
-        if only_url:
-            return url
+        url = (self.get_url() + ("&v={v}".format(
+            v=self.version) if self.version else ""))
+
         # request is a request.get() object
         try:
             if use_default:
@@ -217,13 +210,8 @@ class RequestMixin(ParserMixin):
                 "status": generated_data["status"],
                 "request_instance": generated_data["data"]
             }
-        if auth_load:
-            return {
-                "status": generated_data["status"],
-                "request_instance": generated_data["data"]
-            }
 
-        xml_parsed = self.xmlparser(_type_, data.text.encode("utf-8"))
+        xml_parsed = self.xmlparser(self.type[0], data.text.encode("utf-8"))
         generated_data.update({
             "data": xml_parsed,
         })
@@ -287,7 +275,7 @@ class Api(RequestMixin):
         return bool(self.data)
 
     def __del__(self):
-        
+
         try:
             self.session.close()
         except ReferenceError:
@@ -318,55 +306,38 @@ class Api(RequestMixin):
         else:
             self.shard = None
 
-    def load(self, user_agent=None, telegram_load=False, auth_load=False):
+    def load(self, user_agent=None, telegram_load=False):
         """
         Sends the request for the current _type_, value, and shard.
 
-        Special parameters are used for telegram requests
+        Special parameters are used for telegram requests ()
         """
 
         if self.user_agent is None and user_agent:
             self.handle_user_agent(user_agent)
 
         if telegram_load:
-            self.data = self.request(
-                self.type[0], self.type[1],
-                user_agent=user_agent, telegram_load=True)
+            self.data = self.request(telegram_load=True, user_agent=user_agent)
             return self
 
-        if self.shard:
-            self.data = self.request(
-                self.type[0], self.tail_generator(
-                    self.type, self.shard), self.user_agent)
-            return self.data
-
-        elif self.shard is None and self.type[0] in ["nation", "region", "a"]:
-            self.data = self.request(
-                self.type[0], self.tail_generator(
-                    self.type, self.shard, StandardAPI=True), self.user_agent)
-            return self.data
-
         else:
-            raise APIError("Invalid Shard(s) supplied: " + str(self.shard))
+            self.data = self.request(user_agent=user_agent)
+            return self
 
     def get_url(self):
-
-        if self.shard:
-            url = self.request(
-                self.type[0], self.tail_generator(
-                    self.type, self.shard), self.user_agent, only_url=True)
-            return url
-
-        elif self.shard is None and self.type[0] in ["nation", "region", "a"]:
-            url = self.request(
-                self.type[0], self.tail_generator(
-                    self.type, self.shard, StandardAPI=True),
-                self.user_agent, only_url=True)
-            return url
-
+        if not self.type[0] is "world":
+            url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
         else:
-            raise URLError(
-                "URL Could Not be Generated: Missing or Invalid parameters")
+            url = Url(API_URL)
+        if self.shard:
+            url.query(q=tuple(shard_generator(self.shard)))
+            urlparams = Url('', querydelimiter=";").query(
+                **shard_object_extract(self.shard))
+            return str(url) + (""
+                               if not (shard_object_extract(self.shard)) else
+                               (";" + (urlparams)._query_gen()[1:]))
+        else:
+            return str(url)
 
     def all_data(self):
         """

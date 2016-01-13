@@ -10,4 +10,4 @@ class ShardTest(unittest.TestCase):
             "numnations")
 
     def test_shard_tail_gen(self):
-        self.assertEqual(NScore.Shard("dispatch", dispatchid="1").tail_gen(), "dispatchid=1")
+        self.assertEqual(NScore.Shard("dispatch", dispatchid="1").tail_gen(), {"dispatchid":"1"})

@@ -35,7 +35,7 @@ version = (nationstates.NScore.__version__)
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["requests", "Beautifulsoup4", "xmltodict"],
+      install_requires=["requests", "Beautifulsoup4", "xmltodict", "ezurl"],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',

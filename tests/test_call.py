@@ -17,3 +17,4 @@ class CallTest(unittest.TestCase):
             mycall.load(USERAGENT)
         except Exception as Err:
             self.fail(Err)
+

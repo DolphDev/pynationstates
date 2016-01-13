@@ -14,7 +14,7 @@ class NSDict(dict):
 
 def parsedict(x):
     """
-    This function recursive loops through the processed xml (now dict)
+    This function recursively loops through the processed xml (now dict)
     it unorderers OrderedDicts and converts them to NSDict
     """
     if isinstance(x, list):

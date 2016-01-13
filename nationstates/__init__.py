@@ -314,7 +314,7 @@ class Telegram(NSUserAgentMixin):
         self.api_instance = (
             NScore.Api(
                 "a",
-                value=("?a=sendTG" +
+                value=("sendTG" +
                        "&client={}&".format(client_key) +
                        "tgid={}&".format(tgid) +
                        "key={}&".format(secret_key) +
