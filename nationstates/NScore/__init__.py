@@ -278,6 +278,10 @@ class Api(RequestMixin):
         except ReferenceError:
             """GC Fix"""
             pass
+        except TypeError:
+            """requests fix"""
+            pass
+
 
     def __bool__(self):
         return self.__nonzero__()
