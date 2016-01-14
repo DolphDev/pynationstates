@@ -316,6 +316,7 @@ class Api(RequestMixin):
 
         if self.user_agent is None and user_agent:
             self.handle_user_agent(user_agent)
+        user_agent = user_agent if user_agent else self.user_agent
 
         self.data = self.request(telegram_load=telegram_load, user_agent=user_agent)
         return self
