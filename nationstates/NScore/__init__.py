@@ -111,10 +111,6 @@ class Shard(object):
         else:
             return {}
 
-    def create_tag_tail(self, tag_tuple):
-        _shard_, tag, tagvalue = tag_tuple
-        return (tag + "=" + tagvalue + "+")
-
     def _get_main_value(self):
         return self.shardname
 

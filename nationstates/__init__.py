@@ -430,6 +430,10 @@ class AuthNationstates(Nationstates):
             raise NScore.CollectError("Request must be loaded to collect")
 
     def is_verified(self):
+        """
+        Bool to see if the response from nationstates has verify
+        set to True
+        """
         if self.has_data:
             if not self.shard:
                 return bool(int(self.collect()["is_verify"]))
@@ -615,28 +619,3 @@ def gen_url(api, value=None, shard=None, version=None,
                             version=version, user_agent="", auto_load=False)
     instance.api_instance.session.close()
     return instance.url
-
-
-def get(*args, **kwargs):
-    raise NotImplementedError(
-        "This functionality has been removed. use Nationstates.Api() instead")
-
-
-def get_auth(*args, **kwargs):
-    return get()
-
-
-def get_nation(*args, **kwargs):
-    return get()
-
-
-def get_region(*args, **kwargs):
-    return get()
-
-
-def get_world(*args, **kwargs):
-    return get()
-
-
-def get_poll(*args, **kwargs):
-    return get()
