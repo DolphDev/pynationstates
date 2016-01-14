@@ -61,6 +61,5 @@ class APIRequestError(APIError, ConnectionError):
 class APIRateLimitBan(APIError):
     pass
 
-
 class GarbageXMLerror(APIError, ExpatError):
     pass

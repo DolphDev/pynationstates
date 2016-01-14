@@ -6,7 +6,7 @@ These classes should only be inherited
 """
 try:
     from urllib.parse import quote as escape_url
-except:
+except ImportError:
     from urllib import quote as escape_url
 
 
