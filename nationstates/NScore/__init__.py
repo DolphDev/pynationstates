@@ -228,7 +228,7 @@ class Api(RequestMixin):
 
         :param _type_: Supplies the type of request.
             (accepts "nation", "region", "world", "wa")
-            
+
         :param value: (optional) Value for the api type.
 
             (Required for "nation", "region", "wa")
@@ -313,13 +313,8 @@ class Api(RequestMixin):
         if self.user_agent is None and user_agent:
             self.handle_user_agent(user_agent)
 
-        if telegram_load:
-            self.data = self.request(telegram_load=True, user_agent=user_agent)
-            return self
-
-        else:
-            self.data = self.request(user_agent=user_agent)
-            return self
+        self.data = self.request(telegram_load=telegram_load, user_agent=user_agent)
+        return self
 
     def get_url(self):
         if not self.type[0] is "world":
