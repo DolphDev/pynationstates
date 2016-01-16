@@ -332,7 +332,7 @@ class Api(RequestMixin):
                 **shard_object_extract(self.shard))
             return str(url) + (""
                                if not (shard_object_extract(self.shard)) else
-                               (";" + (urlparams)._query_gen()[1:]))
+                               (";" + (urlparams)._query_gen()))
         else:
             return str(url)
 
