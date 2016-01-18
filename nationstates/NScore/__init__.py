@@ -272,7 +272,9 @@ class Api(RequestMixin):
         return bool(self.data)
 
     def __del__(self):
-
+        """
+        Catches Race Condition errors
+        """
         try:
             self.session.close()
         except ReferenceError:
