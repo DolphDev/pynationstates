@@ -8,6 +8,10 @@ python:
   - "pypy3"
 # command to install dependencies
 install:
+  - pip install -e .
+  - pip uninstall nationstates
+  - pip install pip-autoremove
+  - pip-autoremove nationstates -y
   - pip install -r requirements.txt
   - pip install pytest
   - pip install pytest-pep8
