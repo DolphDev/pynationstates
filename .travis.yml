@@ -9,7 +9,7 @@ python:
 # command to install dependencies
 install:
   - pip install -e .
-  - pip uninstall nationstates
+  - pip uninstall nationstates --yes
   - pip install pip-autoremove
   - pip-autoremove nationstates -y
   - pip install -r requirements.txt
