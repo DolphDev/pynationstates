@@ -12,7 +12,8 @@ To install pynationstates simply use `pip`
 
     pip install nationstates
 
-The NS module usaully updates weekly to biweekly to either fix bugs or to add features.  
+The NS module usually updates weekly to biweekly to either fix bugs or 
+to add features.  
 
 #####Examples
 ###### Making a API request
