@@ -22,8 +22,7 @@ class NSValueMixin(object):
     def value(self, val):
         self._value_store = val
         self.api_instance.type = (self.api, (
-            (None if self.api == "world" else escape_url(
-                val.encode("ascii")))))
+            (None if self.api == "world" else escape_url(val.lower().replace(" ", "_")))))
 
 
 class NSShardMixin(object):
