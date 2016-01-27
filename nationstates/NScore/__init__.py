@@ -90,8 +90,31 @@ class Shard(object):
             return ("<shard:{ShardName}>".format(
                 ShardName=self.shardname))
 
+
+
     def __str__(self):
         return self.shardname
+
+    def __eq__(self, n):
+        """Used for sets/dicts"""
+        tagsnames = tuple(sorted([x["paramtype"] for x in self.tags]))
+        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self.tags]))
+        ntagsnames = tuple(sorted([x["paramtype"] for x in  n.tags]))
+        ntagsnvalues = tuple(sorted([x["paramvalue"] for x in n.tags]))
+
+
+        return ((self.shardname == n.shardname) 
+                and (set(tagsnames) == set(ntagsnames))
+                and set(tagsnvalues) == set(ntagsnvalues))
+
+    def __hash__(self):
+        tagsnames = tuple(sorted([x["paramtype"] for x in self.tags]))
+        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self.tags]))
+
+        return hash(
+                    hash(self.shardname) ^
+                        hash(tagsnames) ^
+                        hash(tagsnames))
 
     def tail_gen(self):
         """
