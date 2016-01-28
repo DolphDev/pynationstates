@@ -65,10 +65,20 @@ class nationstates_methods_set_shard(unittest.TestCase):
 
 class nationstates_method_set_value(unittest.TestCase):
 
-    def test_set_value_method_nation(self):
+    def test_set_value_method_nation_has_capital_letters(self):
         nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
         nation_obj.set_value("USA")
-        self.assertEqual(nation_obj.value, nation_obj.api_instance.type[1], "USA")
+        self.assertEqual(nation_obj.value.lower().replace(" ", "_"), nation_obj.api_instance.type[1], "USA".lower().replace(" ", "_"))
+
+    def test_set_value_method_nation(self):
+        nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
+        nation_obj.set_value("usa")
+        self.assertEqual(nation_obj.value, nation_obj.api_instance.type[1], "usa")
+
+    def test_has_space_set_value_nation(self):
+        nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
+        nation_obj.set_value("TEST NATION")
+        self.assertEqual(nation_obj.value.lower().replace(" ", "_"), nation_obj.api_instance.type[1], "test_nation")
 
     def test_set_value_method_region(self):
         region_obj = nationstates.get_region("the_reject_realms", auto_load=False, user_agent=ua)
