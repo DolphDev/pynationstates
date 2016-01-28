@@ -32,11 +32,11 @@ SOFTWARE.
 """
 
 
-version = '1.1.30.58'
+version = '1.1.30.59'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["requests", "Beautifulsoup4", "xmltodict", "ezurl"],
+      install_requires=["requests>=2.9.1", "Beautifulsoup4>=4.4.1", "xmltodict==0.9.2", "ezurl>=0.1.2.19"],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
