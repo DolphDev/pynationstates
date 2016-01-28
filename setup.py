@@ -32,7 +32,7 @@ SOFTWARE.
 """
 
 
-version = '1.1.30.58'
+version = '1.1.30.59'
 
 from setuptools import setup
 setup(name='nationstates',
