@@ -75,13 +75,13 @@ class Shard(object):
                         {"paramtype": x, "paramvalue": kwarguments[x]})
 
         self.shardname = shard
-        self.tags = temptags
+        self._tags = temptags
 
     def __repr__(self):
-        if self.tags:
+        if _self.tags:
             gen_repr = [
                 "{pn}={pv}".format(
-                    pn=x["paramtype"], pv=x["paramvalue"]) for x in self.tags]
+                    pn=x["paramtype"], pv=x["paramvalue"]) for x in self._tags]
             repl_text = ",".join(gen_repr)
             return ("<shard:({ShardName},{tags})>").format(
                 ShardName=self.shardname,
@@ -121,11 +121,11 @@ class Shard(object):
         Generates the parameters for the url.
 
         """
-        if isinstance(self.tags, dict):
-            self.tags = [self.tags]
-        if self.tags is not None and isinstance(self.tags, list):
+        if isinstance(self._tags, dict):
+            self._tags = [self._tags]
+        if self._tags is not None and isinstance(self._tags, list):
             store = dict()
-            for x in self.tags:
+            for x in self._tags:
                 store.update({x["paramtype"]: str(x["paramvalue"])})
                 setattr(self, x["paramtype"], x["paramvalue"])
             return store
