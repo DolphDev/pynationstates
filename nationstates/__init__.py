@@ -164,7 +164,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 type=self.api, value=self.value)
         else:
             return "<ns:world:shard({shardlen})>".format(
-                shardlen=len(self.shard))
+                shardlen=len(self.shard) if self.shard else "0")
 
     def __getitem__(self, key):
         """getitem implentation"""
