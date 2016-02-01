@@ -250,7 +250,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return super(object, Nationstates).__dir__() + list(self.collect().keys())
         return super(object, Nationstates).__dir__()
 
-
     def collect(self):
         """Returns a Dictionary of the collected shards"""
         if not self.has_data:
@@ -495,7 +494,8 @@ class Api(object):
         :param version: version to use.
 
         """
-        version = (self.instance_version[0] if self.instance_version[1] else version)
+        version = version if (version and version != __apiversion__) else (
+            self.instance_version[0] if self.instance_version[1] else __apiversion__)
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self._call(api, value, shard, useragent, auto_load, version))
