@@ -199,8 +199,23 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return shard
 
-    def load(self, user_agent=None, no_ratelimit=False,
-             retry_after=2, numattempt=3, no_loop=False):
+    def load(self, user_agent=None, no_ratelimit=False, safe="safe",
+        retry_after=2, numattempt=3):
+        if safe == "safe":
+            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                within_time=30, amount_allow=30)
+
+        if safe == "notsafe":
+            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                within_time=30, amount_allow=48)
+
+        if safe == "verysafe":
+                return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                within_time=30, amount_allow=25)
+
+    def _load(self, user_agent=None, no_ratelimit=False,
+              retry_after=2, numattempt=3, amount_allow=48, within_time=30,
+              no_loop=False):
         """Requests/Refreshs the data
 
         :param user_agent: parameter
