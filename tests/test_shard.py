@@ -11,3 +11,7 @@ class ShardTest(unittest.TestCase):
 
     def test_shard_tail_gen(self):
         self.assertEqual(NScore.Shard("dispatch", dispatchid="1").tail_gen(), {"dispatchid":"1"})
+
+    def test_shard_repr(self):
+        self.assertIsInstance(NScore.Shard("test").__repr__(), str)
+        self.assertIsInstance(NScore.Shard("test", test="test").__repr__(), str)
