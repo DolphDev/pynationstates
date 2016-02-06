@@ -78,7 +78,7 @@ class Shard(object):
         self._tags = temptags
 
     def __repr__(self):
-        if _self.tags:
+        if self._tags:
             gen_repr = [
                 "{pn}={pv}".format(
                     pn=x["paramtype"], pv=x["paramvalue"]) for x in self._tags]
