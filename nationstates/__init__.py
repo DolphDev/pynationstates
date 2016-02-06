@@ -200,18 +200,20 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return shard
 
     def load(self, user_agent=None, no_ratelimit=False, safe="safe",
-        retry_after=2, numattempt=3):
+             retry_after=2, numattempt=3):
+        self.__safe__ = safe
+
         if safe == "safe":
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                within_time=30, amount_allow=30)
+                              within_time=30, amount_allow=30)
 
         if safe == "notsafe":
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                within_time=30, amount_allow=48)
+                              within_time=30, amount_allow=48)
 
         if safe == "verysafe":
-                return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                within_time=30, amount_allow=25)
+            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                              within_time=30, amount_allow=25)
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=3, amount_allow=48, within_time=30,
@@ -228,7 +230,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             self.user_agent = user_agent
         if not user_agent and self.user_agent:
             user_agent = self.user_agent
-        if self.ratelimitcheck() or no_ratelimit:
+        if self.ratelimitcheck(amount_allow, within_time) or no_ratelimit:
             try:
                 self.add_timestamp()
                 self.has_data = bool(self.api_instance.load(
@@ -239,30 +241,37 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 raise err
         elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
-            while not self.ratelimitcheck():
+            while not self.ratelimitcheck(amount_allow, within_time):
                 if numattempt == 0:
                     raise NScore.RateLimitCatch(
                         "Rate Limit Protection Blocked this Request")
                 sleep(retry_after)
-                self.load(
+                self._load(
                     user_agent=user_agent,
                     numattempt=(
                         attemptsleft-1) if (
                         not attemptsleft is None) else None,
-                    no_loop=True)
+                    no_loop=True,
+                    amount_allow=amount_allow,
+                    within_time=within_time)
                 if self.has_data:
                     return self
             # In the rare case where the ratelimiter
-            if self.has_data and self.ratelimitcheck():
+            if self.has_data and self.ratelimitcheck(
+                    amount_allow, within_time):
                 return self   # is within a narrow error prone zone
-            if not self.has_data and self.ratelimitcheck():
-                return self.load(user_agent=user_agent, no_ratelimit=True)
+            if not self.has_data and self.ratelimitcheck(
+                    amount_allow, within_time):
+                return self._load(user_agent=user_agent, no_ratelimit=True,
+                                  amount_allow=amount_allow,
+                                  within_time=within_time)
             raise NScore.RateLimitCatch(
                 "Rate Limit Protection Blocked this Request")
 
     def __dir__(self):
         if self.has_data:
-            return super(object, Nationstates).__dir__() + list(self.collect().keys())
+            return super(
+                object, Nationstates).__dir__() + list(self.collect().keys())
         return super(object, Nationstates).__dir__()
 
     def collect(self):
@@ -356,7 +365,7 @@ class AuthNationstates(Nationstates):
 
     def __init__(self, api=None, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
-                 checksum=None, token=None):
+                 checksum=None, token=None, safe="safe"):
         """
         Passes on the arguments to self.__call__()
 
@@ -364,6 +373,7 @@ class AuthNationstates(Nationstates):
         """
 
         self.has_data = False
+        self.__safe__ = safe
 
         self.__call__(
             api, value, shard, user_agent, auto_load, version, checksum, token)
@@ -393,7 +403,7 @@ class AuthNationstates(Nationstates):
         self.version = version
 
         if auto_load and self.user_agent:
-            return self.load()
+            return self.load(safe=self.__safe__)
         else:
             if auto_load and not self.user_agent:
                 raise exceptions.NSError(
@@ -510,7 +520,8 @@ class Api(object):
 
         """
         version = version if (version and version != __apiversion__) else (
-            self.instance_version[0] if self.instance_version[1] else __apiversion__)
+            self.instance_version[0]
+            if self.instance_version[1] else __apiversion__)
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self._call(api, value, shard, useragent, auto_load, version))
