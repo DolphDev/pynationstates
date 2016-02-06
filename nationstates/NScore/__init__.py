@@ -97,10 +97,10 @@ class Shard(object):
 
     def __eq__(self, n):
         """Used for sets/dicts"""
-        tagsnames = tuple(sorted([x["paramtype"] for x in self.tags]))
-        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self.tags]))
-        ntagsnames = tuple(sorted([x["paramtype"] for x in  n.tags]))
-        ntagsnvalues = tuple(sorted([x["paramvalue"] for x in n.tags]))
+        tagsnames = tuple(sorted([x["paramtype"] for x in self._tags]))
+        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
+        ntagsnames = tuple(sorted([x["paramtype"] for x in  n._tags]))
+        ntagsnvalues = tuple(sorted([x["paramvalue"] for x in n._tags]))
 
 
         return ((self.shardname == n.shardname) 
@@ -108,8 +108,8 @@ class Shard(object):
                 and set(tagsnvalues) == set(ntagsnvalues))
 
     def __hash__(self):
-        tagsnames = tuple(sorted([x["paramtype"] for x in self.tags]))
-        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self.tags]))
+        tagsnames = tuple(sorted([x["paramtype"] for x in self._tags]))
+        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
 
         return hash(
                     hash(self.shardname) ^
