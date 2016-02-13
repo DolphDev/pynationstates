@@ -168,14 +168,13 @@ class RequestMixin(ParserMixin):
                                     .headers["Retry-After"])))
             raise APIRateLimitBan(message)
 
-    def request(self, user_agent=None, telegram_load=False):
+    def request(self, user_agent=None):
         """This handles all requests.
 
 
         :param user_agent: (optional) A user_agent.
             Will use the default one if not supplied
 
-        :param telegram_load: Set to True if the request is a telegram
 
         :param auth_load: Returns True if the request is a auth api
 
@@ -221,13 +220,6 @@ class RequestMixin(ParserMixin):
         }
 
         self.response_check(generated_data)
-
-        if telegram_load:
-            return {
-                "status": generated_data["status"],
-                "request_instance": generated_data["data"]
-            }
-
         xml_parsed = self.xmlparser(self.type[0], data.text.encode("utf-8"))
         generated_data.update({
             "data": xml_parsed,
@@ -330,7 +322,7 @@ class Api(RequestMixin):
         else:
             self.shard = None
 
-    def load(self, user_agent=None, telegram_load=False):
+    def load(self, user_agent=None):
         """
         Sends the request for the current _type_, value, and shard.
 
@@ -341,7 +333,7 @@ class Api(RequestMixin):
             self.handle_user_agent(user_agent)
         user_agent = user_agent if user_agent else self.user_agent
 
-        self.data = self.request(telegram_load=telegram_load, user_agent=user_agent)
+        self.data = self.request(user_agent=user_agent)
         return self
 
     def get_url(self):

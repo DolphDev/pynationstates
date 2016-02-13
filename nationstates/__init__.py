@@ -298,69 +298,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return self.data["url"]
 
-
-class Telegram(NSUserAgentMixin):
-
-    """Wraps around Nationstates's Telegram functionality.
-    """
-
-    def __init__(self, to=None, client_key=None, tgid=None,
-                 secret_key=None, auto_send=False,
-                 user_agent=NScore.default_useragent):
-        """Initializes the Telegram
-
-        :param to: The Target nation or recipient
-
-        :param client_key: The API key - Obtained through requesting one
-        from the NS Moderators
-
-        :param tgid: Seemily the meta information that Nationstates uses
-        to get and send a message. Obtained through
-        sending a message (in nationstates) with tag:api as the recipient
-
-        :param secret_key: Seemily the meta information that Nationstates
-        uses to get and send a message. Obtained through sending
-        a message (in nationstates) with tag:api as the recipient"""
-
-        self.__call__(to, client_key, tgid, secret_key, auto_send)
-
-    def __call__(self, to=None, client_key=None, tgid=None,
-                 secret_key=None, auto_send=False,
-                 user_agent=None):
-        """
-        Setups a NScore.Api() instance in a way that will send a telegram.
-        """
-        if not (to and client_key and tgid and secret_key):
-            raise exceptions.APIError(
-                "All arguments for Telegrams were not supplied")
-        self._user_agent = user_agent
-        self.api_instance = (
-            NScore.Api(
-                "a",
-                value=("sendTG" +
-                       "&client={}&".format(client_key) +
-                       "tgid={}&".format(tgid) +
-                       "key={}&".format(secret_key) +
-                       "to={}".format(to)),
-                shard=[""],
-            )
-        )
-        if auto_send:
-            self.send
-
-    def send(self, user_agent=None, return_meta=False):
-        """Sends the telegram"""
-        if user_agent:
-            self.user_agent(user_agent)
-        elif self._user_agent:
-            self.user_agent(self.user_agent)
-            self.user_agent(NScore.default_useragent)
-        self.api_instance.load(telegram_load=True)
-        if self.api_instance.data["status"] == "200":
-            return True
-        return False
-
-
 class AuthNationstates(Nationstates):
 
     def __init__(self, api=None, value=None, shard=None,
