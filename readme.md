@@ -36,28 +36,9 @@ Output
 
     {'numnations': u'119228'}
 
-For more info on the Nationstates Object, click [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/ApiCall.md)
+For more info on the Api Object, click [here](http://pynationstates.readthedocs.org/en/latest/pages/code_overview.html#nationstates.Nationstatesi)<br>
+For more info on the Nationstates Object, click [here](http://pynationstates.readthedocs.org/en/latest/pages/code_overview.html#nationstates.Api)
 
-
-### Telegrams
-
-Telegrams are simple with the nationstates api wrapper
-
-To send me a message in game, simply use the Telegram Wrapper (Replace 
-the client 
-argument 
-with your client key)
-
-    message = nationstates.Telegram(
-        to="The United Island Tribes",
-        client_key="YOUR_API_CLIENT_KEY",
-        tgid="12420908",
-        secret_key="155d5c05f9ff")
-
-    message.send()
-
-[More Documentation here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/telegram.md)
- 
 
 ### Shards
 
@@ -68,7 +49,7 @@ Basic Example
     nationstates.Shard("numnations")
 
 
-To see more advanced usage go [here](https://github.com/Dolphman/pynationstates/blob/master/Documentation/shards.md)<br>
+To see more advanced usage go [here](http://pynationstates.readthedocs.org/en/latest/pages/shard.html)<br>
 To see the official list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html) 
 
 ###Shard List
