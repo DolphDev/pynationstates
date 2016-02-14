@@ -15,9 +15,7 @@ if __name__ != "__main__":
         APIError,
         CollectError,
         ShardError,
-        APIRequestError,
         APIRateLimitBan,
-        URLError,
         RateLimitCatch)
 
 

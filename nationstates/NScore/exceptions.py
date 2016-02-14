@@ -5,7 +5,6 @@ class NSError(Exception):
 
     """
     BASE Exception
-    This should not be called to directly. 
     This Exception is used to detect if an Exception was thrown by
     a nationstates module error instead of a python one
     """
@@ -15,24 +14,23 @@ class NSError(Exception):
 class NotFound(NSError):
 
     """
-    Base Class for a 404 NotFound Exception
+    Exception for a 404 NotFound Exception
     """
     pass
 
 
 class CollectError(NSError):
+    """Raised for errors in Api.collect()"""
     pass
 
 
 class ShardError(NSError):
-    pass
-
-
-class URLError(NSError):
-    pass
+    """Errors caused in incorrect Shard Object use"""
 
 
 class RateLimitCatch(NSError):
+    """Raised if the ratelimiter is unable to confirm rate limit saftey
+    """
     pass
 
 
@@ -42,24 +40,5 @@ class APIError(NSError):
     """
     pass
 
-
-class UnsupportedAPI(APIError):
-    pass
-
-
-class AuthError(APIError):
-    pass
-
-
-class AuthRejected(AuthError):
-    pass
-
-
-class APIRequestError(APIError, ConnectionError):
-    pass
-
 class APIRateLimitBan(APIError):
-    pass
-
-class GarbageXMLerror(APIError, ExpatError):
     pass
