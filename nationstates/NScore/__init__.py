@@ -88,8 +88,6 @@ class Shard(object):
             return ("<shard:{ShardName}>".format(
                 ShardName=self.shardname))
 
-
-
     def __str__(self):
         return self.shardname
 
@@ -97,11 +95,10 @@ class Shard(object):
         """Used for sets/dicts"""
         tagsnames = tuple(sorted([x["paramtype"] for x in self._tags]))
         tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
-        ntagsnames = tuple(sorted([x["paramtype"] for x in  n._tags]))
+        ntagsnames = tuple(sorted([x["paramtype"] for x in n._tags]))
         ntagsnvalues = tuple(sorted([x["paramvalue"] for x in n._tags]))
 
-
-        return ((self.shardname == n.shardname) 
+        return ((self.shardname == n.shardname)
                 and (set(tagsnames) == set(ntagsnames))
                 and set(tagsnvalues) == set(ntagsnvalues))
 
@@ -110,9 +107,9 @@ class Shard(object):
         tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
 
         return hash(
-                    hash(self.shardname) ^
-                        hash(tagsnames) ^
-                        hash(tagsnames))
+            hash(self.shardname) ^
+            hash(tagsnames) ^
+            hash(tagsnames))
 
     def tail_gen(self):
         """
@@ -257,7 +254,7 @@ class Api(RequestMixin):
             when calling .__call__() on this object
 
         """
-
+        self.auth_request = False
         self.__call__(_type_, value, shard, user_agent, version)
 
     def __call__(
@@ -294,7 +291,6 @@ class Api(RequestMixin):
         except TypeError:
             """requests fix"""
             pass
-
 
     def __bool__(self):
         return self.__nonzero__()
@@ -335,17 +331,39 @@ class Api(RequestMixin):
         return self
 
     def get_url(self):
-        if not self.type[0] is "world":
-            url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
+        if not self.type[0] == "world":
+            if self.auth_request:
+                url = Url(
+                    str(Url(API_URL))
+                    + '?' + Url('').query(
+                        **({self.type[0]: self.type[1]})
+                    )._query_gen(safe="&=")[:-1])
+            else:
+                url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
         else:
             url = Url(API_URL)
         if self.shard:
+            if self.auth_request:
+                # Ezurl doesn't handle pre-generated queries
+                authurl = Url("")
+                authurl.query(q=tuple(shard_generator(self.shard)))
+                urlparams = Url('', querydelimiter=";").query(
+                    **shard_object_extract(self.shard))
+                gen = (str(url)
+                       + "&" + authurl._query_gen(safe="&=") +
+                       (""
+                        if not (shard_object_extract(self.shard))
+                        else
+                        (";" + (urlparams)._query_gen())))
+                return gen
+
             url.query(q=tuple(shard_generator(self.shard)))
             urlparams = Url('', querydelimiter=";").query(
                 **shard_object_extract(self.shard))
-            return str(url) + (""
-                               if not (shard_object_extract(self.shard)) else
-                               (";" + (urlparams)._query_gen()))
+            gen = str(url) + (""
+                              if not (shard_object_extract(self.shard)) else
+                              (";" + (urlparams)._query_gen()))
+            return gen
         else:
             return str(url)
 

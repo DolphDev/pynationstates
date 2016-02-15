@@ -379,6 +379,7 @@ class AuthNationstates(Nationstates):
         self.shard = shard
         self.user_agent = user_agent
         self.version = version
+        self.api_instance.auth_request = True
 
     def collect(self):
         if self.has_data:
