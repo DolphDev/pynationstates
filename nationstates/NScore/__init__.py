@@ -334,7 +334,7 @@ class Api(RequestMixin):
         if not self.type[0] == "world":
             if self.auth_request:
                 url = Url(
-                    str(Url(API_URL).netloc)
+                    str(Url(API_URL).__hostname__)
                     + '?' + Url('').query(
                         **({self.type[0]: self.type[1]})
                     )._query_gen(safe="&=")[:-1])
