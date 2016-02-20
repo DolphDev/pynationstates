@@ -178,9 +178,7 @@ class RequestMixin(ParserMixin):
         """
         use_default = user_agent is None and self.user_agent is None
         use_temp_useragent = (user_agent != self.user_agent) and user_agent
-
-        url = (self.get_url() + ("&v={v}".format(
-            v=self.version) if self.version else ""))
+        url = self.get_url()
 
         # request is a request.get() object
         try:
@@ -337,7 +335,7 @@ class Api(RequestMixin):
                     str(Url(API_URL).__hostname__)
                     + '?' + Url('').query(
                         **({self.type[0]: self.type[1]})
-                    )._query_gen(safe="&=")[:-1])
+                    )._query_gen(safe="&="))
             else:
                 url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
         else:
@@ -355,7 +353,8 @@ class Api(RequestMixin):
                         if not (shard_object_extract(self.shard))
                         else
                         (";" + (urlparams)._query_gen())))
-                return gen
+                return gen + ("&v={v}".format(
+            v=self.version) if self.version else "")
 
             url.query(q=tuple(shard_generator(self.shard)))
             urlparams = Url('', querydelimiter=";").query(
@@ -363,9 +362,11 @@ class Api(RequestMixin):
             gen = str(url) + (""
                               if not (shard_object_extract(self.shard)) else
                               (";" + (urlparams)._query_gen()))
-            return gen
+            return gen + ("&v={v}".format(
+            v=self.version) if self.version else "")
         else:
-            return str(url)
+            return str(url) + ("&v={v}".format(
+            v=self.version) if self.version else "")
 
     def all_data(self):
         """
