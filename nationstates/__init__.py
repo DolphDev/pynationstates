@@ -298,126 +298,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return self.data["url"]
 
-class AuthNationstates(Nationstates):
-
-    def __init__(self, api=None, value=None, shard=None,
-                 user_agent=None, auto_load=False, version=None,
-                 checksum=None, token=None, safe="safe"):
-        """
-        Passes on the arguments to self.__call__()
-
-        Creates the variable self.collect and self.has_data
-        """
-
-        self.has_data = False
-        self.__safe__ = safe
-
-        self.__call__(
-            api, value, shard, user_agent, auto_load, version, checksum, token)
-
-    def __call__(self, api=None, value=None, shard=None,
-                 user_agent=None, auto_load=False,
-                 version=None, checksum=None, token=None):
-
-        NSArgs(api, value, shard, user_agent, auto_load, version)
-        if api != "nation":
-            raise NScore.APIError("Auth only supports nation checking")
-
-        if not checksum:
-            raise exceptions.NSError("Checksum required")
-
-        self.checksum = checksum
-        self.token = token
-        self.api = api
-        self.update_instance(self.api, value, self.token, self.checksum,
-                             shard, user_agent, version)
-
-        self.value = value
-        self.shard = shard
-        self.user_agent = user_agent
-        self.has_data = False
-        self.auto_load_bool = auto_load
-        self.version = version
-
-        if auto_load and self.user_agent:
-            return self.load(safe=self.__safe__)
-        else:
-            if auto_load and not self.user_agent:
-                raise exceptions.NSError(
-                    "user_agent required for on-creation requests")
-            return self
-
-    def __copy__(self):
-        """Copies the AuthNationstates Object"""
-        proto_copy = AuthNationstates(
-            "nation", self.value, self.shard, self.user_agent,
-            False, self.version, self.checksum, self.token)
-        proto_copy.has_data = self.has_data
-        proto_copy.api_instance = copy.copy(self.api_instance)
-        return proto_copy
-
-    def update_instance(self, api, value=None, token=None,
-                        checksum=None, shard=None,
-                        user_agent=None, version=None):
-        """
-        Creates a new instance of NScore.Api
-        This method should only be used internally by this
-        Object
-        """
-        is_token = bool(token)
-        self.api_instance = NScore.Api(
-            "a",
-            value=("verify&{apitype}".format(apitype=(
-                "{api}={value}"
-                .format(api=api, value=value))) +
-                "&checksum={chs}{token}"
-                .format(chs=self.checksum,
-                        token=(
-                            "" if not is_token else "&token={token}".format(
-                                token=self.token)
-                        ))))
-        self.shard = shard
-        self.user_agent = user_agent
-        self.version = version
-        self.api_instance.auth_request = True
-
-    def collect(self):
-        if self.has_data:
-            if not self.shard:
-                return NScore.bs4parser.NSDict(self.api_instance.data)
-            else:
-                return super(
-                    AuthNationstates, self).collect()
-        else:
-            raise NScore.CollectError("Request must be loaded to collect")
-
-    def is_verified(self):
-        """
-        Bool to see if the response from nationstates has verify
-        set to True
-        """
-        if self.has_data:
-            if not self.shard:
-                return bool(int(self.collect()["is_verify"]))
-            else:
-                return bool(int(self.collect().verify))
-        else:
-            return False
-
-    @property
-    def value(self):
-        return self._value_store
-
-    @value.setter
-    def value(self, value):
-        self._value_store = value
-        value = (None if self.api == "world" else escape_url(
-            value.encode("ascii")))  # To escape the value
-        self.update_instance(self.api, value,
-                             self.token, self.checksum,
-                             self.shard, self.user_agent,
-                             self.version)
-
 
 class Api(object):
 
@@ -463,31 +343,6 @@ class Api(object):
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self._call(api, value, shard, useragent, auto_load, version))
-        req.api_instance.session = self.nsobj.api_instance.session
-        return req
-
-    def req_auth(self, value=None, checksum=None, shard=None,
-                 user_agent=None, auto_load=True,
-                 version=__apiversion__, token=None):
-        """
-        Auth Requests
-
-        :param api: The api being requested
-        :param value: The value of the api
-        :param shard: Shards to be requested
-        :param user_agent: user_agent to be used for this request
-        :param auto_load: If true the Nationstates instance will request the api on creation
-        :param version: version to use.
-        :param checksum: The Checksum for auth
-        :param token: Token for auth
-        """
-        if not isinstance(checksum, str):
-            raise exceptions.NSError("checksum must be type(str)")
-        if not isinstance(token, str) != (token is None):
-            raise exceptions.NSError("token must be type(str) or type(None)")
-        useragent = self.user_agent if not user_agent else user_agent
-        req = copy.copy(
-            AuthNationstates("nation", value, shard, useragent, auto_load, version, checksum, token))
         req.api_instance.session = self.nsobj.api_instance.session
         return req
 
@@ -565,19 +420,12 @@ def clear_ratelimit():
     RatelimitObj.rltime = list()
 
 
-def gen_url(api, value=None, shard=None, version=None,
-            checksum=None, token=None):
+def gen_url(api, value=None, shard=None, version=None):
     """Generates a url based on the parameters"""
 
     if value is None and not api == "world":
         raise exceptions.NSError(
             "{} requires parameters to generate url.".format(api))
-    if checksum and api == "nation":
-        instance = AuthNationstates(api, value, shard=shard, version=version,
-                                    user_agent="", checksum=checksum, token=token,
-                                    auto_load=False)
-        instance.api_instance.session.close()
-        return instance.url
 
     instance = Nationstates(api, value=value, shard=shard,
                             version=version, user_agent="", auto_load=False)
