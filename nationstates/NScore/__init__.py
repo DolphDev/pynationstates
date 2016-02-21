@@ -194,14 +194,6 @@ class RequestMixin(ParserMixin):
         except ConnectionError as err:
             raise (err)
 
-        if data.text == "0":
-            return {
-                "is_verify": bool(int(data.text)),
-                "status": data.status_code,
-                "url": data.url,
-                "request_instance": data,
-            }
-
         data_bs4 = self.xml2bs4(data.text)
         generated_data = {
             "status": data.status_code,
@@ -252,7 +244,6 @@ class Api(RequestMixin):
             when calling .__call__() on this object
 
         """
-        self.auth_request = False
         self.__call__(_type_, value, shard, user_agent, version)
 
     def __call__(
@@ -330,43 +321,19 @@ class Api(RequestMixin):
 
     def get_url(self):
         if not self.type[0] == "world":
-            if self.auth_request:
-                url = Url(
-                    str(Url(API_URL).__hostname__)
-                    + '?' + Url('').query(
-                        **({self.type[0]: self.type[1]})
-                    )._query_gen(safe="&="))
-            else:
-                url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
+            url = Url(API_URL).query(**({self.type[0]: self.type[1]}))
         else:
             url = Url(API_URL)
         if self.shard:
-            if self.auth_request:
-                # Ezurl doesn't handle pre-generated queries
-                authurl = Url("")
-                authurl.query(q=tuple(shard_generator(self.shard)))
-                urlparams = Url('', querydelimiter=";").query(
-                    **shard_object_extract(self.shard))
-                gen = (str(url)
-                       + "&" + authurl._query_gen(safe="&=") +
-                       (""
-                        if not (shard_object_extract(self.shard))
-                        else
-                        (";" + (urlparams)._query_gen())))
-                return gen + ("&v={v}".format(
-            v=self.version) if self.version else "")
-
             url.query(q=tuple(shard_generator(self.shard)))
             urlparams = Url('', querydelimiter=";").query(
                 **shard_object_extract(self.shard))
             gen = str(url) + (""
                               if not (shard_object_extract(self.shard)) else
                               (";" + (urlparams)._query_gen()))
-            return gen + ("&v={v}".format(
-            v=self.version) if self.version else "")
-        else:
-            return str(url) + ("&v={v}".format(
-            v=self.version) if self.version else "")
+            url = gen
+        return str(url) + ("&v={v}".format(v=self.version)
+                           if self.version else "")
 
     def all_data(self):
         """

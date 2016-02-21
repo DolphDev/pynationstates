@@ -53,7 +53,6 @@ class nationstates_api_object(unittest.TestCase):
         self.assertIsInstance(api.get_region("TEST", auto_load=False), ns.Nationstates)
         self.assertIsInstance(api.get_world(shard=["test"], auto_load=False), ns.Nationstates)
         self.assertIsInstance(api.get_wa("TEST", auto_load=False), ns.Nationstates)
-        self.assertIsInstance(api.req_auth("TEST", checksum="TEST", auto_load=False), ns.AuthNationstates)
   
 
 

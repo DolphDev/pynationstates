@@ -25,7 +25,7 @@ class CollectError(NSError):
 
 
 class ShardError(NSError):
-    """Errors caused in incorrect Shard Object use"""
+    """Errors caused by incorrect Shard Object use"""
 
 
 class RateLimitCatch(NSError):
