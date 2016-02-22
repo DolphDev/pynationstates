@@ -10,13 +10,14 @@ if __name__ != "__main__":
     except ImportError:
         import bs4parser
     from .exceptions import (
-        NSError,
-        NotFound,
         APIError,
-        CollectError,
-        ShardError,
         APIRateLimitBan,
-        RateLimitCatch)
+        CollectError,
+        ConnectionError,
+        NotFound,
+        NSError,
+        RateLimitCatch,
+        ShardError)
 
 
 API_URL = "www.nationstates.net/cgi-bin/api.cgi"
