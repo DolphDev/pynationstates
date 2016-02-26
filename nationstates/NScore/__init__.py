@@ -264,7 +264,7 @@ class Api(RequestMixin):
         self.data = None
         self.version = version
         self.session = requests.Session()
-        self.handle_user_agent(user_agent)
+        self.user_agent = (user_agent)
 
     def __nonzero__(self):
         return bool(self.data)
@@ -284,10 +284,6 @@ class Api(RequestMixin):
 
     def __bool__(self):
         return self.__nonzero__()
-
-    def handle_user_agent(self, user_agent):
-        self.user_agent = user_agent
-        self.session.headers.update({"User-Agent": self.user_agent})
 
     def set_payload(self, shard):
         """
@@ -314,7 +310,8 @@ class Api(RequestMixin):
         """
 
         if self.user_agent is None and user_agent:
-            self.handle_user_agent(user_agent)
+            self.user_agent = user_agent
+
         user_agent = user_agent if user_agent else self.user_agent
 
         self.data = self.request(user_agent=user_agent)

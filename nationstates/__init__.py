@@ -110,6 +110,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         self.has_data = False
+        self.api_instance = NScore.Api(api)
         self.__call__(api, value, shard, user_agent, auto_load, version)
 
     def __call__(self, api, value=None, shard=None,
@@ -138,7 +139,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
 
         args = NSArgs(api, value, shard, user_agent, auto_load, version)
-        self.api_instance = NScore.Api(api)
         if not args.api in ("nation", "region", "world", "wa", "verify"):
             raise exceptions.APIError("Invalid api type: {}".format(api))
 
@@ -152,6 +152,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.auto_load_bool = args.auto_load
         self.version = args.version
+        self.user_agent = user_agent
 
         if args.auto_load is True:
             return self.load()
