@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from ezurl import Url
 
+__apiversion__ = "7"
 __version__ = "1.1.31.61"
 _rltracker_ = list()
 if __name__ != "__main__":
