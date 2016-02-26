@@ -109,12 +109,13 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         Creates the variable self.collect and self.has_data
         """
 
+        args = NSArgs(api, value, shard, user_agent, auto_load, version)
         self.has_data = False
         self.api_instance = NScore.Api(api)
-        self.__call__(api, value, shard, user_agent, auto_load, version)
+        self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
-                 user_agent=None, auto_load=False, version=None):
+                 user_agent=None, auto_load=False, version=None, args=None):
         """
         Handles the arguments and sends the args to be parsed
 
@@ -137,8 +138,9 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         :param version: The Api version to request.
 
         """
+        args = args if args else NSArgs(api, value, shard, user_agent, auto_load, version)
 
-        args = NSArgs(api, value, shard, user_agent, auto_load, version)
+
         if not args.api in ("nation", "region", "world", "wa", "verify"):
             raise exceptions.APIError("Invalid api type: {}".format(api))
 
