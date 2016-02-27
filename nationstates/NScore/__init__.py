@@ -182,7 +182,6 @@ class RequestMixin(ParserMixin):
         use_temp_useragent = (user_agent != self.user_agent) and user_agent
         url = self.get_url()
 
-        # request is a request.get() object
         try:
             if use_default:
                 data = self.session.get(

@@ -3,7 +3,7 @@ import nationstates as ns
 
 
 
-# No requests are made for this, this just silences the ua warning
+# No requests are actually made for these tests, this just silences the ua warning
 ua = ""
 nationstates = ns.Api()
 
