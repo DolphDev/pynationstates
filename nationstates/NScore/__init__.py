@@ -191,7 +191,9 @@ class RequestMixin(ParserMixin):
                 data = self.session.get(
                     url=url, headers={"User-Agent": user_agent}, verify=True)
             else:
-                data = self.session.get(url=url, verify=True)
+                data = self.session.get(
+                    url=url, headers={"User-Agent": self.user_agent},
+                    verify=True)
         except ConnectionError as err:
             raise (err)
 
