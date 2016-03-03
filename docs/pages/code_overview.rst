@@ -11,5 +11,13 @@ objects attributes which are generated dynamically by pynationstates.
 
 .. automodule:: nationstates
     :members:
+    :show-inheritance:
+
+
+:mod:`objects` Module
+---------------------
+
+.. automodule:: nationstates.objects
+    :members:
     :undoc-members:
     :show-inheritance:
