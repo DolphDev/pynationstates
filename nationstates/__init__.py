@@ -56,7 +56,7 @@ class Api(object):
         return self.nsobj
 
     def request(self, api, value=None, shard=None,
-                user_agent=None, auto_load=True,
+                user_agent=None, auto_load=False,
                 version=__apiversion__):
         """Requests the api with the specific parameters
 
