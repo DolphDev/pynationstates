@@ -49,6 +49,7 @@ class WorldTest(unittest.TestCase):
     def test_repr(self):
         self.assertIsInstance(world.__repr__(), str)
 
+
 class WaTest(unittest.TestCase):
 
     def test_world(self):
@@ -57,3 +58,18 @@ class WaTest(unittest.TestCase):
 
     def test_repr(self):
         self.assertIsInstance(wa.__repr__(), str)
+
+
+class TestUserAgent(unittest.TestCase):
+
+    def test_nation_user_agent(self):
+        self.assertEqual(USERAGENT, nation.data["request_instance"].request.headers["User-Agent"])
+
+    def test_region_user_agent(self):
+        self.assertEqual(USERAGENT, region.data["request_instance"].request.headers["User-Agent"])
+
+    def test_world_user_agent(self):
+        self.assertEqual(USERAGENT, world.data["request_instance"].request.headers["User-Agent"])
+
+    def test_wa_user_agent(self):
+        self.assertEqual(USERAGENT, wa.data["request_instance"].request.headers["User-Agent"])
