@@ -11,6 +11,7 @@ if __name__ != "__main__":
         clear_ratelimit,
     )
     from .NScore import __apiversion__
+    from .NScore import exceptions
 else:
     from objects import (
         Nationstates,
@@ -19,6 +20,8 @@ else:
         clear_ratelimit,
     )
     from NScore import __apiversion__
+    from NScore import exceptions
+
 
 # this is used in nationstates get_??? methods
 

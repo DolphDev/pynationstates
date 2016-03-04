@@ -11,13 +11,20 @@ objects attributes which are generated dynamically by pynationstates.
 
 .. automodule:: nationstates
     :members:
+    :undoc-members:
     :show-inheritance:
 
+.. autoclass:: Nationstates
+   :members:
+   :inherited-members:
 
-:mod:`objects` Module
----------------------
+ .. autofunction:: gen_url
 
-.. automodule:: nationstates.objects
+
+:mod:`Exceptions`
+-------------------
+
+.. automodule:: nationstates.NScore.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
