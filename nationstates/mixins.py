@@ -6,7 +6,7 @@ These classes should only be inherited
 """
 try:
     from urllib.parse import quote as escape_url
-except ImportError:
+except ImportError: #PY2
     from urllib import quote as escape_url
 
 
@@ -70,16 +70,19 @@ class NSVersionMixin(object):
 class NSPropertiesMixin(NSValueMixin,
                         NSShardMixin,
                         NSUserAgentMixin,
-                        NSVersionMixin):
+NSVersionMixin):
 
     """Properties for attributes that need
     extra processing"""
-    pass
+    pass                        
 
 
 class NSSettersMixin(object):
 
-    """Methods for changing attributes"""
+    """Methods for changing attributes
+
+       Used for Method Chaining.
+    """
 
     def set_value(self, value):
         self.value = value

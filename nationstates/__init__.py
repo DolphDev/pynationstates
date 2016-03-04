@@ -3,7 +3,6 @@ from time import sleep
 
 import copy
 
-
 if __name__ != "__main__":
     from .objects import (
         Nationstates,
