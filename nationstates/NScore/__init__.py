@@ -149,7 +149,7 @@ class ParserMixin(object):
 class RequestMixin(ParserMixin):
 
     # Methods used for creating and sending requests to the api
-
+    
     def response_check(self, data):
         if data["status"] == 400:
             raise APIError(data["data_bs4"].h1.text)
@@ -191,7 +191,9 @@ class RequestMixin(ParserMixin):
                 data = self.session.get(
                     url=url, headers={"User-Agent": user_agent}, verify=True)
             else:
-                data = self.session.get(url=url, verify=True)
+                data = self.session.get(
+                    url=url, headers={"User-Agent": self.user_agent},
+                    verify=True)
         except ConnectionError as err:
             raise (err)
 
