@@ -3,7 +3,6 @@ from time import sleep
 
 import copy
 
-
 if __name__ != "__main__":
     from .objects import (
         Nationstates,
@@ -12,6 +11,7 @@ if __name__ != "__main__":
         clear_ratelimit,
     )
     from .NScore import __apiversion__
+    from .NScore import exceptions
 else:
     from objects import (
         Nationstates,
@@ -20,6 +20,8 @@ else:
         clear_ratelimit,
     )
     from NScore import __apiversion__
+    from NScore import exceptions
+
 
 # this is used in nationstates get_??? methods
 
@@ -56,7 +58,7 @@ class Api(object):
         return self.nsobj
 
     def request(self, api, value=None, shard=None,
-                user_agent=None, auto_load=True,
+                user_agent=None, auto_load=False,
                 version=__apiversion__):
         """Requests the api with the specific parameters
 
