@@ -256,7 +256,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                                   amount_allow=amount_allow,
                                   within_time=within_time)
             raise NScore.RateLimitCatch(
-                "Rate Limit Protection Blocked this Request")
+                "Rate Limit protection has blocked this request due to being unable to detirmine if it could make a safe request. Make sure you are not bursting requests.")
 
     def __dir__(self):
         if self.has_data:
@@ -268,7 +268,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Returns a Dictionary of the collected shards"""
         if not self.has_data:
             raise NScore.CollectError(
-                "{} requires a previous request to the api".format(self.__repr__()))
+                "{} requires a previous request to the api to collect data".format(type(self))
         return self.full_collect()[self.api]
 
     def full_collect(self):
