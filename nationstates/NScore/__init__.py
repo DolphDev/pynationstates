@@ -33,7 +33,7 @@ def shard_generator(shards):
         elif isinstance(shard, Shard):
             yield shard._get_main_value()
         else:
-            raise ShardError("Shard Cant be type: {}".format(type(shard)))
+            raise ShardError("Shard Can not be type: {}".format(type(shard)))
 
 
 def shard_object_extract(shards):

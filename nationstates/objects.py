@@ -129,8 +129,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         args = args if args else NSArgs(
             api, value, shard, user_agent, auto_load, version)
 
-        if not args.api in ("nation", "region", "world", "wa", "verify"):
-            raise exceptions.APIError("Invalid api type: {}".format(api))
+        if not args.api in ("nation", "region", "world", "wa"):
+            raise exceptions.APIError("Invalid API endpoint: {}".format(api))
 
         # NScore
         # This needs to be created at the start of the run
@@ -160,7 +160,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """getitem implementation"""
         if self.has_data is False:
             raise exceptions.CollectError(
-                "Request Required to access getitem")
+                "Previous request required for Nationstates indices")
         if key == self.api:
             return self.collect()
         return self.collect()[key]
@@ -268,7 +268,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Returns a Dictionary of the collected shards"""
         if not self.has_data:
             raise NScore.CollectError(
-                "Nationstates.collect() requires a request to the api")
+                "{} requires a previous request to the api".format(self.__repr__()))
         return self.full_collect()[self.api]
 
     def full_collect(self):
