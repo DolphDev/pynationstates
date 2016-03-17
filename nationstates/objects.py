@@ -268,7 +268,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Returns a Dictionary of the collected shards"""
         if not self.has_data:
             raise NScore.CollectError(
-                "{} requires a previous request to the api to collect data".format(type(self))
+                "{} requires a previous request to the api to collect data".format(type(self)))
         return self.full_collect()[self.api]
 
     def full_collect(self):
