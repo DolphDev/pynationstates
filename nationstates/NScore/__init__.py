@@ -308,7 +308,6 @@ class Api(RequestMixin):
         """
         Sends the request for the current _type_, value, and shard.
 
-        Special parameters are used for telegram requests ()
         """
 
         if self.user_agent is None and user_agent:
@@ -326,12 +325,8 @@ class Api(RequestMixin):
             url = Url(API_URL)
         if self.shard:
             url.query(q=tuple(shard_generator(self.shard)))
-            urlparams = Url('', querydelimiter=";").query(
+            url.query(
                 **shard_object_extract(self.shard))
-            gen = str(url) + (""
-                              if not (shard_object_extract(self.shard)) else
-                              (";" + (urlparams)._query_gen()))
-            url = gen
         return str(url) + ("&v={v}".format(v=self.version)
                            if self.version else "")
 

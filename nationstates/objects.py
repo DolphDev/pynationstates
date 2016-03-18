@@ -287,7 +287,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.api_instance.get_url()
         else:
             return self.data["url"]
-
+ 
 
 def get_ratelimit():
     # To prevent dependencies

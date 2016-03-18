@@ -1,5 +1,6 @@
 import unittest
 import nationstates as ns
+from nationstates import Shard
 
 
 
@@ -28,6 +29,11 @@ class nationstates_api_is_equal(unittest.TestCase):
 
     def test_gen_url_shard(self):
         self.assertEqual(ns.gen_url("nation", "test", shard=["test"]), "https://www.nationstates.net/cgi-bin/api.cgi?nation=test&q=test")
+
+
+    def test_gen_url_shard_args(self):
+        self.assertEqual(ns.gen_url("nation", "test", shard=[Shard("test", test="test")]), "https://www.nationstates.net/cgi-bin/api.cgi?nation=test&q=test&test=test")
+
 
     def test_gen_url_version(self):
         self.assertEqual(ns.gen_url("nation", "test", version="7"), "https://www.nationstates.net/cgi-bin/api.cgi?nation=test&v=7")
