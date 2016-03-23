@@ -326,7 +326,7 @@ class Api(RequestMixin):
         if self.shard:
             url.query(q=tuple(shard_generator(self.shard)))
             url.query(
-                **shard_object_extract(self.shard))f
+                **shard_object_extract(self.shard))
         if self.version:
             url.query(v=self.version)
         return str(url)
