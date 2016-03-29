@@ -75,8 +75,11 @@ class Api(object):
             if self.instance_version[1] else __apiversion__)
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
-            self._call(api, value, shard, useragent, auto_load, version))
+            self._call(api, value, shard, useragent, False, version))
         req.api_instance.session = self.nsobj.api_instance.session
+        if auto_load:
+            req.auto_load_bool = auto_load
+            req.load()
         return req
 
     def get_nation(self, value=None, shard=None,
