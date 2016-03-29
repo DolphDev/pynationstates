@@ -22,6 +22,7 @@ except (ImportError, SystemError):
         escape_url
     )
 
+__all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
 
 class Shard(NScore.Shard):
 
@@ -256,7 +257,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                                   amount_allow=amount_allow,
                                   within_time=within_time)
             raise NScore.RateLimitCatch(
-                "Rate Limit protection has blocked this request due to being unable to detirmine if it could make a safe request. Make sure you are not bursting requests.")
+                "Rate Limit protection has blocked this request due to being unable to determine if it could make a safe request. Make sure you are not bursting requests.")
 
     def __dir__(self):
         if self.has_data:
@@ -265,7 +266,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         return super(object, Nationstates).__dir__()
 
     def collect(self):
-        """Returns a Dictionary of the collected shards"""
+        """Returns a dictionary of the collected shards"""
         if not self.has_data:
             raise NScore.CollectError(
                 "{} requires a previous request to the api to collect data".format(type(self)))

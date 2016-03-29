@@ -33,7 +33,7 @@ def shard_generator(shards):
         elif isinstance(shard, Shard):
             yield shard._get_main_value()
         else:
-            raise ShardError("Shard Can not be type: {}".format(type(shard)))
+            raise ShardError("Shard can not be type: {}".format(type(shard)))
 
 
 def shard_object_extract(shards):
@@ -50,18 +50,16 @@ class Shard(object):
 
     def __init__(self, shard, st_tags=None, **kwargs):
         if isinstance(shard, str):
-            self.__call__(shard, st_tags, kwargs)
+            self.__call__(shard, st_tags, **kwargs)
         else:
-            raise ShardError("Shard Object must contain shard")
+            raise ShardError("Invalid Argument 'shard' cant be {}".format(type(shard)))
 
-    def __call__(self, shard, st_tags=None, kwinit=None, **kwargs):
-        if kwinit is None:
-            kwinit = {}
-        if not shard:
-            raise ShardError("Shard Object must contain shard")
+    def __call__(self, shard, st_tags=None, **kwargs):
+        if not isinstance(shard, str):
+            raise ShardError("Invalid Argument 'shard' cant be {}. `shard` can only be {}".format(
+                type(shard), str))
 
-        kwarguments = kwinit
-        kwarguments.update(kwargs)
+        kwarguments = kwargs
 
         if st_tags is None:
             temptags = []

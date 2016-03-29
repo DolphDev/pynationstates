@@ -3,6 +3,8 @@ try:
 except (ImportError, SystemError):
     from NScore import exceptions
 
+__all__ = ['NSArgs']
+
 class NSArgs(object):
 
     def __init__(self, api, value, shard, user_agent, auto_load, version):
@@ -23,7 +25,7 @@ class NSArgs(object):
                 raise exceptions.NSError("value cannot be empty string")
         if isinstance(shard, list):
             if len(shard) == 0:
-                raise exceptions.NSError("shard cannot be empty list")
+                raise exceptions.NSError("shard cannot be empty iterable")
         self.api = api
         self.value = value
         self.shard = shard
