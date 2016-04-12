@@ -49,6 +49,9 @@ class WorldTest(unittest.TestCase):
     def test_repr(self):
         self.assertIsInstance(world.__repr__(), str)
 
+    def test_numnations(self):
+        self.assertTrue(bool(world.numnations)) 
+
 
 class WaTest(unittest.TestCase):
 
