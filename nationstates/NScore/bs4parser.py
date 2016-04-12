@@ -1,5 +1,9 @@
 from xmltodict import parse
 
+try:
+    unicode
+except:
+    unicode = str
 
 class NSDict(dict):
 
@@ -21,7 +25,7 @@ def parsedict(x):
         gen_list = [NSDict(parsedict(y)) if isinstance(
             parsedict(y), dict) else parsedict(y) for y in x]
         return gen_list
-    if isinstance(x, str):
+    if isinstance(x, str) or isinstance(x, unicode):
         return x
     if isinstance(x, dict):
         newdict = {}
