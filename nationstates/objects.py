@@ -193,18 +193,22 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def load(self, user_agent=None, no_ratelimit=False, safe="safe",
              retry_after=2, numattempt=3):
         self.__safe__ = safe
+        if self.has_data:
+            xrls = int(self.data["request_instance"].raw.headers["X-ratelimit-requests-seen"])
+        else: 
+            xrls = 0
 
         if safe == "safe":
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=30)
+                              within_time=30, amount_allow=40-xrls)
 
         if safe == "notsafe":
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=48)
+                              within_time=30, amount_allow=48-xrls)
 
         if safe == "verysafe":
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=25)
+                              within_time=30, amount_allow=30-xrls)
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=3, amount_allow=48, within_time=30,
