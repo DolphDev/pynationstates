@@ -197,18 +197,28 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             xrls = int(self.data["request_instance"].raw.headers["X-ratelimit-requests-seen"])
         else: 
             xrls = 0
+        if xrls >= 49:
+            raise RateLimitCatch("{} {} {}".format(
+                "Rate Limit Protection Blocked this Request.",
+                "API is too close to a API Ban.",
+                "Amount of Requests from this IP: {}".format(
+                    xrls)))
+
 
         if safe == "safe":
+            vsafe = 40-xrls if (40-xrls) > 1 else 1
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=40-xrls)
+                              within_time=30, amount_allow=vsafe)
 
         if safe == "notsafe":
+            vsafe = 48-xrls if (48-xrls) > 1 else 1
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=48-xrls)
+                              within_time=30, amount_allow=vsafe)
 
         if safe == "verysafe":
+            vsafe = 30-xrls if (30-xrls) > 1 else 1
             return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=30-xrls)
+                              within_time=30, amount_allow=vsafe)
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=3, amount_allow=48, within_time=30,
