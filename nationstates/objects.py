@@ -209,7 +209,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 xrls = 0
 
         if safe == "safe":
-            vsafe = xrls(45) if (xrls(40) > 1) else 1
+            vsafe = xrls(45) if (xrls(45) > 1) else 1
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.api_mother.__xrls__ = int(self.data["request_instance"]
@@ -225,7 +225,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return
 
         if safe == "verysafe":
-            vsafe = xrls(35) if (xrls(30) > 1) else 1
+            vsafe = xrls(35) if (xrls(35) > 1) else 1
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.api_mother.__xrls__ = int(self.data["request_instance"]
