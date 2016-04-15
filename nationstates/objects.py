@@ -1,4 +1,5 @@
 from time import time as timestamp
+from time import sleep
 import copy
 
 try:
@@ -91,7 +92,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
-                 disable_ratelimit=False):
+                 api_mother=None, disable_ratelimit=False):
         """
         Passes on the arguments to self.__call__()
 
@@ -100,6 +101,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         args = NSArgs(api, value, shard, user_agent, auto_load, version)
         self.has_data = False
+        self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
@@ -178,7 +180,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Copies the Nationstates Object"""
         proto_copy = Nationstates(
             self.api, self.value, self.shard, self.user_agent,
-            False, self.version)
+            False, self.version, api_mother = self.api_mother)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
         return proto_copy
@@ -190,38 +192,48 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return shard
 
-    def load(self, user_agent=None, no_ratelimit=False, safe="safe",
-             retry_after=2, numattempt=3):
+    def load(self, user_agent=None, use_error=True, no_ratelimit=False,
+             safe="safe", retry_after=2, numattempt=3):
         self.__safe__ = safe
-        if self.has_data:
-            xrls = int(self.data["request_instance"].raw.headers["X-ratelimit-requests-seen"])
-        else: 
-            xrls = 0
-        if xrls >= 49:
-            raise RateLimitCatch("{} {} {}".format(
-                "Rate Limit Protection Blocked this Request.",
-                "API is too close to a API Ban.",
-                "Amount of Requests from this IP: {}".format(
-                    xrls)))
-
+        xrls = lambda x: x - (self.api_mother.xrls)
+            
+        if self.api_mother.xrls >= 49:
+            if use_error:
+                raise exceptions.RateLimitCatch("{} {} {}".format(
+                    "Rate Limit Protection Blocked this Request.",
+                    "API request count is too close to a API Ban.",
+                    "Amount of Requests from this IP: {}".format(
+                        xrls)))
+            else:
+                time.sleep(30)
+                xrls = 0
 
         if safe == "safe":
-            vsafe = 40-xrls if (40-xrls) > 1 else 1
-            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+            vsafe = xrls(45) if (xrls(40) > 1) else 1
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
+            self.api_mother.__xrls__ = int(self.data["request_instance"]
+                .raw.headers["X-ratelimit-requests-seen"])
+            return resp
 
         if safe == "notsafe":
-            vsafe = 48-xrls if (48-xrls) > 1 else 1
-            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+            vsafe = xrls(48) if (xrls(48) > 1) else 1
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
+            self.api_mother.__xrls__ = int(self.data["request_instance"]
+                .raw.headers["X-ratelimit-requests-seen"])
+            return
 
         if safe == "verysafe":
-            vsafe = 30-xrls if (30-xrls) > 1 else 1
-            return self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+            vsafe = xrls(35) if (xrls(30) > 1) else 1
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
+            self.api_mother.__xrls__ = int(self.data["request_instance"]
+                .raw.headers["X-ratelimit-requests-seen"])
+            return resp
 
     def _load(self, user_agent=None, no_ratelimit=False,
-              retry_after=2, numattempt=3, amount_allow=48, within_time=30,
+              retry_after=2, numattempt=5, amount_allow=48, within_time=30,
               no_loop=False):
         """Requests/Refreshs the data
 
@@ -248,7 +260,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             attemptsleft = numattempt
             while not self.ratelimitcheck(amount_allow, within_time):
                 if numattempt == 0:
-                    raise NScore.RateLimitCatch(
+                    raise exceptions.RateLimitCatch(
                         "Rate Limit Protection Blocked this Request")
                 sleep(retry_after)
                 self._load(
@@ -270,7 +282,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 return self._load(user_agent=user_agent, no_ratelimit=True,
                                   amount_allow=amount_allow,
                                   within_time=within_time)
-            raise NScore.RateLimitCatch(
+            raise exceptions.RateLimitCatch(
                 "Rate Limit protection has blocked this request due to being unable to determine if it could make a safe request. Make sure you are not bursting requests.")
 
     def __dir__(self):

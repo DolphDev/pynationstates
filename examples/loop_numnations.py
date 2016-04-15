@@ -13,4 +13,4 @@ while True:
     mycall.load()
     if mycall.has_data:
         print(mycall.numnations)
-        time.sleep(30)
+        time.sleep(5)

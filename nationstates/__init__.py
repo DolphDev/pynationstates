@@ -37,8 +37,9 @@ class Api(object):
     def __init__(self, user_agent=None, v=__apiversion__):
         """Creates Api Instance"""
         self.instance_version = (v, (v != __apiversion__))
-        self.nsobj = Nationstates("world", shard=None, auto_load=False)
+        self.nsobj = Nationstates("world", shard=None, auto_load=False, api_mother=self)
         self.user_agent = user_agent if user_agent else None
+        self.__xrls__ = 0
 
     @property
     def user_agent(self):
@@ -56,6 +57,11 @@ class Api(object):
         self.nsobj(api, value=value, shard=shard,
                    user_agent=user_agent, auto_load=auto_load, version=version)
         return self.nsobj
+
+    @property
+    def xrls(self):
+        return self.__xrls__
+    
 
     def request(self, api, value=None, shard=None,
                 user_agent=None, auto_load=False,

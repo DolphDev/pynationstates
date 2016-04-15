@@ -4,15 +4,22 @@ import nationstates
 
 USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman"
 
+class TestApi(object):
+
+    @property
+    def xrls(self):
+        return 0
+
+
 world = nationstates.Nationstates(
-    "world", shard=["numnations"]).load(USERAGENT)
+    "world", shard=["numnations"], api_mother=TestApi()).load(USERAGENT)
 wa = nationstates.Nationstates(
-    "wa", "0", shard=["numnations"]).load(USERAGENT)
+    "wa", "0", shard=["numnations"], api_mother=TestApi()).load(USERAGENT)
 time.sleep(0.3)
 nation = nationstates.Nationstates(
-    "nation", "The United Island Tribes").load(USERAGENT)
+    "nation", "The United Island Tribes", api_mother=TestApi()).load(USERAGENT)
 time.sleep(0.3)
-region = nationstates.Nationstates("region", "Balder").load(USERAGENT)
+region = nationstates.Nationstates("region", "Balder", api_mother=TestApi()).load(USERAGENT)
 
 
 """
