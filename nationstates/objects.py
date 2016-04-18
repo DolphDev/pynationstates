@@ -195,7 +195,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def load(self, user_agent=None, use_error=True, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3):
         self.__safe__ = safe
-        xrls = lambda x: x - (self.api_mother.xrls)
+        xrls = lambda x: (x - (self.api_mother.xrls) 
+            if (x - (self.api_mother.xrls)) >= 0 else 0) 
             
         if self.api_mother.xrls >= 49:
             if use_error:
@@ -206,10 +207,9 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                         xrls)))
             else:
                 time.sleep(30)
-                xrls = 0
 
         if safe == "safe":
-            vsafe = xrls(45) if (xrls(45) > 1) else 1
+            vsafe = xrls(45)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.api_mother.__xrls__ = int(self.data["request_instance"]
@@ -217,7 +217,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return resp
 
         if safe == "notsafe":
-            vsafe = xrls(48) if (xrls(48) > 1) else 1
+            vsafe = xrls(48)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.api_mother.__xrls__ = int(self.data["request_instance"]
@@ -225,7 +225,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return
 
         if safe == "verysafe":
-            vsafe = xrls(35) if (xrls(35) > 1) else 1
+            vsafe = xrls(35)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.api_mother.__xrls__ = int(self.data["request_instance"]
