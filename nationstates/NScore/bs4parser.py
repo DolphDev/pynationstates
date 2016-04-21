@@ -2,7 +2,7 @@ from xmltodict import parse
 
 try:
     unicode
-except:
+except NameError:
     unicode = str
 
 class NSDict(dict):

@@ -173,8 +173,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         if self.has_data:
             if attr in self.collect().keys():
                 return self.collect()[attr]
-        raise AttributeError('\'%s\' has no attribute \'%s\'' % (type(self),
-                                                                 attr))
+        raise AttributeError('\'{}\' has no attribute \'{}\''.format(
+            type(self), attr))
 
     def __copy__(self):
         """Copies the Nationstates Object"""
