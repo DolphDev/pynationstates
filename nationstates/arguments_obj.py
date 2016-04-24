@@ -21,7 +21,7 @@ class NSArgs(object):
         if not isinstance(version, str) != (version is None):
             raise exceptions.NSError("version must be type(str)")
         if isinstance(value, str):
-            if bool(value) == 0:
+            if bool(value):
                 raise exceptions.NSError("value cannot be empty string")
         if isinstance(shard, list):
             if len(shard) == 0:
