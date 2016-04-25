@@ -92,17 +92,19 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
-                 api_mother=None, disable_ratelimit=False):
+                 api_mother=None, disable_ratelimit=False,
+                 use_error_xrls=True):
         """
-        Passes on the arguments to self.__call__()
+        Passes on the api arguments to self.__call__()
 
-        Creates the variable self.collect and self.has_data
+        Creates instance attributes for the instance to use.
         """
 
         args = NSArgs(api, value, shard, user_agent, auto_load, version)
         self.has_data = False
         self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
+        self.__use_error_xrls__ = use_error_xrls
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
@@ -192,14 +194,14 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return shard
 
-    def load(self, user_agent=None, use_error=True, no_ratelimit=False,
+    def load(self, user_agent=None, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3):
         self.__safe__ = safe
         xrls = lambda x: (x - (self.api_mother.xrls) 
             if (x - (self.api_mother.xrls)) >= 0 else 0) 
             
         if self.api_mother.xrls >= 49:
-            if use_error:
+            if self.__use_error_xrls__:
                 raise exceptions.RateLimitCatch("{} {} {}".format(
                     "Rate Limit Protection Blocked this Request.",
                     "API request count is too close to a API Ban.",
