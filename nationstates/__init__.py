@@ -83,7 +83,7 @@ class Api(object):
         req = copy.copy(
             self._call(api, value, shard, useragent, False, version))
         req.api_instance.session = self.nsobj.api_instance.session
-        req.__use_error_xrls__ = use_error
+        req.__use_error_xrls__ = use_error_xrls
         if auto_load:
             req.auto_load_bool = auto_load
             req.load()
