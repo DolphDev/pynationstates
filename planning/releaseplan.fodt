@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><dc:title/><dc:date>2016-04-24T01:17:19.662000000</dc:date><meta:editing-duration>PT6H56M43S</meta:editing-duration><meta:editing-cycles>95</meta:editing-cycles><meta:generator>LibreOffice/5.1.0.3$Windows_X86_64 LibreOffice_project/5e3e00a007d9b3b6efb6797a8b8e57b51ab1f737</meta:generator><meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="5" meta:paragraph-count="27" meta:word-count="225" meta:character-count="1425" meta:non-whitespace-character-count="1236"/></office:meta>
+ <office:meta><dc:title/><dc:date>2016-04-26T14:53:30.168000000</dc:date><meta:editing-duration>PT7H2M10S</meta:editing-duration><meta:editing-cycles>104</meta:editing-cycles><meta:generator>LibreOffice/5.1.0.3$Windows_X86_64 LibreOffice_project/5e3e00a007d9b3b6efb6797a8b8e57b51ab1f737</meta:generator><meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="6" meta:paragraph-count="29" meta:word-count="236" meta:character-count="1513" meta:non-whitespace-character-count="1315"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="long">87171</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="long">145417</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
    <config:config-item config:name="ViewAreaWidth" config:type="long">40843</config:config-item>
-   <config:config-item config:name="ViewAreaHeight" config:type="long">16889</config:config-item>
+   <config:config-item config:name="ViewAreaHeight" config:type="long">17759</config:config-item>
    <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
    <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="long">13436</config:config-item>
-     <config:config-item config:name="ViewTop" config:type="long">91694</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="long">22428</config:config-item>
+     <config:config-item config:name="ViewTop" config:type="long">145669</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="long">87171</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="long">145417</config:config-item>
      <config:config-item config:name="VisibleRight" config:type="long">40841</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="long">104059</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="long">163174</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -81,7 +81,7 @@
    <config:config-item config:name="UnxForceZeroExtLeading" config:type="boolean">false</config:config-item>
    <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
    <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
-   <config:config-item config:name="Rsid" config:type="int">1983307</config:config-item>
+   <config:config-item config:name="Rsid" config:type="int">2009948</config:config-item>
    <config:config-item config:name="ApplyParagraphMarkFormatToNumbering" config:type="boolean">false</config:config-item>
    <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
    <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
@@ -735,255 +735,330 @@
    <style:text-properties style:font-name="Courier New" fo:font-weight="bold" officeooo:paragraph-rsid="00182a84" style:font-name-asian="Courier New" style:font-weight-asian="bold" style:font-name-complex="Courier New" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-  </style:style>
-  <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="00182a84"/>
-  </style:style>
-  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
-  </style:style>
-  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
-  </style:style>
-  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="0019d442" officeooo:paragraph-rsid="0019d442"/>
-  </style:style>
-  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019d442" officeooo:paragraph-rsid="0019d442" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
-  </style:style>
-  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
-  </style:style>
-  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="00182a84" officeooo:paragraph-rsid="001c0969"/>
-  </style:style>
-  <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e"/>
-  </style:style>
-  <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none"/>
-  </style:style>
-  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="00182a84"/>
-  </style:style>
-  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
-  </style:style>
-  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
-  </style:style>
-  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
-  </style:style>
-  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001aa401" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
-  </style:style>
-  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="001c0969" officeooo:paragraph-rsid="001c0969"/>
-  </style:style>
-  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Text_20_body">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="001ca149" officeooo:paragraph-rsid="001ca149"/>
-  </style:style>
-  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
   </style:style>
-  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Heading_20_3">
-   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+  <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
   </style:style>
-  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Heading_20_3">
-   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="00182a84"/>
   </style:style>
+  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
+  </style:style>
+  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
+  </style:style>
+  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="0019d442" officeooo:paragraph-rsid="0019d442"/>
+  </style:style>
+  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019d442" officeooo:paragraph-rsid="0019d442" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="00182a84" officeooo:paragraph-rsid="001c0969"/>
+  </style:style>
+  <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="001deaef" officeooo:paragraph-rsid="001deaef"/>
+  </style:style>
+  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e"/>
+  </style:style>
+  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none"/>
+  </style:style>
+  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="00182a84"/>
+  </style:style>
+  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
+  </style:style>
+  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
+  </style:style>
+  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001aa401" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" fo:font-size="12pt" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001deaef" style:font-name-asian="Courier New" style:font-size-asian="12pt" style:font-name-complex="Courier New" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="001c0969" officeooo:paragraph-rsid="001c0969"/>
+  </style:style>
+  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties officeooo:rsid="001ca149" officeooo:paragraph-rsid="001ca149"/>
+  </style:style>
   <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Heading_20_3">
-   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
   </style:style>
   <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
-   <style:text-properties fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-size-complex="20pt" style:font-style-complex="normal"/>
   </style:style>
   <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+   <style:text-properties officeooo:paragraph-rsid="00182a84"/>
+  </style:style>
+  <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Heading_20_3">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+   <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
+  </style:style>
+  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Heading_20_3">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+   <style:text-properties fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-size-complex="20pt" style:font-style-complex="normal"/>
+  </style:style>
+  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Heading_20_3">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="20pt" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="20pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Heading_20_2">
+  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Heading_20_2">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="22pt" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:font-size-asian="22pt" style:font-weight-asian="bold" style:font-size-complex="22pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+  <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
    <style:text-properties officeooo:paragraph-rsid="00182a84"/>
   </style:style>
-  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+  <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
    <style:text-properties fo:font-weight="bold" officeooo:paragraph-rsid="00182a84" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+  <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
    <style:text-properties style:font-name="Courier New" fo:font-weight="bold" officeooo:paragraph-rsid="00182a84" style:font-name-asian="Courier New" style:font-weight-asian="bold" style:font-name-complex="Courier New" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+  <style:style style:name="P38" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
    <style:text-properties style:font-name="Courier New" officeooo:paragraph-rsid="00182a84" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
-  </style:style>
-  <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="">
-   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
-   <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
-  </style:style>
-  <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none"/>
-  </style:style>
-  <style:style style:name="P38" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="00182a84"/>
   </style:style>
   <style:style style:name="P39" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none"/>
   </style:style>
   <style:style style:name="P40" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="00182a84"/>
   </style:style>
   <style:style style:name="P41" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="001eab5c"/>
   </style:style>
-  <style:style style:name="P42" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="">
-   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" fo:font-size="12pt" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001deaef" style:font-name-asian="Courier New" style:font-size-asian="12pt" style:font-name-complex="Courier New" style:font-size-complex="12pt"/>
+  <style:style style:name="P42" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
   </style:style>
   <style:style style:name="P43" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
   </style:style>
   <style:style style:name="P44" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:rsid="00182a84" officeooo:paragraph-rsid="001eab5c"/>
+  </style:style>
+  <style:style style:name="P45" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P46" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P47" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P48" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Times New Roman" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P49" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Open Sans" fo:font-size="12pt" fo:font-weight="bold" officeooo:rsid="001aa401" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-name-complex="Courier New" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="P50" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P51" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019df5e" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P52" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties style:font-name="Times New Roman" officeooo:rsid="0019d442" officeooo:paragraph-rsid="0019d442" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
-  <style:style style:name="P45" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+  <style:style style:name="P53" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="001deaef" officeooo:paragraph-rsid="001deaef" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P54" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="001ca149" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="P55" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties style:font-name="Times New Roman" officeooo:rsid="00182a84" officeooo:paragraph-rsid="001c0969"/>
   </style:style>
-  <style:style style:name="P46" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+  <style:style style:name="P56" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties style:font-name="Times New Roman" officeooo:rsid="001deaef" officeooo:paragraph-rsid="001deaef"/>
   </style:style>
-  <style:style style:name="P47" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
+  <style:style style:name="P57" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84"/>
   </style:style>
-  <style:style style:name="P48" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
+  <style:style style:name="P58" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="00182a84" officeooo:paragraph-rsid="0019df5e"/>
   </style:style>
-  <style:style style:name="P49" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
+  <style:style style:name="P59" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="0019df5e" officeooo:paragraph-rsid="0019df5e"/>
   </style:style>
-  <style:style style:name="P50" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+  <style:style style:name="P60" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false" fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties fo:font-size="12pt" officeooo:paragraph-rsid="001deaef" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+  </style:style>
+  <style:style style:name="P61" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in" loext:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="001ca149" officeooo:paragraph-rsid="001ca149"/>
+   <style:text-properties officeooo:rsid="001eab5c" officeooo:paragraph-rsid="001eab5c"/>
   </style:style>
-  <style:style style:name="P51" style:family="paragraph" style:parent-style-name="Heading_20_2">
-   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
-   <style:text-properties style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="22pt" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:font-size-asian="22pt" style:font-weight-asian="bold" style:font-size-complex="22pt" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P52" style:family="paragraph" style:parent-style-name="Heading_20_3" style:list-style-name="">
+  <style:style style:name="P62" style:family="paragraph" style:parent-style-name="Heading_20_3" style:list-style-name="">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
   </style:style>
-  <style:style style:name="P53" style:family="paragraph" style:parent-style-name="Heading_20_3">
+  <style:style style:name="P63" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="20pt" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="00182a84" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="20pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P54" style:family="paragraph" style:parent-style-name="Heading_20_3">
+  <style:style style:name="P64" style:family="paragraph" style:parent-style-name="Heading_20_3">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="20pt" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="00182a84" officeooo:paragraph-rsid="001eab5c" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="20pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="P65" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
   </style:style>
-  <style:style style:name="P55" style:family="paragraph" style:parent-style-name="Heading_20_3">
+  <style:style style:name="P66" style:family="paragraph" style:parent-style-name="Heading_20_3">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page"/>
    <style:text-properties fo:font-size="20pt" officeooo:paragraph-rsid="00182a84" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
+  </style:style>
+  <style:style style:name="P67" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+   <style:text-properties style:font-name="Courier New" fo:font-weight="bold" officeooo:paragraph-rsid="001eab5c" style:font-name-asian="Courier New" style:font-weight-asian="bold" style:font-name-complex="Courier New" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="P68" style:family="paragraph" style:parent-style-name="Horizontal_20_Line">
+   <style:text-properties officeooo:rsid="001ca149" officeooo:paragraph-rsid="00182a84"/>
+  </style:style>
+  <style:style style:name="P69" style:family="paragraph" style:parent-style-name="Heading_20_2">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+   <style:text-properties style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="22pt" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:font-size-asian="22pt" style:font-weight-asian="bold" style:font-size-complex="22pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T1" style:family="text">
    <style:text-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
   </style:style>
   <style:style style:name="T2" style:family="text">
-   <style:text-properties style:font-name="Courier New" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Courier New"/>
   </style:style>
   <style:style style:name="T3" style:family="text">
-   <style:text-properties style:font-name="Courier New" officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Courier New" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T4" style:family="text">
-   <style:text-properties style:font-name="Courier New" officeooo:rsid="001c0969" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Courier New" officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T5" style:family="text">
-   <style:text-properties style:font-name="Courier New" fo:font-size="20pt" style:font-name-asian="Courier New" style:font-size-asian="20pt" style:font-name-complex="Courier New" style:font-size-complex="20pt"/>
+   <style:text-properties style:font-name="Courier New" officeooo:rsid="001c0969" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T6" style:family="text">
-   <style:text-properties style:font-name="Courier New" fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-name-complex="Courier New" style:font-size-complex="20pt" style:font-style-complex="normal"/>
+   <style:text-properties style:font-name="Courier New" officeooo:rsid="001eab5c" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T7" style:family="text">
-   <style:text-properties officeooo:rsid="00182a84"/>
+   <style:text-properties style:font-name="Courier New" officeooo:rsid="001ca149" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T8" style:family="text">
-   <style:text-properties fo:font-size="20pt" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
+   <style:text-properties style:font-name="Courier New" fo:font-size="20pt" style:font-name-asian="Courier New" style:font-size-asian="20pt" style:font-name-complex="Courier New" style:font-size-complex="20pt"/>
   </style:style>
   <style:style style:name="T9" style:family="text">
-   <style:text-properties fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-size-complex="20pt" style:font-style-complex="normal"/>
+   <style:text-properties style:font-name="Courier New" fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-name-complex="Courier New" style:font-size-complex="20pt" style:font-style-complex="normal"/>
   </style:style>
   <style:style style:name="T10" style:family="text">
-   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
+   <style:text-properties style:font-name="Courier New" officeooo:rsid="001c0969"/>
   </style:style>
   <style:style style:name="T11" style:family="text">
-   <style:text-properties style:font-name="Times New Roman" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties officeooo:rsid="00182a84"/>
   </style:style>
   <style:style style:name="T12" style:family="text">
-   <style:text-properties officeooo:rsid="0019df5e"/>
+   <style:text-properties fo:font-size="20pt" style:font-size-asian="20pt" style:font-size-complex="20pt"/>
   </style:style>
   <style:style style:name="T13" style:family="text">
-   <style:text-properties officeooo:rsid="001aa401"/>
+   <style:text-properties fo:font-size="20pt" fo:font-style="normal" officeooo:rsid="00182a84" style:font-size-asian="20pt" style:font-style-asian="normal" style:font-size-complex="20pt" style:font-style-complex="normal"/>
   </style:style>
   <style:style style:name="T14" style:family="text">
-   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-weight="normal" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T15" style:family="text">
-   <style:text-properties style:font-name="Symbol" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties style:font-name="Times New Roman" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <style:style style:name="T16" style:family="text">
-   <style:text-properties style:font-name="Wingdings" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties officeooo:rsid="0019df5e"/>
   </style:style>
   <style:style style:name="T17" style:family="text">
-   <style:text-properties style:font-name="Open Sans" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties officeooo:rsid="001aa401"/>
   </style:style>
   <style:style style:name="T18" style:family="text">
-   <style:text-properties style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T19" style:family="text">
-   <style:text-properties officeooo:rsid="001c0969" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Symbol" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T20" style:family="text">
-   <style:text-properties officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Wingdings" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T21" style:family="text">
-   <style:text-properties officeooo:rsid="001deaef" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+   <style:text-properties style:font-name="Open Sans" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T22" style:family="text">
+   <style:text-properties style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="T23" style:family="text">
+   <style:text-properties officeooo:rsid="001c0969" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="T24" style:family="text">
+   <style:text-properties officeooo:rsid="00182a84" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="T25" style:family="text">
+   <style:text-properties officeooo:rsid="001deaef" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="T26" style:family="text">
    <style:text-properties officeooo:rsid="001ca149"/>
+  </style:style>
+  <style:style style:name="T27" style:family="text">
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Open Sans" fo:font-weight="bold" officeooo:rsid="001aa401" style:font-name-asian="Courier New" style:font-weight-asian="bold" style:font-name-complex="Courier New" style:font-weight-complex="bold"/>
+  </style:style>
+  <style:style style:name="T28" style:family="text">
+   <style:text-properties style:font-name="Times New Roman" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
+  </style:style>
+  <style:style style:name="T29" style:family="text">
+   <style:text-properties style:font-name="Times New Roman" officeooo:rsid="001ca149" style:font-name-asian="Courier New" style:font-name-complex="Courier New"/>
   </style:style>
   <text:list-style style:name="L1">
    <text:list-level-style-bullet text:level="1" text:bullet-char="●">
@@ -1097,7 +1172,7 @@
  <office:master-styles>
   <style:master-page style:name="Standard" style:page-layout-name="pm1">
    <style:footer>
-    <text:p text:style-name="P1"><text:page-number text:select-page="current">5</text:page-number> </text:p>
+    <text:p text:style-name="P1"><text:page-number text:select-page="current">4</text:page-number> </text:p>
    </style:footer>
   </style:master-page>
  </office:master-styles>
@@ -1110,90 +1185,99 @@
     <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
     <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
    </text:sequence-decls>
-   <text:h text:style-name="P31" text:outline-level="2"><text:span text:style-name="T1">Pynationstates</text:span> Release Plan</text:h>
+   <text:h text:style-name="P34" text:outline-level="2"><text:span text:style-name="T1">Pynationstates</text:span> Release Plan</text:h>
    <text:p text:style-name="Horizontal_20_Line"/>
    <text:p text:style-name="P5">This document will contains goals and plans for future (1.1.31.xx ++) releases. Individual release plans will usually be updated as they approach there respected releases. Bugfix releases are not included in this document.</text:p>
    <text:p text:style-name="P6"><text:s/></text:p>
-   <text:h text:style-name="P52" text:outline-level="3"/>
-   <text:h text:style-name="P30" text:outline-level="3">Version <text:span text:style-name="T2">1.1.31.xx</text:span></text:h>
-   <text:p text:style-name="P34"/>
-   <text:list xml:id="list7550884281704057342" text:style-name="L1">
+   <text:h text:style-name="P62" text:outline-level="3"/>
+   <text:h text:style-name="P33" text:outline-level="3">Version <text:span text:style-name="T3">1.1.31.xx</text:span></text:h>
+   <text:p text:style-name="P37"/>
+   <text:list xml:id="list7592099164254063438" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P37">Remove all <text:span text:style-name="T2">Telegram</text:span> functionality.</text:p>
+     <text:p text:style-name="P39">Remove all <text:span text:style-name="T3">Telegram</text:span> functionality.</text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P39"><text:span text:style-name="T10">Reason</text:span>: Deviates to much from the <text:span text:style-name="T12">D</text:span>ata API to justify its existence in the module.</text:p>
+       <text:p text:style-name="P42"><text:span text:style-name="T14">Reason</text:span>: Deviates to much from the <text:span text:style-name="T16">D</text:span>ata API to justify its existence in the module.</text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P38">Removed unused exceptions.</text:p>
+     <text:p text:style-name="P40">Removed unused exceptions.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P40"><text:span text:style-name="T12">Remove all</text:span> <text:span text:style-name="T2">AuthNationstates</text:span><text:span text:style-name="T11"> functionality.</text:span></text:p>
+     <text:p text:style-name="P43"><text:span text:style-name="T16">Remove all</text:span> <text:span text:style-name="T3">AuthNationstates</text:span><text:span text:style-name="T15"> functionality.</text:span></text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P41">Reason: To many special cases. Complicates the program and is untestable. It doesn&apos;t fit in the flow of the API wrapper.</text:p>
+       <text:p text:style-name="P45">Reason: To many special cases. Complicates the program and is untestable. It doesn&apos;t fit in the flow of the API wrapper.</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P41">Comments: May be delegated to a separate module in the future.</text:p>
+       <text:p text:style-name="P45">Comments: May be delegated to a separate module in the future.</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P41">Comments: Has been broken for a while, its removal should not effect users using a recent version of the module. Will not trigger backwards incompatible <text:span text:style-name="T13">version increase.</text:span></text:p>
+       <text:p text:style-name="P45">Comments: Has been broken for a while, its removal should not effect users using a recent version of the module. Will not trigger backwards incompatible <text:span text:style-name="T17">version increase.</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P21"/>
-   <text:p text:style-name="P22"><text:span text:style-name="T17">RELEASED</text:span> </text:p>
-   <text:list xml:id="list11720630056387" text:continue-numbering="true" text:style-name="L1">
+   <text:p text:style-name="P23"/>
+   <text:p text:style-name="P24"><text:span text:style-name="T21">RELEASED</text:span> </text:p>
+   <text:list xml:id="list145357708580561" text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
      <text:list>
       <text:list-header>
-       <text:p text:style-name="P43"/>
+       <text:p text:style-name="P50"/>
       </text:list-header>
      </text:list>
-     <text:p text:style-name="P44"/>
+     <text:p text:style-name="P52"/>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P26" text:outline-level="3"><text:span text:style-name="T8">Version </text:span><text:span text:style-name="T5">1.1.32.xx</text:span></text:h>
-   <text:p text:style-name="P32"/>
+   <text:h text:style-name="P29" text:outline-level="3"><text:span text:style-name="T12">Version </text:span><text:span text:style-name="T8">1.1.32.xx</text:span></text:h>
+   <text:p text:style-name="P35"/>
    <text:p text:style-name="P7"/>
-   <text:list xml:id="list8180057257796375477" text:style-name="L2">
+   <text:list xml:id="list5891885804552461978" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P47">Remove <text:span text:style-name="T2">RateLimitCatch</text:span> Exception.</text:p>
+     <text:p text:style-name="P57">Remove <text:span text:style-name="T3">RateLimitCatch</text:span> Exception.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P49"><text:span text:style-name="T13">Fix how</text:span> User-Agents are handled.</text:p>
+     <text:p text:style-name="P59"><text:span text:style-name="T17">Fix how</text:span> User-Agents are handled.</text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P49">Info: Since the session object is shared, user-agents should only be applied per request, <text:span text:style-name="T13">instead of being latched onto the session.</text:span></text:p>
+       <text:p text:style-name="P59">Info: Since the session object is shared, user-agents should only be applied per request, <text:span text:style-name="T17">instead of being latched onto the session.</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P48">Improve error messages for specialized exceptions.</text:p>
+     <text:p text:style-name="P58">Improve error messages for specialized exceptions.</text:p>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P52" text:outline-level="3"/>
-   <text:p text:style-name="P36"/>
-   <text:p text:style-name="P42"><text:span text:style-name="T17">RELEASED</text:span></text:p>
-   <text:h text:style-name="P28" text:outline-level="3">Version <text:span text:style-name="T2">1.1.3</text:span><text:span text:style-name="T3">3</text:span><text:span text:style-name="T2">.xx</text:span></text:h>
-   <text:p text:style-name="P35"/>
-   <text:list xml:id="list4310711906553986998" text:style-name="L3">
+   <text:h text:style-name="P62" text:outline-level="3"/>
+   <text:p text:style-name="P60"><text:span text:style-name="T27">RELEASED</text:span></text:p>
+   <text:h text:style-name="P31" text:outline-level="3">Version <text:span text:style-name="T3">1.1.3</text:span><text:span text:style-name="T4">3</text:span><text:span text:style-name="T3">.xx</text:span></text:h>
+   <text:p text:style-name="P38"/>
+   <text:list xml:id="list896059561535015666" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P45"><text:span text:style-name="T19">Refactor and </text:span><text:span text:style-name="T21">re-implement</text:span><text:span text:style-name="T19"> legacy code for the</text:span><text:span text:style-name="T18"> </text:span><text:span text:style-name="T4">Shard</text:span><text:span text:style-name="T18"> </text:span><text:span text:style-name="T19">object.</text:span></text:p>
+     <text:p text:style-name="P55"><text:span text:style-name="T23">Refactor and </text:span><text:span text:style-name="T25">re-implement</text:span><text:span text:style-name="T23"> legacy code for the</text:span><text:span text:style-name="T22"> </text:span><text:span text:style-name="T5">Shard</text:span><text:span text:style-name="T22"> </text:span><text:span text:style-name="T23">object.</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P46"><text:span text:style-name="T19">A</text:span><text:span text:style-name="T18">dd support </text:span><text:span text:style-name="T19">the</text:span><text:span text:style-name="T20"> </text:span><text:span text:style-name="T2">X-ratelimit-requests-seen</text:span><text:span text:style-name="T20"> </text:span><text:span text:style-name="T18">header</text:span><text:span text:style-name="T19">.</text:span></text:p>
-     <text:p text:style-name="P46"><text:span text:style-name="T18"/></text:p>
+     <text:p text:style-name="P56"><text:span text:style-name="T23">A</text:span><text:span text:style-name="T22">dd support </text:span><text:span text:style-name="T23">the</text:span><text:span text:style-name="T24"> </text:span><text:span text:style-name="T3">X-ratelimit-requests-seen</text:span><text:span text:style-name="T24"> </text:span><text:span text:style-name="T22">header</text:span><text:span text:style-name="T23">.</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P28" text:outline-level="3">Version <text:span text:style-name="T2">1.1.3</text:span><text:span text:style-name="T3">4</text:span><text:span text:style-name="T2">.xx</text:span></text:h>
-   <text:p text:style-name="P35"/>
-   <text:list xml:id="list11721336879054" text:continue-numbering="true" text:style-name="L3">
+   <text:p text:style-name="P53"/>
+   <text:p text:style-name="P53"/>
+   <text:p text:style-name="P53"/>
+   <text:p text:style-name="P49">RELEASED</text:p>
+   <text:h text:style-name="P31" text:outline-level="3">Version <text:span text:style-name="T3">1.1.3</text:span><text:span text:style-name="T4">4</text:span><text:span text:style-name="T3">.xx</text:span></text:h>
+   <text:p text:style-name="P68"/>
+   <text:list xml:id="list145356972467756" text:continue-numbering="true" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P50">Do a technical audit on how pynationstates handles <text:span text:style-name="T4">r</text:span><text:span text:style-name="T2">equests</text:span> library errors. There seems to be inconsistent behavior dealing with networking errors. <text:s/>Apply the needed changes if any.</text:p>
+     <text:p text:style-name="P61">Further Incorporate <text:span text:style-name="T3">NSargs</text:span><text:span text:style-name="T29"> </text:span><text:span text:style-name="T15">object into the <text:s/></text:span><text:span text:style-name="T3">Nationstates</text:span><text:span text:style-name="T29"> </text:span><text:span text:style-name="T15">object</text:span></text:p>
+    </text:list-item>
+   </text:list>
+   <text:h text:style-name="P64" text:outline-level="3">Version <text:span text:style-name="T3">1.1.3</text:span><text:span text:style-name="T6">5</text:span><text:span text:style-name="T3">.xx</text:span></text:h>
+   <text:p text:style-name="P67"/>
+   <text:list xml:id="list145357913485919" text:continue-list="list145357708580561" text:style-name="L1">
+    <text:list-item>
+     <text:p text:style-name="P54">Do a technical audit on how pynationstates handles <text:span text:style-name="T10">r</text:span><text:span text:style-name="T2">equests</text:span> library errors. There seems to be inconsistent behavior dealing with networking errors. <text:s/>Apply the needed changes if any.</text:p>
     </text:list-item>
    </text:list>
   </office:text>
