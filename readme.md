@@ -115,6 +115,7 @@ Nations
 [`factbooklist`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=factbooklist)
 [`dispatches`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=dispatches)
 [`dispatchlist`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=dispatchlist)
+[`zombies`](https://www.nationstates.net/cgi-bin/api.cgi?nation=testlandia&q=zombie)
 
 
 Regions
