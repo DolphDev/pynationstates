@@ -194,11 +194,18 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return shard
 
+    @property
+    def xrls(self):
+        return lambda x: (x - (self.api_mother.xrls) 
+            if (x - (self.api_mother.xrls)) >= 0 else 0)
+
+    @xrls.setter
+    def xrls(self, v):
+        self.api_mother.__xrls__ = v
+
     def load(self, user_agent=None, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3):
         self.__safe__ = safe
-        xrls = lambda x: (x - (self.api_mother.xrls) 
-            if (x - (self.api_mother.xrls)) >= 0 else 0) 
             
         if self.api_mother.xrls >= 49:
             if self.__use_error_xrls__:
@@ -211,26 +218,26 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 time.sleep(30)
 
         if safe == "safe":
-            vsafe = xrls(40)
+            vsafe = self.xrls(40)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
-            self.api_mother.__xrls__ = int(self.data["request_instance"]
+            self.xrls = int(self.data["request_instance"]
                 .raw.headers["X-ratelimit-requests-seen"])
             return resp
 
         if safe == "notsafe":
-            vsafe = xrls(48)
+            vsafe = self.xrls(48)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
-            self.api_mother.__xrls__ = int(self.data["request_instance"]
+            self.xrls = int(self.data["request_instance"]
                 .raw.headers["X-ratelimit-requests-seen"])
             return
 
         if safe == "verysafe":
-            vsafe = xrls(35)
+            vsafe = self.xrls(35)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
-            self.api_mother.__xrls__ = int(self.data["request_instance"]
+            self.xrls = int(self.data["request_instance"]
                 .raw.headers["X-ratelimit-requests-seen"])
             return resp
 
