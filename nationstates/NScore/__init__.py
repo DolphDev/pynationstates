@@ -52,12 +52,15 @@ class Shard(object):
         if isinstance(shard, str):
             self.__call__(shard, st_tags, **kwargs)
         else:
-            raise ShardError("Invalid Argument 'shard' cant be {}".format(type(shard)))
+            raise ShardError(
+                "Invalid Argument 'shard' cant be {}".format(type(shard)))
 
     def __call__(self, shard, st_tags=None, **kwargs):
         if not isinstance(shard, str):
-            raise ShardError("Invalid Argument 'shard' cant be {}. `shard` can only be {}".format(
-                type(shard), str))
+            raise ShardError(
+                "Invalid Argument 'shard' cant be {}. `shard` can only be {}"
+                .format(
+                    type(shard), str))
 
         kwarguments = kwargs
 
@@ -147,7 +150,7 @@ class ParserMixin(object):
 class RequestMixin(ParserMixin):
 
     # Methods used for creating and sending requests to the api
-    
+
     def response_check(self, data):
         if data["status"] == 400:
             raise APIError(data["data_bs4"].h1.text)

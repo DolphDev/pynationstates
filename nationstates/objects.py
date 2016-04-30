@@ -11,7 +11,7 @@ try:
         NSPropertiesMixin,
         NSSettersMixin,
         escape_url
-        )
+    )
 except (ImportError, SystemError):
     import NScore
     from NScore import exceptions
@@ -24,6 +24,7 @@ except (ImportError, SystemError):
     )
 
 __all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
+
 
 class Shard(NScore.Shard):
 
@@ -182,7 +183,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Copies the Nationstates Object"""
         proto_copy = Nationstates(
             self.api, self.value, self.shard, self.user_agent,
-            False, self.version, api_mother = self.api_mother)
+            False, self.version, api_mother=self.api_mother)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
         return proto_copy
@@ -196,8 +197,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     @property
     def xrls(self):
-        return lambda x: (x - (self.api_mother.xrls) 
-            if (x - (self.api_mother.xrls)) >= 0 else 0)
+        return lambda x: (x - (self.api_mother.xrls)
+                          if (x - (self.api_mother.xrls)) >= 0 else 0)
 
     @xrls.setter
     def xrls(self, v):
@@ -206,7 +207,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def load(self, user_agent=None, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3):
         self.__safe__ = safe
-            
+
         if self.api_mother.xrls >= 49:
             if self.__use_error_xrls__:
                 raise exceptions.RateLimitCatch("{} {} {}".format(
@@ -222,7 +223,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
-                .raw.headers["X-ratelimit-requests-seen"])
+                            .raw.headers["X-ratelimit-requests-seen"])
             return resp
 
         if safe == "notsafe":
@@ -230,7 +231,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
-                .raw.headers["X-ratelimit-requests-seen"])
+                            .raw.headers["X-ratelimit-requests-seen"])
             return
 
         if safe == "verysafe":
@@ -238,7 +239,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
-                .raw.headers["X-ratelimit-requests-seen"])
+                            .raw.headers["X-ratelimit-requests-seen"])
             return resp
 
     def _load(self, user_agent=None, no_ratelimit=False,
@@ -291,8 +292,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 return self._load(user_agent=user_agent, no_ratelimit=True,
                                   amount_allow=amount_allow,
                                   within_time=within_time)
-            raise exceptions.RateLimitCatch(
-                "Rate Limit protection has blocked this request due to being unable to determine if it could make a safe request. Make sure you are not bursting requests.")
+            raise exceptions.RateLimitCatch("{} {} {}".format(
+                "Rate Limit protection has blocked this request due to being",
+                "unable to determine if it could make a safe request.",
+                "Make sure you are not bursting requests."))
 
     def __dir__(self):
         if self.has_data:
@@ -304,7 +307,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """Returns a dictionary of the collected shards"""
         if not self.has_data:
             raise NScore.CollectError(
-                "{} requires a previous request to the api to collect data".format(type(self)))
+                ("{} requires a previous request to the api to collect data"
+                    .format(type(self))))
         return self.full_collect()[self.api]
 
     def full_collect(self):
@@ -323,7 +327,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return self.api_instance.get_url()
         else:
             return self.data["url"]
- 
+
 
 def get_ratelimit():
     # To prevent dependencies

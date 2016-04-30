@@ -5,6 +5,7 @@ try:
 except NameError:
     unicode = str
 
+
 class NSDict(dict):
 
     def __init__(self, *arg, **kw):
@@ -15,6 +16,7 @@ class NSDict(dict):
             return self[attr]
         else:
             return super(dict, self).__getattribute__(attr)
+
 
 def parsedict(x):
     """

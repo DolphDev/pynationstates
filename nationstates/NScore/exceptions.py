@@ -1,6 +1,7 @@
 from requests.exceptions import ConnectionError
 from xml.parsers.expat import ExpatError
 
+
 class NSError(Exception):
 
     """
@@ -20,15 +21,18 @@ class NotFound(NSError):
 
 
 class CollectError(NSError):
+
     """Raised for errors in Api.collect()"""
     pass
 
 
 class ShardError(NSError):
+
     """Errors caused by incorrect Shard Object use"""
 
 
 class RateLimitCatch(NSError):
+
     """Raised if the ratelimiter is unable to confirm rate limit saftey
     """
     pass
@@ -39,6 +43,7 @@ class APIError(NSError):
     """Api error
     """
     pass
+
 
 class APIRateLimitBan(APIError):
     pass
