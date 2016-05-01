@@ -138,7 +138,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         if not args.api in ("nation", "region", "world", "wa"):
             raise exceptions.APIError("Invalid API endpoint: {}".format(api))
 
-        # NScore
         # This needs to be created at the start of the run
         self.api = args.api
 
