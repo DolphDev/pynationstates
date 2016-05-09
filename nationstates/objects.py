@@ -308,8 +308,11 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             raise NScore.CollectError(
                 ("{} requires a previous request to the api to collect data"
                     .format(type(self))))
-        return self.full_collect()[self.api]
-
+        resp = self.full_collect()[self.api]
+        if resp == None:
+            raise APIError("API returned empty response (Check your shards)")
+        return resp
+        
     def full_collect(self):
         """Returns NScore's collect"""
         return self.api_instance.collect()
