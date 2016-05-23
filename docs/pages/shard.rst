@@ -23,8 +23,8 @@ The :class:`Shard` Object was built to allow more complicated shards. They allow
 
     >>> import nationstates as ns
     >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
-    >>> customshard = ns.Shard("happenings", view="region.the_pacific", filter="founding")
-    >>> r = api.get_world(shard=[customshard])
+    >>> happenings = ns.Shard("happenings", view="region.the_pacific", filter="founding")
+    >>> r = api.get_world(shard=[happenings])
 
 
 
