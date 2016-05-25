@@ -167,6 +167,10 @@ class RequestMixin(ParserMixin):
         if data["status"] == 500:
             message = ("Nationstates API has returned a Internal Server Error")
             raise APIError(message)
+        if data["status"] == 521:
+            raise APIError(
+                "Error 521: Cloudflare did not recieve a response from nationstates"
+                )
 
     def request(self, user_agent=None):
         """This handles all requests.
