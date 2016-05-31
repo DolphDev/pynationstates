@@ -45,3 +45,5 @@ venv/
 *.css
 *.txt
 *.html
+
+cache/

@@ -94,7 +94,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
                  api_mother=None, disable_ratelimit=False,
-                 use_error_xrls=True):
+                 use_error_xrls=True, use_error_rl=False):
         """
         Passes on the api arguments to self.__call__()
 
@@ -106,6 +106,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
         self.__use_error_xrls__ = use_error_xrls
+        self.__use_error_rl__ = use_error_rl
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
@@ -268,9 +269,11 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
             while not self.ratelimitcheck(amount_allow, within_time):
-                if numattempt == 0:
-                    raise exceptions.RateLimitCatch(
-                        "Rate Limit Protection Blocked this Request")
+                if numattempt == 0 or self.__use_error_rl__: 
+                    raise exceptions.RateLimitCatch("{} {} {}".format(
+                        "Rate Limit protection has blocked this request due to being",
+                        "unable to determine if it could make a safe request.",
+                        "Make sure you are not bursting requests."))
                 sleep(retry_after)
                 self._load(
                     user_agent=user_agent,

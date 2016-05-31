@@ -65,7 +65,7 @@ class Api(object):
 
     def request(self, api, value=None, shard=None,
                 user_agent=None, auto_load=False,
-                version=__apiversion__, use_error_xrls=True):
+                version=__apiversion__, use_error_xrls=True, user_error_rl=False):
         """Requests the api with the specific parameters
 
         :param api: The api being requested
@@ -84,6 +84,7 @@ class Api(object):
             self._call(api, value, shard, useragent, False, version))
         req.api_instance.session = self.nsobj.api_instance.session
         req.__use_error_xrls__ = use_error_xrls
+        req.__use_error_xrls__ = user_error_rl
         if auto_load:
             req.auto_load_bool = auto_load
             req.load()
