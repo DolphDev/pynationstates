@@ -164,6 +164,7 @@ class RequestMixin(ParserMixin):
                        " Retry-After: {seconds}".format(
                            seconds=(data["request_instance"]
                                     .headers["Retry-After"])))
+            raise APIRateLimitBan(message)
         if data["status"] == 500:
             message = ("Nationstates API has returned a Internal Server Error")
             raise APIError(message)
