@@ -29,11 +29,13 @@ class CollectError(NSError):
 class ShardError(NSError):
 
     """Errors caused by incorrect Shard Object use"""
+    pass
 
 
 class RateLimitCatch(NSError):
 
-    """Raised if the ratelimiter is unable to confirm rate limit saftey
+    """Raised if the ratelimiter is unable to confirm rate limit safety or
+    the ratelimit sleep system is disabled
     """
     pass
 
