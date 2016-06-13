@@ -12,7 +12,7 @@ To install pynationstates simply use `pip`
 
     pip install nationstates
 
-The NS module usually updates weekly to biweekly to either fix bugs or 
+The NS module usually updates monthly to either fix bugs or 
 to add features.  
 
 #####Examples
@@ -50,7 +50,7 @@ Basic Example
 
 
 To see more advanced usage go [here](http://pynationstates.readthedocs.org/en/latest/pages/shard.html)<br>
-To see the official list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html) 
+To see the official (and updated) list of shards from the official nationstates api go [here](https://www.nationstates.net/pages/api.html) 
 
 ###Shard List
 
