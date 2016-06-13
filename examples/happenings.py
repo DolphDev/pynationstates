@@ -1,9 +1,8 @@
 import nationstates
-
-nationname = "The United Island Tribes"
+from nationstates import Shard
+from pprint import pprint
 
 api = nationstates.Api("Example for Nationstates API for python")
 
-print(
-	api.get_nation(nationname, shard=["flag"]).flag
-	)
+resp = api.get_world(shard=[Shard("happenings", view="region.the_pacific", filter='founding+move+cte', limit="5")])
+pprint(resp.happenings)
