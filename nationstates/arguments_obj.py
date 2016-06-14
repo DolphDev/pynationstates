@@ -10,7 +10,8 @@ class NSArgs(object):
     def __init__(self, api, value, shard, user_agent, auto_load, version):
         if not isinstance(api, str):
             raise exceptions.NSError("api must be type(str)")
-        if not isinstance(value, str) != (value is None):
+        if (False if api=="world" else (False 
+                if isinstance(value, str) else True)):
             raise exceptions.NSError("value must be type(str)")
         if (not isinstance(shard, list)) != (shard is None):
             raise exceptions.NSError("shard must be type(list)")
