@@ -36,7 +36,7 @@ version = '1.1.33.63'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["requests==2.9.1", "Beautifulsoup4==4.4.1", "xmltodict==0.10.2", "ezurl==0.1.3.24"],
+      install_requires=["requests==2.10.0", "Beautifulsoup4==4.4.1", "xmltodict==0.10.2", "ezurl==0.1.3.24"],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
