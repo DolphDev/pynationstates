@@ -15,4 +15,3 @@ def parse_nation(s):
 def parse_region(s):
     return REGION_REGEX.findall(s)
 
-print((parse_nation(s)))
