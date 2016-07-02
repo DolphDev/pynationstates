@@ -56,7 +56,14 @@ def parse_shard_arg(arg):
 
 class Shard(object):
 
-    """Shard Object"""
+    """Shard Object
+        :param shard: The shard this object represents (must be string)
+            Will use the default one if not supplied
+
+        Kwargs can be used to attach parameters to this shard
+            that will be included when the url is generated.
+
+    """
 
     def __init__(self, shard, **kwargs):
         if isinstance(shard, str):
@@ -110,6 +117,11 @@ class Shard(object):
             hash(self.shardname) ^
             hash(tagsnames) ^
             hash(tagsnames))
+
+    @property
+    def name(self):
+        """Returns the Name of the Shard"""
+        return self._get_main_value()
 
     def tail_gen(self):
         """
