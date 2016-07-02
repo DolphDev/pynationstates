@@ -64,28 +64,22 @@ class Shard(object):
             raise ShardError(
                 "Invalid Argument 'shard' cant be {}".format(type(shard)))
 
-    def __call__(self, shard, st_tags=None, **kwargs):
+    def __call__(self, shard, **kwargs):
         if not isinstance(shard, str):
             raise ShardError(
                 "Invalid Argument 'shard' cant be {}. `shard` can only be {}"
                 .format(
                     type(shard), str))
 
-        kwarguments = kwargs
-
-        if st_tags is None:
-            temptags = []
-        if isinstance(st_tags, dict):
-            temptags = [st_tags]
-        if isinstance(st_tags, list) or kwarguments:
-            temptags = tags if not (st_tags is None) else []
+        tagstore = []
+        if kwargs:
             if kwarguments:
-                for x in kwarguments.keys():
-                    temptags.append(
+                for x in kwargs.keys():
+                    tagstore.append(
                         {"paramtype": x, "paramvalue": parse_shard_arg(kwarguments[x])})
 
         self.shardname = shard
-        self._tags = temptags
+        self._tags = tagstore
 
     def __repr__(self):
         if self._tags:
