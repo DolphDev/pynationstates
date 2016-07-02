@@ -5,7 +5,7 @@ import copy
 try:
     from . import NScore
     from .arguments_obj import NSArgs
-    from .NScore import exceptions
+    from .NScore import exceptions,  Shard
     from .mixins import (
         NSUserAgentMixin,
         NSPropertiesMixin,
@@ -14,7 +14,7 @@ try:
     )
 except (ImportError, SystemError):
     import NScore
-    from NScore import exceptions
+    from NScore import exceptions, Shard
     from arguments_obj import NSArgs
     from mixins import (
         NSUserAgentMixin,
@@ -24,16 +24,6 @@ except (ImportError, SystemError):
     )
 
 __all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
-
-
-class Shard(NScore.Shard):
-
-    """Inherits from NScore Shard"""
-
-    @property
-    def name(self):
-        """Returns the Name of the Shard"""
-        return self._get_main_value()
 
 
 class RateLimit(object):
