@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from ezurl import Url
+from collections import OrderedDict
 
 __apiversion__ = "8"
 __version__ = "1.1.34.64"
@@ -57,9 +58,9 @@ class Shard(object):
 
     """Shard Object"""
 
-    def __init__(self, shard, st_tags=None, **kwargs):
+    def __init__(self, shard, **kwargs):
         if isinstance(shard, str):
-            self.__call__(shard, st_tags, **kwargs)
+            self.__call__(shard, **kwargs)
         else:
             raise ShardError(
                 "Invalid Argument 'shard' cant be {}".format(type(shard)))
@@ -71,21 +72,14 @@ class Shard(object):
                 .format(
                     type(shard), str))
 
-        tagstore = []
-        if kwargs:
-            if kwarguments:
-                for x in kwargs.keys():
-                    tagstore.append(
-                        {"paramtype": x, "paramvalue": parse_shard_arg(kwarguments[x])})
-
         self.shardname = shard
-        self._tags = tagstore
+        self._tags = OrderedDict(kwargs)
 
     def __repr__(self):
         if self._tags:
-            gen_repr = [
+            gen_repr = (
                 "{pn}={pv}".format(
-                    pn=x["paramtype"], pv=x["paramvalue"]) for x in self._tags]
+                    pn=k, pv=v) for k,v in self._tags.items())
             repl_text = ",".join(gen_repr)
             return ("<shard:({ShardName},{tags})>").format(
                 ShardName=self.shardname,
@@ -99,18 +93,18 @@ class Shard(object):
 
     def __eq__(self, n):
         """Used for sets/dicts"""
-        tagsnames = tuple(sorted([x["paramtype"] for x in self._tags]))
-        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
-        ntagsnames = tuple(sorted([x["paramtype"] for x in n._tags]))
-        ntagsnvalues = tuple(sorted([x["paramvalue"] for x in n._tags]))
+        tagsnames = tuple(sorted((k for k in self._tags.keys())))
+        tagsnvalues = tuple(sorted((v for v in self._tags.values())))
+        ntagsnames = tuple(sorted((k for k in n._tags.keys())))
+        ntagsnvalues = tuple(sorted((v for v in n._tags.values())))
 
         return ((self.shardname == n.shardname)
                 and (set(tagsnames) == set(ntagsnames))
                 and set(tagsnvalues) == set(ntagsnvalues))
 
     def __hash__(self):
-        tagsnames = tuple(sorted([x["paramtype"] for x in self._tags]))
-        tagsnvalues = tuple(sorted([x["paramvalue"] for x in self._tags]))
+        tagsnames = tuple(sorted((k for k in self._tags.keys())))
+        tagsnvalues = tuple(sorted((v for v in self._tags.values())))
 
         return hash(
             hash(self.shardname) ^
@@ -122,16 +116,7 @@ class Shard(object):
         Generates the parameters for the url.
 
         """
-        if isinstance(self._tags, dict):
-            self._tags = [self._tags]
-        if self._tags is not None and isinstance(self._tags, list):
-            store = dict()
-            for x in self._tags:
-                store.update({x["paramtype"]: str(x["paramvalue"])})
-                setattr(self, x["paramtype"], x["paramvalue"])
-            return store
-        else:
-            return {}
+        return dict(self._tags)
 
     def _get_main_value(self):
         return self.shardname
