@@ -5,18 +5,6 @@ USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrap
 
 
 
-class TestApi(object):
-
-    def __init__(self):
-        self.__xrls__ = 0
-
-    @property
-    def xrls(self):
-        return 0
-
-    @xrls.setter
-    def xrls(self, v):
-        pass
 
 
 class CallTest(unittest.TestCase):
