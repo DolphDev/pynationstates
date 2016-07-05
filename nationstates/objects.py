@@ -49,23 +49,43 @@ class RateLimit(object):
         """Sets the current tracker"""
         NScore._rltracker_ = val
 
-    def ratelimitcheck(self, amount_allow=48, within_time=30):
+    def ratelimitcheck(self, amount_allow=48, within_time=30, xrls=0):
         """Checks if PyNationstates needs pause to prevent api banning"""
 
-        if len(self.rltime) >= amount_allow:
+        if xrls >= amount_allow:
+            pre_raf = xrls - (xrls - len(self.rltime))
             currenttime = timestamp()
             try:
                 while (self.rltime[-1]+within_time) < currenttime:
                     del self.rltime[-1]
-                if len(self.rltime) >= amount_allow:
+                post_raf = xrls - (xrls - len(self.rltime))
+                diff = pre_raf - post_raf
+                nxrls = xrls - diff
+                if nxrls >= amount_allow:
                     return False
             except IndexError as err:
-                if len(self.rltime) == 0:
+                if (xrls - pre_raf) >= amount_allow:
+                    return False
+                else:
                     return True
             else:
+                self.cleanup()
                 return True
         else:
+            self.cleanup()
             return True
+
+    def cleanup(self, amount_allow=50, within_time=30):
+        """To prevent the list from growing forever when there isn't enough requests to force it
+            cleanup"""
+        try:
+            currenttime = timestamp()
+            while (self.rltime[-1]+within_time) < currenttime:
+                del self.rltime[-1]
+        except IndexError as err:
+            #List is empty, pass
+            pass
+
 
     def add_timestamp(self):
         """Adds timestamp to rltime"""
@@ -95,6 +115,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
+        self.__requestsallowed__ = 40
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
@@ -187,12 +208,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     @property
     def xrls(self):
-        return lambda x: (x - (self.api_mother.xrls)
-                          if (x - (self.api_mother.xrls)) >= 0 else 0)
+        return self.api_mother.xrls
 
     @xrls.setter
     def xrls(self, v):
         self.api_mother.__xrls__ = v
+
 
     def load(self, user_agent=None, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3):
@@ -209,7 +230,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 time.sleep(30)
 
         if safe == "safe":
-            vsafe = self.xrls(40)
+            vsafe = (40)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
@@ -217,7 +238,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return resp
 
         if safe == "notsafe":
-            vsafe = self.xrls(48)
+            vsafe = (48)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
@@ -225,7 +246,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             return
 
         if safe == "verysafe":
-            vsafe = self.xrls(35)
+            vsafe = (35)
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                               within_time=30, amount_allow=vsafe)
             self.xrls = int(self.data["request_instance"]
@@ -240,6 +261,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         :param user_agent: parameter
 
         """
+        xrls = self.api_mother.xrls
         # These next three if statements handle user_agents
         if not (user_agent or self.user_agent):
             print("Warning: No user-agent set, default will be used.")
@@ -247,7 +269,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             self.user_agent = user_agent
         if not user_agent and self.user_agent:
             user_agent = self.user_agent
-        if self.ratelimitcheck(amount_allow, within_time) or no_ratelimit:
+        if self.ratelimitcheck(amount_allow, within_time, xrls) or no_ratelimit:
             try:
                 self.add_timestamp()
                 self.has_data = bool(self.api_instance.load(
@@ -258,12 +280,18 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 raise err
         elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
-            while not self.ratelimitcheck(amount_allow, within_time):
-                if numattempt == 0 or self.__use_error_rl__: 
-                    raise exceptions.RateLimitCatch("{} {} {}".format(
-                        "Rate Limit protection has blocked this request due to being",
-                        "unable to determine if it could make a safe request.",
-                        "Make sure you are not bursting requests."))
+            while not self.ratelimitcheck(amount_allow, within_time, xrls):
+                if numattempt == 0:
+                    if self.__use_error_rl__: 
+                        raise exceptions.RateLimitCatch("{} {} {}".format(
+                            "Rate Limit protection has blocked this request due to being",
+                            "unable to determine if it could make a safe request.",
+                            "Make sure you are not bursting requests."))
+                    else:
+                        sleep(30) #This will wait till the API resets our counter
+                        return self._load(user_agent=user_agent, no_ratelimit=True,
+                                  amount_allow=amount_allow,
+                                  within_time=within_time)                
                 sleep(retry_after)
                 self._load(
                     user_agent=user_agent,
@@ -277,10 +305,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     return self
             # In the rare case where the ratelimiter
             if self.has_data and self.ratelimitcheck(
-                    amount_allow, within_time):
+                    amount_allow, within_time, self.xrls):
                 return self   # is within a narrow error prone zone
             if not self.has_data and self.ratelimitcheck(
-                    amount_allow, within_time):
+                    amount_allow, within_time, xrls):
                 return self._load(user_agent=user_agent, no_ratelimit=True,
                                   amount_allow=amount_allow,
                                   within_time=within_time)
