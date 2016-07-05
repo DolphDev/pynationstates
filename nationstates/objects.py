@@ -255,7 +255,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=5, amount_allow=48, within_time=30,
-              no_loop=False, do_sleep=False):
+              no_loop=False):
         """Requests/Refreshs the data
 
         :param user_agent: parameter
