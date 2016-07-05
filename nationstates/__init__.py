@@ -61,7 +61,6 @@ class Api(object):
     @property
     def xrls(self):
         return self.__xrls__
-    
 
     def request(self, api, value=None, shard=None,
                 user_agent=None, auto_load=False,

@@ -64,8 +64,10 @@ class RateLimit(object):
                 if nxrls >= amount_allow:
                     return False
             except IndexError as err:
-                if len(self.rltime) == 0:
+                if (xrls - pre_raf) >= amount_allow:
                     return True
+                else:
+                    return False
             else:
                 self.cleanup()
                 return True
@@ -206,7 +208,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     @property
     def xrls(self):
-        return self.api_mother.__xrls__
+        return self.api_mother.xrls
 
     @xrls.setter
     def xrls(self, v):
