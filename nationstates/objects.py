@@ -255,7 +255,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=5, amount_allow=48, within_time=30,
-              no_loop=False):
+              no_loop=False, sleep_for=30):
         """Requests/Refreshs the data
 
         :param user_agent: parameter
@@ -288,7 +288,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                             "unable to determine if it could make a safe request.",
                             "Make sure you are not bursting requests."))
                     else:
-                        sleep(30) #This will wait till the API resets our counter
+                        sleep(sleep_for) #This will wait till the API resets our counter
                         return self._load(user_agent=user_agent, no_ratelimit=True,
                                   amount_allow=amount_allow,
                                   within_time=within_time)                

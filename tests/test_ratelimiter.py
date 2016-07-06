@@ -38,6 +38,21 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         nsinstance.rltime = [(ct+x) for x in range(47)]
         self.assertTrue(nsinstance.ratelimitcheck(xrls=47))
 
+    def test_rate_limiting_check_Sleeps(self):
+        api = Api()
+        nsinstance = api.get_world(shard=["TEST"], auto_load=False)
+        api.__xrls__ = 50
+        ct = time()
+        nsinstance.rltime = [(ct+x) for x in range(0)]
+        # This is to assert that the RateLimitCatch isn't meaningless
+        self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
+        # Tests that numattempts will raise this exception at zero
+        nsinstance._load(numattempt=0, retry_after=0, sleep_for=0)
+        # To assure that data was not requested, so the rate-limit will not be
+        # broken
+        self.assertTrue(nsinstance.has_data)
+
+
     def test_rate_limiting_check_RaisesCatch_use_error_rl(self):
         api = Api()
         api.__xrls__ = 50
@@ -63,20 +78,3 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
             self.fail(str(err))
 
 
-"""
-This test has been removed for now
-    There is no way to test if it worked.
-    def test_rate_limiting_check_RaisesCatch(self):
-        api = Api()
-        nsinstance = api.get_world(shard=["TEST"], auto_load=False)
-        api.__xrls__ = 50
-        ct = time()
-        nsinstance.rltime = [(ct+x) for x in range(0)]
-        # This is to assert that the RateLimitCatch isn't meaningless
-        self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
-        # Tests that numattempts will raise this exception at zero
-        nsinstance._load(numattempt=0, retry_after=0, dont_sleep=True)
-        # To assure that data was not requested, so the rate-limit will not be
-        # broken
-        self.assertFalse(nsinstance.has_data)
-"""
