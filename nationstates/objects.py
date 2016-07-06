@@ -331,7 +331,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     .format(type(self))))
         resp = self.full_collect()[self.api]
         if resp == None:
-            raise APIError("API returned empty response (Check your shards)")
+            raise NScore.APIError("API returned empty response (Check your shards)")
         return resp
         
     def full_collect(self):
