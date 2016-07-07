@@ -4,7 +4,7 @@ from ezurl import Url
 from collections import OrderedDict
 
 __apiversion__ = "8"
-__version__ = "1.1.34.64"
+__version__ = "1.1.34.65"
 _rltracker_ = list()
 if __name__ != "__main__":
     try:
@@ -163,7 +163,7 @@ class RequestMixin(ParserMixin):
                        " for Breaking the Rate Limit." +
                        " Retry-After: {seconds}".format(
                            seconds=(data["request_instance"]
-                                    .headers["Retry-After"])))
+                                    .headers["X-Retry-After"])))
             raise APIRateLimitBan(message)
         if data["status"] == 500:
             message = ("Nationstates API has returned a Internal Server Error")
