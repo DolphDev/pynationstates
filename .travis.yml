@@ -9,11 +9,15 @@ python:
 # command to install dependencies
 install:
   - pip install -e .
+  - pip install pytest-cov
+  - pip install python-coveralls
   - pip uninstall nationstates requests xmltodict ezurl --yes
   - pip install -r requirements.txt
   - pip install pytest
   - pip install pytest-pep8
 # command to run tests
 script:
-  py.test tests --pep8
+  - py.test --cov=nationstates tests/
+after_success:
+  - coveralls
 
