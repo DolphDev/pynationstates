@@ -1,7 +1,4 @@
-try:
-    from .NScore import exceptions
-except (ImportError, SystemError):
-    from NScore import exceptions
+from .NScore import exceptions
 
 __all__ = ['NSArgs']
 

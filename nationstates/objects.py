@@ -2,26 +2,15 @@ from time import time as timestamp
 from time import sleep
 import copy
 
-try:
-    from . import NScore
-    from .arguments_obj import NSArgs
-    from .NScore import exceptions,  Shard
-    from .mixins import (
-        NSUserAgentMixin,
-        NSPropertiesMixin,
-        NSSettersMixin,
-        escape_url
-    )
-except (ImportError, SystemError):
-    import NScore
-    from NScore import exceptions, Shard
-    from arguments_obj import NSArgs
-    from mixins import (
-        NSUserAgentMixin,
-        NSPropertiesMixin,
-        NSSettersMixin,
-        escape_url
-    )
+from . import NScore
+from .arguments_obj import NSArgs
+from .NScore import exceptions,  Shard
+from .mixins import (
+    NSUserAgentMixin,
+    NSPropertiesMixin,
+    NSSettersMixin,
+    escape_url
+)
 
 __all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
 

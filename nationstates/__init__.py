@@ -3,24 +3,15 @@ from time import sleep
 
 import copy
 
-if __name__ != "__main__":
-    from .objects import (
-        Nationstates,
-        Shard,
-        get_ratelimit,
-        clear_ratelimit,
-    )
-    from .NScore import __apiversion__
-    from .NScore import exceptions
-else:
-    from objects import (
-        Nationstates,
-        Shard,
-        get_ratelimit,
-        clear_ratelimit,
-    )
-    from NScore import __apiversion__
-    from NScore import exceptions
+from .objects import (
+    Nationstates,
+    Shard,
+    get_ratelimit,
+    clear_ratelimit,
+)
+from .NScore import __apiversion__
+from .NScore import exceptions
+
 
 
 # this is used in nationstates get_??? methods

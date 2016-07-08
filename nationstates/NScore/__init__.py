@@ -6,20 +6,18 @@ from collections import OrderedDict
 __apiversion__ = "8"
 __version__ = "1.1.34.65"
 _rltracker_ = list()
-if __name__ != "__main__":
-    try:
-        from . import bs4parser
-    except ImportError:
-        import bs4parser
-    from .exceptions import (
-        APIError,
-        APIRateLimitBan,
-        CollectError,
-        ConnectionError,
-        NotFound,
-        NSError,
-        RateLimitCatch,
-        ShardError)
+
+from . import bs4parser
+
+from .exceptions import (
+    APIError,
+    APIRateLimitBan,
+    CollectError,
+    ConnectionError,
+    NotFound,
+    NSError,
+    RateLimitCatch,
+    ShardError)
 
 
 API_URL = "www.nationstates.net/cgi-bin/api.cgi"
