@@ -20,3 +20,10 @@ class ShardTest(unittest.TestCase):
     def test_shard_ShardError(self):
         self.assertRaises(NScore.ShardError, NScore.Shard, None)
         self.assertRaises(NScore.ShardError, NScore.Shard("Test"), None)
+
+    def test_shard_string(self):
+        try:
+            str(NScore.Shard("TEST"))
+        except:
+            self.fail()
+            
