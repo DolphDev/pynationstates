@@ -24,6 +24,10 @@ class ShardTest(unittest.TestCase):
     def test_shard_string(self):
         try:
             str(NScore.Shard("TEST"))
+            NScore.Shard("TEST").name
         except:
             self.fail()
-            
+
+    def test_shard_eq(self):
+        self.assertEqual(NScore.Shard("TEST"), NScore.Shard("TEST"))
+    
