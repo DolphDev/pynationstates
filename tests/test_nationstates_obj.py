@@ -1,5 +1,6 @@
 import unittest
 import nationstates as ns
+from nationstates.NScore.exceptions import CollectError, APIError
 
 
 
@@ -125,4 +126,30 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         self.assertEqual(
             wa_obj.user_agent, wa_obj.api_instance.user_agent, new_useragent)
         self.assertNotEqual(new_useragent, wa_obj.api_instance.session.headers["User-Agent"])
+
+class nationstates_object(unittest.TestCase):
+    
+
+    def test_has_data_collect_dir(self):
+        nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
+        self.assertTrue(isinstance(dir(nation_obj), list))
+        self.assertRaises(CollectError, nation_obj.__getitem__, "fullname")
+        self.assertRaises(CollectError, nation_obj.collect)
+        self.assertTrue(isinstance(nation_obj.url, str))
+        nation_obj.load()
+        self.assertTrue(isinstance(dir(nation_obj), list))
+        self.assertTrue(isinstance(nation_obj.url, str))
+        try:
+            nation_obj.collect()
+            nation_obj["fullname"]
+        except CollectError as err:
+            self.fail(err)
+
+    def test_fail(self):
+        self.assertRaises(APIError, nationstates.request, "NON_VALID_API", "TEST", auto_load=False)
+
+
+
+
+
 
