@@ -1,6 +1,12 @@
 from time import time as timestamp
 from time import sleep
+from sys import version
+
+__pyv__ = (version[:3].split("."))
+
+
 import copy
+
 
 from . import NScore
 from .arguments_obj import NSArgs
@@ -19,6 +25,7 @@ __SAFEDICT__ = {
     "notsafe": 48,
     "verysafe": 35
 }
+
 
 
 class RateLimit(object):
@@ -282,12 +289,17 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     within_time=within_time)
                 if self.has_data:
                     return self
- 
-    def __dir__(self):
+    
+    def __collectdir__(self):
         if self.has_data:
-            return super(
-                object, Nationstates).__dir__() + list(self.collect().keys())
-        return super(object, Nationstates).__dir__()
+            return list(self.collect().keys())
+        else:
+            return []
+
+    def __dir__(self):
+        return sorted(set(
+                dir(type(self)) + \
+                list(self.__dict__.keys()) + self.__collectdir__()))
 
     def collect(self):
         """Returns a dictionary of the collected shards"""
