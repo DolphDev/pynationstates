@@ -131,6 +131,7 @@ class nationstates_object(unittest.TestCase):
     
 
     def test_has_data_collect_dir(self):
+
         nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
         self.assertTrue(isinstance(dir(nation_obj), list))
         self.assertRaises(CollectError, nation_obj.__getitem__, "fullname")
@@ -138,7 +139,11 @@ class nationstates_object(unittest.TestCase):
         self.assertTrue(isinstance(nation_obj.url, str))
         nation_obj.load()
         self.assertTrue(isinstance(dir(nation_obj), list))
-        self.assertTrue(isinstance(nation_obj.url, str))
+        try:
+            unicode
+        except NameError:
+            unicode = str
+        self.assertTrue(isinstance(nation_obj.url, unicode))
         try:
             nation_obj.collect()
             nation_obj["fullname"]
