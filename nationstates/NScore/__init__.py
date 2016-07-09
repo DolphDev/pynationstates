@@ -42,16 +42,6 @@ def shard_object_extract(shards):
             store.update(shard.tail_gen())
     return store
 
-def parse_shard_arg(arg):
-    if isinstance(arg, str):
-        return arg
-    if (isinstance(arg, list) or isinstance(arg, tuple)
-        or isinstance(arg, set)):
-        return "+".join((str(x) for x in arg))
-    else:
-        return str(arg)
-
-
 class Shard(object):
 
     """Shard Object

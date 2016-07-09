@@ -2,6 +2,7 @@ import unittest
 
 from nationstates import NScore
 
+
 class ShardTest(unittest.TestCase):
 
     def test_shard(self):
@@ -15,3 +16,7 @@ class ShardTest(unittest.TestCase):
     def test_shard_repr(self):
         self.assertIsInstance(NScore.Shard("test").__repr__(), str)
         self.assertIsInstance(NScore.Shard("test", test="test").__repr__(), str)
+
+    def test_shard_ShardError(self):
+        self.assertRaises(NScore.ShardError, NScore.Shard, None)
+        self.assertRaises(NScore.ShardError, NScore.Shard("Test"), None)
