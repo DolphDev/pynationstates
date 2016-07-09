@@ -14,6 +14,12 @@ from .mixins import (
 
 __all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
 
+__SAFEDICT__ = {
+    "safe": 40,
+    "notsafe": 48,
+    "verysafe": 35
+}
+
 
 class RateLimit(object):
 
@@ -205,7 +211,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=2, numattempt=3):
+             safe="safe", retry_after=2, numattempt=3, sleep_for=30):
         self.__safe__ = safe
 
         if self.api_mother.xrls >= 49:
@@ -214,33 +220,17 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     "Rate Limit Protection Blocked this Request.",
                     "API request count is too close to a API Ban.",
                     "Amount of Requests from this IP: {}".format(
-                        xrls)))
+                        self.xrls)))
             else:
-                time.sleep(30)
+                sleep(sleep_for)
 
-        if safe == "safe":
-            vsafe = (40)
-            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=vsafe)
-            self.xrls = int(self.data["request_instance"]
-                            .raw.headers["X-ratelimit-requests-seen"])
-            return resp
+        vsafe = (__SAFEDICT__.get(safe, 40))
+        resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                          within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
+        self.xrls = int(self.data["request_instance"]
+                        .raw.headers["X-ratelimit-requests-seen"])
+        return resp
 
-        if safe == "notsafe":
-            vsafe = (48)
-            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=vsafe)
-            self.xrls = int(self.data["request_instance"]
-                            .raw.headers["X-ratelimit-requests-seen"])
-            return
-
-        if safe == "verysafe":
-            vsafe = (35)
-            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                              within_time=30, amount_allow=vsafe)
-            self.xrls = int(self.data["request_instance"]
-                            .raw.headers["X-ratelimit-requests-seen"])
-            return resp
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=5, amount_allow=48, within_time=30,

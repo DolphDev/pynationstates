@@ -69,6 +69,21 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         # broken
         self.assertFalse(nsinstance.has_data)
 
+    def test_rate_limiting_check_Raises_RateLimitCatch(self):
+
+        api = Api()
+        api.__xrls__ = 49
+        nsinstance = api.get_world(shard=["TEST"], auto_load=False)
+        nsinstance.__use_error_xrls__ = True
+
+        # This is to assert that the RateLimitCatch isn't meaningless
+        # Tests that numattempts will raise this exception at zero
+        self.assertRaises(
+            nationstates.NScore.RateLimitCatch, nsinstance.load)
+        # To assure that data was not requested, so the rate-limit will not be
+        # broken
+        self.assertFalse(nsinstance.has_data)
+
     def test_rate_limiter_handles_IndexError(self):
         nsinstance = Nationstates("world")
         nsinstance.rltime = list(range(50))
