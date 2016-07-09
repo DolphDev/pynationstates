@@ -282,20 +282,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     within_time=within_time)
                 if self.has_data:
                     return self
-            # In the rare case where the ratelimiter
-            if self.has_data and self.ratelimitcheck(
-                    amount_allow, within_time, self.xrls):
-                return self   # is within a narrow error prone zone
-            if not self.has_data and self.ratelimitcheck(
-                    amount_allow, within_time, xrls):
-                return self._load(user_agent=user_agent, no_ratelimit=True,
-                                  amount_allow=amount_allow,
-                                  within_time=within_time)
-            raise exceptions.RateLimitCatch("{} {} {}".format(
-                "Rate Limit protection has blocked this request due to being",
-                "unable to determine if it could make a safe request.",
-                "Make sure you are not bursting requests."))
-
+ 
     def __dir__(self):
         if self.has_data:
             return super(
