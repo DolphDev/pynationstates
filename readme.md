@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Dolphman/pynationstates.svg)](https://travis-ci.org/Dolphman/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates) [![Documentation Status](https://readthedocs.org/projects/pynationstates/badge/?version=latest)](http://pynationstates.readthedocs.org/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/Dolphman/pynationstates/badge.svg?branch=master)](https://coveralls.io/github/Dolphman/pynationstates?branch=master)
-Textile 
+
 
 Nationstates API wrapper
 ---
