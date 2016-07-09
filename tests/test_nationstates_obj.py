@@ -143,7 +143,10 @@ class nationstates_object(unittest.TestCase):
             unicode
         except NameError:
             unicode = str
-        self.assertTrue(isinstance(nation_obj.url, str) or isinstance(nation_obj.url, unicode))
+        try:
+            nation_obj.url
+        except:
+            self.fail()
         try:
             nation_obj.collect()
             nation_obj["fullname"]
