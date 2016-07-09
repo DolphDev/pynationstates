@@ -1,10 +1,5 @@
 from time import time as timestamp
 from time import sleep
-from sys import version
-
-__pyv__ = (version[:3].split("."))
-
-
 import copy
 
 
