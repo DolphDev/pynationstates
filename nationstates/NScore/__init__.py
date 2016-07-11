@@ -127,10 +127,12 @@ class ParserMixin(object):
     """Methods Dealing with the parser or parsing
     """
 
-    def xml2bs4(self, xml):
+    @staticmethod
+    def xml2bs4(xml):
         return (BeautifulSoup(xml, "html.parser"))
 
-    def xmlparser(self, _type_, xml):
+    @staticmethod
+    def xmlparser(_type_, xml):
         parsedsoup = bs4parser.parsetree(xml)
         return (parsedsoup)
 
@@ -139,7 +141,8 @@ class RequestMixin(ParserMixin):
 
     # Methods used for creating and sending requests to the api
 
-    def response_check(self, data):
+    @staticmethod
+    def response_check(data):
         if data["status"] == 400:
             raise APIError(data["data_bs4"].h1.text)
         if data["status"] == 403:
