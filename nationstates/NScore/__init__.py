@@ -267,19 +267,6 @@ class Api(RequestMixin):
     def __nonzero__(self):
         return bool(self.data)
 
-    def __del__(self):
-        """
-        Catches Race Condition errors
-        """
-        try:
-            self.session.close()
-        except ReferenceError:
-            """GC Fix"""
-            pass
-        except TypeError:
-            """requests fix"""
-            pass
-
     def __bool__(self):
         return self.__nonzero__()
 

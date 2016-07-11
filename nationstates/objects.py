@@ -284,6 +284,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                     within_time=within_time)
                 if self.has_data:
                     return self
+            return self._load(user_agent=user_agent, no_loop=True, no_ratelimit=True,
+                       amount_allow=amount_allow, within_time=within_time)
     
     def __collectdir__(self):
         if self.has_data:

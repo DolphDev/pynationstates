@@ -31,3 +31,5 @@ class ShardTest(unittest.TestCase):
     def test_shard_eq(self):
         self.assertEqual(NScore.Shard("TEST"), NScore.Shard("TEST"))
     
+    def test_shard_generator_func(self):
+        self.assertRaises(NScore.ShardError, list, NScore.shard_generator([None]))

@@ -29,6 +29,7 @@ class Api(object):
         """Creates Api Instance"""
         self.instance_version = (v, (v != __apiversion__))
         self.nsobj = Nationstates("world", shard=None, auto_load=False, api_mother=self)
+        self.__session__ = self.nsobj.api_instance.session
         self.user_agent = user_agent if user_agent else None
         self.__xrls__ = 0
 
@@ -72,7 +73,7 @@ class Api(object):
         useragent = self.user_agent if not user_agent else user_agent
         req = copy.copy(
             self._call(api, value, shard, useragent, False, version))
-        req.api_instance.session = self.nsobj.api_instance.session
+        req.api_instance.session = self.__session__
         req.__use_error_xrls__ = use_error_xrls
         req.__use_error_xrls__ = user_error_rl
         if auto_load:

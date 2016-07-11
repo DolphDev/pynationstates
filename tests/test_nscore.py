@@ -9,7 +9,13 @@ from nationstates.NScore import (
     APIError,
     CollectError,
     ShardError)
+from bs4 import BeautifulSoup
 
+errorhtml = BeautifulSoup("""<h1>ERROR</h1>""")
+
+dataresponse = {
+    
+}
 
 errorxml = """<!DOCTYPE html><h1 style="color:red">Unknown nation: "231".</h1><p style="font-size:small">Error: 404 Not Found<p><a href="/pages/api.html">The NationStates API Documentation</a>"""
 

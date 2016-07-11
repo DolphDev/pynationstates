@@ -3,6 +3,17 @@ from nationstates import Nationstates, Api
 from time import time
 import nationstates
 
+__STATE__ = {
+    "rl": 0
+}
+
+def ratelimitcheck(*args, **kwargs):
+    if __STATE__["rl"] == 0:
+        __STATE__["rl"] = 1 
+        return False
+    else:
+        return True
+    
 
 
 class nationstates_rate_limiting_handeling(unittest.TestCase):
@@ -83,6 +94,13 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         # To assure that data was not requested, so the rate-limit will not be
         # broken
         self.assertFalse(nsinstance.has_data)
+
+    def test_rate_limiter_handles_error_prone_zone(self):
+        api = Api("AUTOMATED TESTING BY PYNATIONSTATES")
+        nsinstance = api.get_world(shard=["TEST"], auto_load=False)
+        nsinstance.ratelimitcheck = ratelimitcheck
+        nsinstance._load()
+        self.assertTrue(nsinstance.has_data)
 
     def test_rate_limiter_handles_IndexError(self):
         nsinstance = Nationstates("world")
