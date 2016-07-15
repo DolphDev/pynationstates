@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 errorhtml = BeautifulSoup("""<h1>ERROR</h1>""")
 
 dataresponse = {
+    'status': 400,
+    "data_bs4" : errorhtml
     
 }
 
@@ -50,3 +52,4 @@ class RequestMixinTest(unittest.TestCase):
         url_is_string_NScore_object = ns.Nationstates("world", 
             shard=["numnations"], auto_load=False).api_instance
         self.assertIsInstance(url_is_string_NScore_object.get_url(), str)
+

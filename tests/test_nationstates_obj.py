@@ -1,5 +1,6 @@
 import unittest
 import nationstates as ns
+from nationstates.NScore.bs4parser import NSDict
 from nationstates.NScore.exceptions import CollectError, APIError
 
 
@@ -155,6 +156,59 @@ class nationstates_object(unittest.TestCase):
 
     def test_fail(self):
         self.assertRaises(APIError, nationstates.request, "NON_VALID_API", "TEST", auto_load=False)
+
+    def test_auto_load(self):
+        def load():
+            return True
+        nation_obj = nationstates.get_nation("the_united_island_tribes", auto_load=False, user_agent=ua)
+        region_obj = nationstates.get_region("the_reject_realms", auto_load=False, user_agent=ua)
+        wa_obj = nationstates.get_wa("1", shard=["TEST"], auto_load=False, user_agent=ua)
+        world_obj = nationstates.get_world(shard=["no_shard"], auto_load=False, user_agent=ua)
+
+        nation_obj.load = load
+        region_obj.load = load
+        wa_obj.load = load
+        world_obj.load = load
+
+        self.assertTrue(nation_obj.__call__("nation", "the_united_island_tribes" , auto_load=True))
+        self.assertTrue(region_obj.__call__("region", "the_reject_realms", auto_load=True))
+        self.assertTrue(wa_obj.__call__("wa", "1", auto_load=True))
+        self.assertTrue(world_obj.__call__("world", auto_load=True))
+
+    def test_xrls(self):
+        test_obj = nationstates.get_world(shard=["TEST"], auto_load=False)
+        self.assertTrue(isinstance(test_obj.xrls, int))
+
+    def test_shard_handler(self):
+        test_obj = nationstates.get_world(shard=["TEST"], auto_load=False)
+
+        self.assertTrue(test_obj.shard_handeler((1,2))==[1,2])
+
+    def test_getitem__key(self):
+        def collect():
+            return NSDict({"world": True})
+        test_obj = nationstates.get_world(shard=["TEST"], auto_load=False)
+        test_obj.has_data = True
+        test_obj.collect = collect
+
+        self.assertTrue(test_obj.__getitem__("world").world)
+
+
+    def test_raises_empty_response(self):
+        def full_collect():
+            return NSDict({"world": None})
+        test_obj = nationstates.get_world(shard=["TEST"], auto_load=False)
+        test_obj.has_data = True
+        test_obj.full_collect = full_collect
+
+        self.assertRaises(APIError, test_obj.collect)
+
+
+
+
+
+
+
 
 
 

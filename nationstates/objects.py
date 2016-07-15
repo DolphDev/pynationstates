@@ -60,14 +60,13 @@ class RateLimit(object):
                 nxrls = xrls - diff
                 if nxrls >= amount_allow:
                     return False
+                else:
+                    return True
             except IndexError as err:
                 if (xrls - pre_raf) >= amount_allow:
                     return False
                 else:
                     return True
-            else:
-                self.cleanup()
-                return True
         else:
             self.cleanup()
             return True
@@ -214,18 +213,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def load(self, user_agent=None, no_ratelimit=False,
              safe="safe", retry_after=2, numattempt=3, sleep_for=30):
+
         self.__safe__ = safe
-
-        if self.api_mother.xrls >= 49:
-            if self.__use_error_xrls__:
-                raise exceptions.RateLimitCatch("{} {} {}".format(
-                    "Rate Limit Protection Blocked this Request.",
-                    "API request count is too close to a API Ban.",
-                    "Amount of Requests from this IP: {}".format(
-                        self.xrls)))
-            else:
-                sleep(sleep_for)
-
         vsafe = (__SAFEDICT__.get(safe, 40))
         resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
@@ -288,6 +277,9 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                        amount_allow=amount_allow, within_time=within_time)
     
     def __collectdir__(self):
+        """Returns a list of all keys that
+        get be used as an attribute on this object"""
+
         if self.has_data:
             return list(self.collect().keys())
         else:

@@ -43,6 +43,16 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
         nationstates.clear_ratelimit()
 
+    def test_rate_limitingcheck_isTrue_NonIndexError(self):
+        api = Api()
+        api.__xrls__ = 50
+        nsinstance = api.get_world(shard=["TEST"], auto_load=False)
+        ct = time()
+        nsinstance.rltime = [(ct-(x)) for x in range(50)]
+        self.assertTrue(nsinstance.ratelimitcheck(xrls=50))
+
+
+
     def test_rate_limiting_check_isTrue(self):
         nsinstance = Nationstates("world")
         ct = time()
@@ -80,20 +90,16 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         # broken
         self.assertFalse(nsinstance.has_data)
 
-    def test_rate_limiting_check_Raises_RateLimitCatch(self):
-
+    def test_ratelimit_check_indexerror_returns_True(self):
         api = Api()
-        api.__xrls__ = 49
+        api.__xrls__ = 50
         nsinstance = api.get_world(shard=["TEST"], auto_load=False)
-        nsinstance.__use_error_xrls__ = True
+        ct = time()
+        nsinstance.rltime = [(ct-(x+31)) for x in range(50)]
+        self.assertTrue(nsinstance.ratelimitcheck(xrls=50))
 
-        # This is to assert that the RateLimitCatch isn't meaningless
-        # Tests that numattempts will raise this exception at zero
-        self.assertRaises(
-            nationstates.NScore.RateLimitCatch, nsinstance.load)
-        # To assure that data was not requested, so the rate-limit will not be
-        # broken
-        self.assertFalse(nsinstance.has_data)
+
+
 
     def test_rate_limiter_handles_error_prone_zone(self):
         api = Api("AUTOMATED TESTING BY PYNATIONSTATES")
