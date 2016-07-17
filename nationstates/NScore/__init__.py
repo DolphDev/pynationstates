@@ -5,7 +5,6 @@ from collections import OrderedDict
 
 __apiversion__ = "8"
 __version__ = "1.1.34.65"
-_rltracker_ = list()
 
 from . import bs4parser
 
