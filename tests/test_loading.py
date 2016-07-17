@@ -6,9 +6,13 @@ USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrap
 
 class TestApi(object):
 
+    __rltime__ = []
+
     @property
     def xrls(self):
         return 0
+
+
 
 
 world = nationstates.Nationstates(

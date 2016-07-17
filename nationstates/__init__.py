@@ -32,6 +32,7 @@ class Api(object):
         self.__session__ = self.nsobj.api_instance.session
         self.user_agent = user_agent if user_agent else None
         self.__xrls__ = 0
+        self.__rltime__ = list()
 
     @property
     def user_agent(self):
@@ -142,6 +143,12 @@ class Api(object):
         """
         return self.request("wa", council, shard, user_agent,
                             auto_load, version)
+
+    def get_ratelimit(self):
+        return self.__rltime__
+
+    def clear_ratelimit(self):
+        self.__rltime__ = []
 
 
 def gen_url(api, value=None, shard=None, version=None):

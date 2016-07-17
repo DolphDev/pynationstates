@@ -18,17 +18,24 @@ def ratelimitcheck(*args, **kwargs):
 
 class nationstates_rate_limiting_handeling(unittest.TestCase):
 
-    def test_ratelimiting_clear(self):
+    def test_ratelimiting_clear_raises_not_implmented(self):
+        api = Api("AUTOMATED TESTING BY PYNATIONSTATES")
+
         ct = time()
-        nationstates.NScore._rltracker_ = [(ct+x) for x in range(55)]
-        nationstates.clear_ratelimit()
-        self.assertEqual(len(nationstates.NScore._rltracker_), 0)
+        api.__rltime__ = [(ct+x) for x in range(55)]
+        api.clear_ratelimit()
+        self.assertEqual(len(api.__rltime__), 0)
 
     def test_ratelimiting_get(self):
+        api = Api("AUTOMATED TESTING BY PYNATIONSTATES")
         ct = time()
-        nationstates.NScore._rltracker_ = [(ct+x) for x in range(55)]
+        api.__rltime__ = [(ct+x) for x in range(55)]
         self.assertEqual(
-            nationstates.get_ratelimit(), nationstates.NScore._rltracker_)
+            api.get_ratelimit(), api.__rltime__)
+
+    def test_not_implemented_error(self):
+        self.assertRaises(NotImplementedError, nationstates.get_ratelimit)
+        self.assertRaises(NotImplementedError, nationstates.clear_ratelimit)
 
 
 
@@ -41,7 +48,7 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         ct = time()
         nsinstance.rltime = [(ct+x) for x in range(50)]
         self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
-        nationstates.clear_ratelimit()
+        nationstates.__rltime__ = []
 
     def test_rate_limitingcheck_isTrue_NonIndexError(self):
         api = Api()

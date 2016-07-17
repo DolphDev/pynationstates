@@ -39,12 +39,12 @@ class RateLimit(object):
     @property
     def rltime(self):
         """Returns the current tracker"""
-        return NScore._rltracker_
+        return self.rlref
 
     @rltime.setter
     def rltime(self, val):
         """Sets the current tracker"""
-        NScore._rltracker_ = val
+        self.rlref = val
 
     def ratelimitcheck(self, amount_allow=48, within_time=30, xrls=0):
         """Checks if PyNationstates needs pause to prevent api banning"""
@@ -109,6 +109,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
         args = NSArgs(api, value, shard, user_agent, auto_load, version)
         self.has_data = False
+        self.__rltime__ = None if api_mother else list()
         self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
         self.__requestsallowed__ = 40
@@ -185,6 +186,20 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 return self.collect()[attr]
         raise AttributeError('\'{}\' has no attribute \'{}\''.format(
             type(self), attr))
+
+    @property
+    def rlref(self):
+        if isinstance(self.__rltime__, type(None)):
+            return self.api_mother.__rltime__
+        else:
+            return self.__rltime__
+
+    @rlref.setter
+    def rlref(self, v):
+        if isinstance(self.__rltime__, type(None)):
+            self.api_mother.__rltime__ = v
+        else:
+            self.__rltime__ = v
 
     def __copy__(self):
         """Copies the Nationstates Object"""
@@ -320,11 +335,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
 def get_ratelimit():
-    # To prevent dependencies
-    RatelimitObj = RateLimit()
-    return RatelimitObj.rltime
-
+    raise NotImplementedError("get_ratelimit has been moved to a method on the Api object")
 
 def clear_ratelimit():
-    RatelimitObj = RateLimit()
-    RatelimitObj.rltime = list()
+    raise NotImplementedError("clear_ratelimit has been moved to a method on the Api object")

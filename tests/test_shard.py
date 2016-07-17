@@ -33,3 +33,4 @@ class ShardTest(unittest.TestCase):
     
     def test_shard_generator_func(self):
         self.assertRaises(NScore.ShardError, list, NScore.shard_generator([None]))
+
