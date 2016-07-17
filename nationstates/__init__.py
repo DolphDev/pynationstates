@@ -75,7 +75,7 @@ class Api(object):
             self._call(api, value, shard, useragent, False, version))
         req.api_instance.session = self.__session__
         req.__use_error_xrls__ = use_error_xrls
-        req.__use_error_xrls__ = user_error_rl
+        req.__use_error_rl__ = user_error_rl
         if auto_load:
             req.auto_load_bool = auto_load
             req.load()
