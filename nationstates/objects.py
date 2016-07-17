@@ -246,6 +246,17 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         :param user_agent: parameter
 
         """
+        if numattempt == 0:
+            if self.__use_error_rl__: 
+                raise exceptions.RateLimitCatch("{} {} {}".format(
+                    "Rate Limit protection has blocked this request due to being",
+                    "unable to determine if it could make a safe request.",
+                    "Make sure you are not bursting requests."))
+            else:
+                sleep(sleep_for) #This will wait till the API resets our counter
+                return self._load(user_agent=user_agent, no_ratelimit=True,
+                          amount_allow=amount_allow,
+                          within_time=within_time)     
         xrls = self.api_mother.xrls
         # These next three if statements handle user_agents
         if not (user_agent or self.user_agent):
@@ -255,7 +266,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         if not user_agent and self.user_agent:
             user_agent = self.user_agent
         if self.ratelimitcheck(amount_allow, within_time, xrls) or no_ratelimit:
-            try:
+            try: 
                 self.add_timestamp()
                 self.has_data = bool(self.api_instance.load(
                     user_agent=user_agent))
@@ -265,24 +276,12 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 raise err
         elif not no_ratelimit and not no_loop:
             attemptsleft = numattempt
-            while not self.ratelimitcheck(amount_allow, within_time, xrls):
-                if numattempt == 0:
-                    if self.__use_error_rl__: 
-                        raise exceptions.RateLimitCatch("{} {} {}".format(
-                            "Rate Limit protection has blocked this request due to being",
-                            "unable to determine if it could make a safe request.",
-                            "Make sure you are not bursting requests."))
-                    else:
-                        sleep(sleep_for) #This will wait till the API resets our counter
-                        return self._load(user_agent=user_agent, no_ratelimit=True,
-                                  amount_allow=amount_allow,
-                                  within_time=within_time)                
+            while not self.ratelimitcheck(amount_allow, within_time, xrls):          
                 sleep(retry_after)
                 self._load(
                     user_agent=user_agent,
                     numattempt=(
-                        attemptsleft-1) if (
-                        not attemptsleft is None) else None,
+                        numattempt-1),
                     no_loop=True,
                     amount_allow=amount_allow,
                     within_time=within_time)
