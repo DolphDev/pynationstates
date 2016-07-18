@@ -117,7 +117,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.__rltime__ = None if api_mother else list()
         self.api_mother = api_mother
         self.api_instance = NScore.Api(api)
-        self.__requestsallowed__ = 40
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
