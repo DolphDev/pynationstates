@@ -16,10 +16,15 @@ from .mixins import (
 __all__ = ["Shard", "get_ratelimit", "clear_ratelimit", "Nationstates"]
 
 __SAFEDICT__ = {
-    "safe": 40,
+    "safe": 45,
     "notsafe": 48,
     "verysafe": 35
 }
+
+class API_VAR(object):
+    requests_per_block = 50
+    block_time = 30
+    default_safe = __SAFEDICT__["safe"]
 
 
 
@@ -227,7 +232,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=2, numattempt=3, sleep_for=30):
+             safe="safe", retry_after=5, numattempt=7, sleep_for=None):
 
         self.__safe__ = safe
         vsafe = (__SAFEDICT__.get(safe, 40))
@@ -240,7 +245,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
     def _load(self, user_agent=None, no_ratelimit=False,
               retry_after=2, numattempt=5, amount_allow=48, within_time=30,
-              no_loop=False, sleep_for=30):
+              no_loop=False, sleep_for=None):
         """Requests/Refreshs the data
 
         :param user_agent: parameter
@@ -281,12 +286,18 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 self._load(
                     user_agent=user_agent,
                     numattempt=(
-                        numattempt-1),
+                        attemptsleft),
                     no_loop=True,
                     amount_allow=amount_allow,
-                    within_time=within_time)
+                    within_time=within_time,
+                    sleep_for=API_VAR.block_time-(
+                        (numattempt-attemptsleft)*retry_after) 
+                        if not sleep_for
+                            else sleep_for)
                 if self.has_data:
                     return self
+                attemptsleft = attemptsleft - 1
+
             return self._load(user_agent=user_agent, no_loop=True, no_ratelimit=True,
                        amount_allow=amount_allow, within_time=within_time)
     
