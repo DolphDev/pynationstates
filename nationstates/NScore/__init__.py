@@ -4,7 +4,7 @@ from ezurl import Url
 from collections import OrderedDict
 
 __apiversion__ = "8"
-__version__ = "1.1.34.65"
+__version__ = "1.1.35.66"
 
 from . import bs4parser
 
