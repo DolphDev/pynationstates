@@ -16,7 +16,9 @@ from .exceptions import (
     NotFound,
     NSError,
     RateLimitCatch,
-    ShardError)
+    ShardError,
+    Forbidden,
+    ConflictError)
 
 
 API_URL = "www.nationstates.net/cgi-bin/api.cgi"
@@ -142,10 +144,12 @@ class RequestMixin(ParserMixin):
 
     @staticmethod
     def response_check(data):
+        if data["status"] == 409:
+            raise ConflictError("Nationstates API has returned a Conflict Error.")
         if data["status"] == 400:
             raise APIError(data["data_bs4"].h1.text)
         if data["status"] == 403:
-            raise APIError(data["data_bs4"].h1.text)
+            raise Forbidden(data["data_bs4"].h1.text)
         if data["status"] == 404:
             raise NotFound(data["data_bs4"].h1.text)
         if data["status"] == 429:

@@ -49,3 +49,9 @@ class APIError(NSError):
 
 class APIRateLimitBan(APIError):
     pass
+
+class ConflictError(APIError):
+    pass
+
+class Forbidden(APIError):
+    pass

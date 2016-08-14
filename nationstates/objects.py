@@ -231,14 +231,28 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=5, numattempt=7, sleep_for=None):
+             safe="safe", retry_after=5, numattempt=7, sleep_for=None,
+             handle_forbidden=True):
 
         self.__safe__ = safe
         vsafe = (__SAFEDICT__.get(safe, 40))
-        resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+        try:
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
-        self.xrls = int(self.data["request_instance"]
-                        .raw.headers["X-ratelimit-requests-seen"])
+            self.xrls = int(self.data["request_instance"]
+                .raw.headers["X-ratelimit-requests-seen"])
+        except exceptions.Forbidden as err:
+            if not handle_forbidden:
+                raise err
+            if not isinstance(self.api_mother.__session__, Auth):
+                raise err
+            if not self.api_mother.__session__.isauth():
+                raise err
+            self.api_mother.__session__.__usepasswordoral__ = True
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+                  within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
+            self.xrls = int(self.data["request_instance"]
+                            .raw.headers["X-ratelimit-requests-seen"]) + 1
         return resp
 
 
@@ -342,9 +356,52 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return self.data["url"]
 
+class Auth(object):
 
-def get_ratelimit():
-    raise NotImplementedError("get_ratelimit has been moved to a method on the Api object")
+    def __init__(self, sess, password=None, autologin=None, pin=None):
+        self.session = sess
+        if not (password or autologin) and pin:
+            raise exceptions.NSError("Password or Autologin required")
+        self.__password__ = password
+        self.__pin__ = pin
+        self.__autologin__ = autologin
+        self.__usepasswordoral__ = False
 
-def clear_ratelimit():
-    raise NotImplementedError("clear_ratelimit has been moved to a method on the Api object")
+    def get(self, url=None, headers=None, verify=None):
+        if headers == None:
+            headers = {}
+        headers = self.delete_old_headers(headers)
+        headers.update(self.headers())
+        resp = self.session.get(url=url, headers=headers, verify=verify)
+        if self.__password__ and not self.__autologin__:
+            self.__autologin__ = resp.headers.get("X-Autologin", self.__autologin__)
+        self.__pin__ = resp.headers.get("X-pin", self.__pin__)
+        return resp
+
+    def delete_old_headers(self, headers):
+        if headers.get("Pin"):
+            del headers["Pin"]
+        if headers.get("Password"):
+            del headers["Password"]
+        if headers.get("Autologin"):
+            del headers["Autologin"]
+        return headers
+
+    def isauth(self):
+        return bool(self.__pin__) and (bool(self.__password__) or bool(self.__autologin__))
+
+    def headers(self):
+        if self.__usepasswordoral__:
+            sel.__usepasswordoral__ = False
+            if self.__autologin__:
+                return {"Autologin": self.__autologin__}
+            else:
+                return {"Password": self.__password__}
+
+        if not self.__pin__ or not self.__autologin__: 
+            return {"Password": self.__password__}
+        if self.__autologin__ and not self.__pin__:
+            return {"Autologin": self.__autologin__}
+        if self.__pin__:
+            return {"Pin": self.__pin__}
+        return {}
