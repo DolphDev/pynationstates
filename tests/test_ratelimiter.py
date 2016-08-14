@@ -33,10 +33,6 @@ class nationstates_rate_limiting_handeling(unittest.TestCase):
         self.assertEqual(
             api.get_ratelimit(), api.__rltime__)
 
-    def test_not_implemented_error(self):
-        self.assertRaises(NotImplementedError, nationstates.get_ratelimit)
-        self.assertRaises(NotImplementedError, nationstates.clear_ratelimit)
-
 
 
 class nationstates_rate_limiting_checking(unittest.TestCase):
