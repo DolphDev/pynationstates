@@ -392,7 +392,7 @@ class Auth(object):
 
     def headers(self):
         if self.__usepasswordoral__:
-            sel.__usepasswordoral__ = False
+            self.__usepasswordoral__ = False
             if self.__autologin__:
                 return {"Autologin": self.__autologin__}
             else:
