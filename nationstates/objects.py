@@ -25,7 +25,7 @@ class API_VAR(object):
     requests_per_block = 50
     block_time = 30
     default_safe = __SAFEDICT__["safe"]
-    login_fail_sleep_time = 5
+    login_fail_sleep_time = 6
 
 
 
@@ -121,7 +121,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.api_instance = NScore.Api(api)
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
-        self.__use_error_login__
+        self.__use_error_login__ = use_error_login
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
@@ -250,7 +250,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 raise err
             if not self.api_mother.__session__.isauth():
                 raise err
-            time.sleep(API_VAR.login_fail_sleep_time)
+            sleep(API_VAR.login_fail_sleep_time)
             self.api_mother.__session__.__usepasswordoral__ = True
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                   within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
