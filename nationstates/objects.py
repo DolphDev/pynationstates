@@ -25,7 +25,7 @@ class API_VAR(object):
     requests_per_block = 50
     block_time = 30
     default_safe = __SAFEDICT__["safe"]
-    login_fail_sleep_time = 6
+    login_fail_sleep_time = 4
 
 
 
@@ -234,7 +234,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=5, numattempt=7, sleep_for=None):
+             safe="safe", retry_after=5, numattempt=7, sleep_for=None,
+             accept_forbidden=True):
 
         self.__safe__ = safe
         vsafe = (__SAFEDICT__.get(safe, 40))
@@ -243,7 +244,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
             self.xrls = int(self.data["request_instance"]
                 .raw.headers["X-ratelimit-requests-seen"])
-        except (exceptions.Forbidden, exceptions.ConflictError) as err:
+        except (exceptions.ConflictError) as err:
             if not self.__use_error_login__:
                 raise err
             if not isinstance(self.api_mother.__session__, Auth):
@@ -252,10 +253,22 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                 raise err
             sleep(API_VAR.login_fail_sleep_time)
             self.api_mother.__session__.__usepasswordoral__ = True
-            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
-                  within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
-            self.xrls = int(self.data["request_instance"]
-                          .raw.headers["X-ratelimit-requests-seen"]) + 1
+            resp = self.load(user_agent, no_ratelimit, safe, retry_after,
+                numattempt, sleep_for)
+        except (exceptions.Forbidden) as err:
+            if not accept_forbidden:
+                raise err
+            if not self.__use_error_login__:
+                raise err
+            if not isinstance(self.api_mother.__session__, Auth):
+                raise err
+            if not self.api_mother.__session__.isauth():
+                raise err
+            sleep(API_VAR.login_fail_sleep_time)
+            self.api_mother.__session__.__usepasswordoral__ = True
+            resp = self.load(user_agent, no_ratelimit, safe, retry_after,
+                 numattempt, sleep_for, accept_forbidden=False)
+
         return resp
 
 
