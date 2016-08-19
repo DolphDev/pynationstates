@@ -25,6 +25,7 @@ class API_VAR(object):
     requests_per_block = 50
     block_time = 30
     default_safe = __SAFEDICT__["safe"]
+    login_fail_sleep_time = 5
 
 
 
@@ -105,7 +106,8 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
                  api_mother=None, disable_ratelimit=False,
-                 use_error_xrls=True, use_error_rl=False):
+                 use_error_xrls=True, use_error_rl=False,
+                 use_error_login=True):
         """
         Passes on the api arguments to self.__call__()
 
@@ -119,6 +121,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.api_instance = NScore.Api(api)
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
+        self.__use_error_login__
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
@@ -231,8 +234,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=5, numattempt=7, sleep_for=None,
-             handle_forbidden=True):
+             safe="safe", retry_after=5, numattempt=7, sleep_for=None):
 
         self.__safe__ = safe
         vsafe = (__SAFEDICT__.get(safe, 40))
@@ -241,18 +243,19 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
             self.xrls = int(self.data["request_instance"]
                 .raw.headers["X-ratelimit-requests-seen"])
-        except exceptions.Forbidden as err:
-            if not handle_forbidden:
+        except (exceptions.Forbidden, exceptions.ConflictError) as err:
+            if not self.__use_error_login__:
                 raise err
             if not isinstance(self.api_mother.__session__, Auth):
                 raise err
             if not self.api_mother.__session__.isauth():
                 raise err
+            time.sleep(API_VAR.login_fail_sleep_time)
             self.api_mother.__session__.__usepasswordoral__ = True
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                   within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
             self.xrls = int(self.data["request_instance"]
-                            .raw.headers["X-ratelimit-requests-seen"]) + 1
+                          .raw.headers["X-ratelimit-requests-seen"]) + 1
         return resp
 
 
