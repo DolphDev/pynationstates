@@ -1,7 +1,7 @@
 import unittest
 import nationstates as ns
-from nationstates.NScore.bs4parser import NSDict
-from nationstates.NScore.exceptions import CollectError, APIError
+from nationstates.core.parser import NSDict
+from nationstates.core.exceptions import CollectError, APIError
 
 
 

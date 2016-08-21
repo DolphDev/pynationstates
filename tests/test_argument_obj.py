@@ -1,5 +1,5 @@
 from nationstates.arguments_obj import NSArgs
-from nationstates.NScore import exceptions
+from nationstates.core import exceptions
 import unittest
 #    def __init__(self, api, value, shard, user_agent, auto_load, version):
 

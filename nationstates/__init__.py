@@ -8,12 +8,9 @@ from .objects import (
     Shard,
     Auth
 )
-from .NScore import __apiversion__
-from .NScore import exceptions
+from .core import __apiversion__
+from .core import exceptions
 
-
-
-# this is used in nationstates get_??? methods
 
 
 """PyNationstates

@@ -3,9 +3,9 @@ from time import sleep
 import copy
 
 
-from . import NScore
+from . import core
 from .arguments_obj import NSArgs
-from .NScore import exceptions,  Shard
+from .core import exceptions, Shard
 from .mixins import (
     NSUserAgentMixin,
     NSPropertiesMixin,
@@ -99,7 +99,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     """
     Api object
 
-    This Wraps around the NScore.Api Object.
+    This Wraps around the core.Api Object.
 
     """
 
@@ -118,7 +118,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.__rltime__ = None if api_mother else list()
         self.api_mother = api_mother
-        self.api_instance = NScore.Api(api)
+        self.api_instance = core.Api(api)
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
         self.__use_error_login__ = use_error_login
@@ -129,7 +129,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
         Handles the arguments and sends the args to be parsed
 
-        Then sets up a NScore.Api instance (api_instance) that this object
+        Then sets up a core.Api instance (api_instance) that this object
              will interact with
 
         :param api: The type of API being accesses
@@ -347,16 +347,16 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def collect(self):
         """Returns a dictionary of the collected shards"""
         if not self.has_data:
-            raise NScore.CollectError(
+            raise core.exceptions.CollectError(
                 ("{} requires a previous request to the api to collect data"
                     .format(type(self))))
         resp = self.full_collect()[self.api]
         if resp == None:
-            raise NScore.APIError("API returned empty response (Check your shards)")
+            raise core.exceptions.APIError("API returned empty response (Check your shards)")
         return resp
         
     def full_collect(self):
-        """Returns NScore's collect"""
+        """Returns core's collect"""
         return self.api_instance.collect()
 
     @property

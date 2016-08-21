@@ -88,7 +88,7 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
         # Tests that numattempts will raise this exception at zero
         self.assertRaises(
-            nationstates.NScore.RateLimitCatch, nsinstance._load, numattempt=0, retry_after=0)
+            nationstates.core.exceptions.RateLimitCatch, nsinstance._load, numattempt=0, retry_after=0)
         # To assure that data was not requested, so the rate-limit will not be
         # broken
         self.assertFalse(nsinstance.has_data)
