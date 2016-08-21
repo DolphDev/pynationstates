@@ -386,25 +386,16 @@ class Auth(object):
     def get(self, url=None, headers=None, verify=None):
         if headers == None:
             headers = {}
-        headers = self.delete_old_headers(headers)
         headers.update(self.headers())
         resp = self.session.get(url=url, headers=headers, verify=verify)
-        if self.__password__ and not self.__autologin__:
-            self.__autologin__ = resp.headers.get("X-Autologin", self.__autologin__)
+        if resp.headers.get("X-autologin", None):
+            self.__autologin__ = resp.headers.get("X-autologin", self.__autologin__)
         self.__pin__ = resp.headers.get("X-pin", self.__pin__)
         return resp
 
-    def delete_old_headers(self, headers):
-        if headers.get("Pin"):
-            del headers["Pin"]
-        if headers.get("Password"):
-            del headers["Password"]
-        if headers.get("Autologin"):
-            del headers["Autologin"]
-        return headers
 
     def isauth(self):
-        return bool(self.__pin__) and (bool(self.__password__) or bool(self.__autologin__))
+        return (bool(self.__password__) or bool(self.__autologin__))
 
     def headers(self):
         if self.__usepasswordoral__:
@@ -413,11 +404,11 @@ class Auth(object):
                 return {"Autologin": self.__autologin__}
             else:
                 return {"Password": self.__password__}
-
-        if not self.__pin__ or not self.__autologin__: 
-            return {"Password": self.__password__}
-        if self.__autologin__ and not self.__pin__:
-            return {"Autologin": self.__autologin__}
         if self.__pin__:
             return {"Pin": self.__pin__}
+        elif self.__autologin__: 
+            return {"Autologin": self.__autologin__}
+        elif self.__password__:
+            return {"Password": self.__password__}
+
         return {}
