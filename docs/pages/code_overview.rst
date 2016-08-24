@@ -14,6 +14,10 @@ objects attributes which are generated dynamically by pynationstates.
     :undoc-members:
     :show-inheritance:
 
+.. autoclass:: Api
+   :members:
+   :inherited-members:
+
 .. autoclass:: Nationstates
    :members:
    :inherited-members:
