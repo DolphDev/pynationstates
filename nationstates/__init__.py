@@ -30,8 +30,6 @@ class Api(object):
         self.__xrls__ = 0
         self.__rltime__ = list()
 
-    
-
     @property
     def user_agent(self):
         """Returns current instance's user_agent"""

@@ -9,7 +9,6 @@ from nationstates.core.exceptions import (
     ShardError)
 from nationstates.core.mixins import (
         ParserMixin,
-    RequestMixin
 )
 from bs4 import BeautifulSoup
 

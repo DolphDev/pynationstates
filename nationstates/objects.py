@@ -118,7 +118,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.__rltime__ = None if api_mother else list()
         self.api_mother = api_mother
-        self.api_instance = core.Api(api)
+        self.api_instance = core.Api(api, ns_mother=self)
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
         self.__use_error_login__ = use_error_login
@@ -215,6 +215,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             False, self.version, api_mother=self.api_mother)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
+        proto_copy.api_instance.ns_mother = proto_copy
         return proto_copy
 
     def shard_handeler(self, shard):
@@ -242,8 +243,6 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         try:
             resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
-            self.xrls = int(self.data["request_instance"]
-                .raw.headers["X-ratelimit-requests-seen"])
         except (exceptions.ConflictError) as err:
             if not self.__use_error_login__:
                 raise err
@@ -255,6 +254,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             self.api_mother.__session__.__usepasswordoral__ = True
             resp = self.load(user_agent, no_ratelimit, safe, retry_after,
                 numattempt, sleep_for)
+
         except (exceptions.Forbidden) as err:
             if not accept_forbidden:
                 raise err
