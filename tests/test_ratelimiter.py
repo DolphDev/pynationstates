@@ -33,10 +33,6 @@ class nationstates_rate_limiting_handeling(unittest.TestCase):
         self.assertEqual(
             api.get_ratelimit(), api.__rltime__)
 
-    def test_not_implemented_error(self):
-        self.assertRaises(NotImplementedError, nationstates.get_ratelimit)
-        self.assertRaises(NotImplementedError, nationstates.clear_ratelimit)
-
 
 
 class nationstates_rate_limiting_checking(unittest.TestCase):
@@ -92,7 +88,7 @@ class nationstates_rate_limiting_checking(unittest.TestCase):
         self.assertFalse(nsinstance.ratelimitcheck(xrls=50))
         # Tests that numattempts will raise this exception at zero
         self.assertRaises(
-            nationstates.NScore.RateLimitCatch, nsinstance._load, numattempt=0, retry_after=0)
+            nationstates.core.exceptions.RateLimitCatch, nsinstance._load, numattempt=0, retry_after=0)
         # To assure that data was not requested, so the rate-limit will not be
         # broken
         self.assertFalse(nsinstance.has_data)

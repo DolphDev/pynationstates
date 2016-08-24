@@ -3,9 +3,9 @@ from time import sleep
 import copy
 
 
-from . import NScore
+from . import core
 from .arguments_obj import NSArgs
-from .NScore import exceptions,  Shard
+from .core import exceptions, Shard
 from .mixins import (
     NSUserAgentMixin,
     NSPropertiesMixin,
@@ -25,6 +25,7 @@ class API_VAR(object):
     requests_per_block = 50
     block_time = 30
     default_safe = __SAFEDICT__["safe"]
+    login_fail_sleep_time = 4
 
 
 
@@ -98,14 +99,15 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     """
     Api object
 
-    This Wraps around the NScore.Api Object.
+    This Wraps around the core.Api Object.
 
     """
 
     def __init__(self, api, value=None, shard=None,
                  user_agent=None, auto_load=False, version=None,
                  api_mother=None, disable_ratelimit=False,
-                 use_error_xrls=True, use_error_rl=False):
+                 use_error_xrls=True, use_error_rl=False,
+                 use_error_login=True):
         """
         Passes on the api arguments to self.__call__()
 
@@ -116,9 +118,10 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         self.has_data = False
         self.__rltime__ = None if api_mother else list()
         self.api_mother = api_mother
-        self.api_instance = NScore.Api(api)
+        self.api_instance = core.Api(api, ns_mother=self)
         self.__use_error_xrls__ = use_error_xrls
         self.__use_error_rl__ = use_error_rl
+        self.__use_error_login__ = use_error_login
         self.__call__(api, value, shard, user_agent, auto_load, version, args)
 
     def __call__(self, api, value=None, shard=None,
@@ -126,7 +129,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         """
         Handles the arguments and sends the args to be parsed
 
-        Then sets up a NScore.Api instance (api_instance) that this object
+        Then sets up a core.Api instance (api_instance) that this object
              will interact with
 
         :param api: The type of API being accesses
@@ -212,6 +215,7 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
             False, self.version, api_mother=self.api_mother)
         proto_copy.has_data = self.has_data
         proto_copy.api_instance = copy.copy(self.api_instance)
+        proto_copy.api_instance.ns_mother = proto_copy
         return proto_copy
 
     def shard_handeler(self, shard):
@@ -231,14 +235,40 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
 
 
     def load(self, user_agent=None, no_ratelimit=False,
-             safe="safe", retry_after=5, numattempt=7, sleep_for=None):
+             safe="safe", retry_after=5, numattempt=7, sleep_for=None,
+             accept_forbidden=True):
 
         self.__safe__ = safe
         vsafe = (__SAFEDICT__.get(safe, 40))
-        resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
+        try:
+            resp = self._load(user_agent=user_agent, no_ratelimit=no_ratelimit,
                           within_time=30, amount_allow=vsafe, sleep_for=sleep_for)
-        self.xrls = int(self.data["request_instance"]
-                        .raw.headers["X-ratelimit-requests-seen"])
+        except (exceptions.ConflictError) as err:
+            if not self.__use_error_login__:
+                raise err
+            if not isinstance(self.api_mother.__session__, Auth):
+                raise err
+            if not self.api_mother.__session__.isauth():
+                raise err
+            sleep(API_VAR.login_fail_sleep_time)
+            self.api_mother.__session__.__usepasswordoral__ = True
+            resp = self.load(user_agent, no_ratelimit, safe, retry_after,
+                numattempt, sleep_for)
+
+        except (exceptions.Forbidden) as err:
+            if not accept_forbidden:
+                raise err
+            if not self.__use_error_login__:
+                raise err
+            if not isinstance(self.api_mother.__session__, Auth):
+                raise err
+            if not self.api_mother.__session__.isauth():
+                raise err
+            sleep(API_VAR.login_fail_sleep_time)
+            self.api_mother.__session__.__usepasswordoral__ = True
+            resp = self.load(user_agent, no_ratelimit, safe, retry_after,
+                 numattempt, sleep_for, accept_forbidden=False)
+
         return resp
 
 
@@ -317,16 +347,16 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
     def collect(self):
         """Returns a dictionary of the collected shards"""
         if not self.has_data:
-            raise NScore.CollectError(
+            raise core.exceptions.CollectError(
                 ("{} requires a previous request to the api to collect data"
                     .format(type(self))))
         resp = self.full_collect()[self.api]
         if resp == None:
-            raise NScore.APIError("API returned empty response (Check your shards)")
+            raise core.exceptions.APIError("API returned empty response (Check your shards)")
         return resp
         
     def full_collect(self):
-        """Returns NScore's collect"""
+        """Returns core's collect"""
         return self.api_instance.collect()
 
     @property
@@ -342,9 +372,43 @@ class Nationstates(NSPropertiesMixin, NSSettersMixin, RateLimit):
         else:
             return self.data["url"]
 
+class Auth(object):
 
-def get_ratelimit():
-    raise NotImplementedError("get_ratelimit has been moved to a method on the Api object")
+    def __init__(self, sess, password=None, autologin=None, pin=None):
+        self.session = sess
+        if not (password or autologin) and pin:
+            raise exceptions.NSError("Password or Autologin required")
+        self.__password__ = password
+        self.__pin__ = pin
+        self.__autologin__ = autologin
+        self.__usepasswordoral__ = False
 
-def clear_ratelimit():
-    raise NotImplementedError("clear_ratelimit has been moved to a method on the Api object")
+    def get(self, url=None, headers=None, verify=None):
+        if headers == None:
+            headers = {}
+        headers.update(self.headers())
+        resp = self.session.get(url=url, headers=headers, verify=verify)
+        if resp.headers.get("X-autologin", None):
+            self.__autologin__ = resp.headers.get("X-autologin", self.__autologin__)
+        self.__pin__ = resp.headers.get("X-pin", self.__pin__)
+        return resp
+
+
+    def isauth(self):
+        return (bool(self.__password__) or bool(self.__autologin__))
+
+    def headers(self):
+        if self.__usepasswordoral__:
+            self.__usepasswordoral__ = False
+            if self.__autologin__:
+                return {"Autologin": self.__autologin__}
+            else:
+                return {"Password": self.__password__}
+        if self.__pin__:
+            return {"Pin": self.__pin__}
+        elif self.__autologin__: 
+            return {"Autologin": self.__autologin__}
+        elif self.__password__:
+            return {"Password": self.__password__}
+
+        return {}

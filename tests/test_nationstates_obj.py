@@ -1,7 +1,7 @@
 import unittest
 import nationstates as ns
-from nationstates.NScore.bs4parser import NSDict
-from nationstates.NScore.exceptions import CollectError, APIError
+from nationstates.core.parser import NSDict
+from nationstates.core.exceptions import CollectError, APIError
 
 
 
@@ -102,7 +102,7 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         nation_obj.set_useragent(new_useragent)
         self.assertEqual(
             nation_obj.user_agent, nation_obj.api_instance.user_agent, new_useragent)
-        self.assertNotEqual(new_useragent, nation_obj.api_instance.session.headers["User-Agent"])
+        self.assertNotEqual(new_useragent, nation_obj.api_instance.session.session.headers["User-Agent"])
 
 
     def test_set_user_agent_method_region(self):
@@ -110,7 +110,7 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         region_obj.set_useragent(new_useragent)
         self.assertEqual(
             region_obj.user_agent, region_obj.api_instance.user_agent, new_useragent)
-        self.assertNotEqual(new_useragent, region_obj.api_instance.session.headers["User-Agent"])
+        self.assertNotEqual(new_useragent, region_obj.api_instance.session.session.headers["User-Agent"])
 
 
     def test_set_user_agent_method_world(self):
@@ -118,7 +118,7 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         world_obj.set_useragent(new_useragent)
         self.assertEqual(
             world_obj.user_agent, world_obj.api_instance.user_agent, new_useragent)
-        self.assertNotEqual(new_useragent, world_obj.api_instance.session.headers["User-Agent"])
+        self.assertNotEqual(new_useragent, world_obj.api_instance.session.session.headers["User-Agent"])
 
 
     def test_set_user_agent_method_wa(self):
@@ -126,7 +126,7 @@ class nationstates_method_set_useragent_method(unittest.TestCase):
         wa_obj.set_useragent(new_useragent)
         self.assertEqual(
             wa_obj.user_agent, wa_obj.api_instance.user_agent, new_useragent)
-        self.assertNotEqual(new_useragent, wa_obj.api_instance.session.headers["User-Agent"])
+        self.assertNotEqual(new_useragent, wa_obj.api_instance.session.session.headers["User-Agent"])
 
 class nationstates_object(unittest.TestCase):
     

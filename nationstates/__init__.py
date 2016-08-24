@@ -6,15 +6,11 @@ import copy
 from .objects import (
     Nationstates,
     Shard,
-    get_ratelimit,
-    clear_ratelimit,
+    Auth
 )
-from .NScore import __apiversion__
-from .NScore import exceptions
+from .core import __apiversion__
+from .core import exceptions
 
-
-
-# this is used in nationstates get_??? methods
 
 
 """PyNationstates
@@ -25,11 +21,11 @@ This module wraps around the Nationstates API to create a simple uniform way to 
 
 class Api(object):
 
-    def __init__(self, user_agent=None, v=__apiversion__):
+    def __init__(self, user_agent=None, v=__apiversion__, password=None, autologin=None, pin=None):
         """Creates Api Instance"""
         self.instance_version = (v, (v != __apiversion__))
         self.nsobj = Nationstates("world", shard=None, auto_load=False, api_mother=self)
-        self.__session__ = self.nsobj.api_instance.session
+        self.__session__ = Auth(self.nsobj.api_instance.session, password, autologin, pin)
         self.user_agent = user_agent if user_agent else None
         self.__xrls__ = 0
         self.__rltime__ = list()
@@ -38,6 +34,7 @@ class Api(object):
     def user_agent(self):
         """Returns current instance's user_agent"""
         return self._user_agent_store
+
 
     @user_agent.setter
     def user_agent(self, val):
