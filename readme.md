@@ -4,6 +4,8 @@
 Nationstates API wrapper
 ---
 
+#NOTE: Pynationstates is no longer worked on, It also is not ready for anything besides personal scripts. 
+
 ### API
 
 ##### Installation
