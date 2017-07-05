@@ -4,7 +4,10 @@
 Nationstates API wrapper
 ---
 
-#NOTE: Pynationstates is no longer worked on, It also is not ready for anything besides personal scripts. 
+# NOTE: Pynationstates is no longer worked on, It also is not ready for anything besides personal scripts. 
+## Also: This library was created when I had less understanding of python, it may contain bad pratices (such as usesing time.sleep())
+### Contributions welcomed, I may eventually rewrite this.
+
 
 ### API
 
