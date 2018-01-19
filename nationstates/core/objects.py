@@ -1,4 +1,5 @@
 import requests
+from bs4 import BeautifulSoup
 from ezurl import Url
 from collections import OrderedDict
 from .info import __apiversion__
@@ -12,11 +13,12 @@ from .exceptions import (
     NotFound,
     NSError,
     RateLimitCatch,
+    RateLimitReached
     ShardError,
     Forbidden,
     ConflictError)
 
-from .mixins import ParserMixin
+from .parser import parsetree
 
 def shard_generator(shards):
     for shard in shards:
@@ -116,7 +118,7 @@ class Shard(object):
 
 
 
-class Api(ParserMixin):
+class Api(object):
 
     def __init__(
             self,
@@ -230,6 +232,14 @@ class Api(ParserMixin):
 
         """
         return self.data
+
+    @staticmethod
+    def xml2bs4(xml):
+        return (BeautifulSoup(xml, "html.parser"))
+
+    @staticmethod
+    def xmlparser(_type_, xml):
+        return parsetree(xml)
 
     def get_data(self):
         "Returns the key ['data'] from self.data "

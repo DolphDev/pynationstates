@@ -1,30 +1,15 @@
 from xmltodict import parse
 
-try:
-    unicode
-except NameError:
-    unicode = str
-
-
-class NSDict(dict):
-
-    def __init__(self, *arg, **kw):
-        super(NSDict, self).__init__(*arg, **kw)
-
-    def __getattribute__(self, attr):
-        if attr in super(NSDict, self).keys():
-            return self[attr]
-        else:
-            return super(dict, self).__getattribute__(attr)
-
+class NSdict(dict):
+    pass
 
 def parsedict(x):
     """
     This function recursively loops through the processed xml (now dict)
-    it unorderers OrderedDicts and converts them to NSDict
+    it unorderers OrderedDicts and converts them to dict
     """
     if isinstance(x, list):
-        gen_list = [NSDict(parsedict(y)) if isinstance(
+        gen_list = [dict(parsedict(y)) if isinstance(
             parsedict(y), dict) else parsedict(y) for y in x]
         return gen_list
     if isinstance(x, str) or isinstance(x, unicode):
@@ -37,7 +22,7 @@ def parsedict(x):
             else:
                 thiskey = key.lower()
             this_lower = parsedict(x[key])
-            newdict[thiskey] = NSDict(this_lower) if isinstance(
+            newdict[thiskey] = dict(this_lower) if isinstance(
                 this_lower, dict) else this_lower
         return newdict
     if x is None:
@@ -45,4 +30,4 @@ def parsedict(x):
 
 
 def parsetree(xml):
-    return NSDict(parsedict(parse(xml)))
+    return dict(parsedict(parse(xml)))

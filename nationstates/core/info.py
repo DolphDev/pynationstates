@@ -1,6 +1,6 @@
 
-__apiversion__ = "8"
-__version__ = "1.1.35.66"
+__apiversion__ = "9"
+__version__ = "2.0.0.0"
 
 
 API_URL = "www.nationstates.net/cgi-bin/api.cgi"

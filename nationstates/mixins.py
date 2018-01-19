@@ -4,6 +4,7 @@ This file contains mixins that don't have dependencies
 
 These classes should only be inherited
 """
+#NOTE THIS FILE HAS BEEN MARKED FOR REWORKING
 try:
     from urllib.parse import quote as escape_url
 except ImportError:  # PY2

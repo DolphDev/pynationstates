@@ -39,6 +39,12 @@ class RateLimitCatch(NSError):
     """
     pass
 
+class RateLimitReached(NSError):
+
+    """Raised if the ratelimiter is reached
+    """
+    pass
+
 
 class APIError(NSError):
 

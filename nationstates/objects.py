@@ -1,5 +1,4 @@
 from time import time as timestamp
-from time import sleep
 import copy
 
 
@@ -26,6 +25,9 @@ class API_VAR(object):
     block_time = 30
     default_safe = __SAFEDICT__["safe"]
     login_fail_sleep_time = 4
+
+def sleep(*args, **kwargs):
+    raise exceptions.RateLimitBreak("PLACEHOLDER MESSAGE")
 
 
 
