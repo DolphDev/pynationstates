@@ -6,4 +6,6 @@ class Option:
     pass
 # TODO 
 class Issue:
-    pass
+    
+    def __init__(self, data, nationobj):
+        self.raw = data

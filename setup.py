@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 """
 
-   ___       __     __                 
-  / _ \___  / /__  / /  __ _  ___ ____ 
- / // / _ \/ / _ \/ _ \/  ' \/ _ `/ _ \
-/____/\___/_/ .__/_//_/_/_/_/\_,_/_//_/
-           /_/                         
-
-
 The MIT License (MIT)
 
-Copyright (c) 2015 Dolphman
+Copyright (c) 2015-2018 Dolphman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,32 +25,26 @@ SOFTWARE.
 """
 
 
-version = '1.1.35.66'
+version = '2.0.0.0'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["requests==2.10.0", "Beautifulsoup4==4.4.1", "xmltodict==0.10.2", "ezurl==0.1.3.25"],
+      install_requires=["nsapiwrapper"],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
-      author_email='therealdolphman@gmail.com',
+      author_email='dolphdevgithub@gmail.com',
       url='https://github.com/Dolphman/pynationstates',
-      packages=['nationstates', 'nationstates.core'],
+      packages=['nationstates'],
       package_data={'': ['LICENSE.txt', "readme.md"]},
-      download_url='https://github.com/Dolphman/pynationstates/releases/tag/'+version,
+      download_url='https://github.com/DolphDev/pynationstates/releases/tag/'+version,
       keywords=['nationstates', 'api wrapper', 'api',
                 "Nationstates API", "Nationstates API Wrapper", "Wrapper",
                 "nationstates python bindings", "web api", "web wrapper"],
       classifiers=["License :: OSI Approved :: MIT License",
                    "Operating System :: OS Independent",
                    "Topic :: Utilities",
-                   "Programming Language :: Python :: 2.7",
-                   "Programming Language :: Python :: 3",
-                   "Programming Language :: Python :: 3.0",
-                   "Programming Language :: Python :: 3.1",
-                   "Programming Language :: Python :: 3.2",
-                   "Programming Language :: Python :: 3.3",
-                   "Programming Language :: Python :: 3.4",
-                   "Programming Language :: Python :: 3.5"],
+                   "Programming Language :: Python :: 3.5",
+                   "Programming Language :: Python :: 3.6"],
       license="MIT"
       )
