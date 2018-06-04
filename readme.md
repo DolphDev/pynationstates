@@ -1,15 +1,14 @@
-[![Build Status](https://travis-ci.org/Dolphman/pynationstates.svg)](https://travis-ci.org/Dolphman/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates) [![Documentation Status](https://readthedocs.org/projects/pynationstates/badge/?version=latest)](http://pynationstates.readthedocs.org/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/Dolphman/pynationstates/badge.svg?branch=master)](https://coveralls.io/github/Dolphman/pynationstates?branch=master)
+[![Build Status](https://travis-ci.org/DolphDev/pynationstates.svg)](https://travis-ci.org/DolphDev/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates) [![Documentation Status](https://readthedocs.org/projects/pynationstates/badge/?version=latest)](http://pynationstates.readthedocs.org/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/DolphDev/pynationstates/badge.svg?branch=master)](https://coveralls.io/github/DolphDev/pynationstates?branch=master)
 
 
 Nationstates API wrapper
 ---
 
-# NOTE: Pynationstates is no longer worked on, It also is not ready for anything besides personal scripts. 
-### Contributions welcomed, I may eventually rewrite this.
+This is a high level and simple to use API wrapper for nationstates, currently being rewritten. 
 
 
 ### API
-
+###### Note: All examples are set to change for 2.0.0.0 rewrite
 ##### Installation
 
 To install pynationstates simply use `pip`
@@ -29,16 +28,14 @@ The code
 
     import nationstates
 	
-    api = nationstates.Api("My Awesome Application")
-    call = api.get_world(shard=["numnations"])
-
-    data = call.collect()
-
+    api = nationstates.Nationstates("My Awesome Application")
+    world = api.world()
+    data = world.numnations
     print(data)
 
 Output
 
-    {'numnations': u'119228'}
+    '184284'
 
 For more info on the Api Object, click [here](http://pynationstates.readthedocs.org/en/latest/pages/code_overview.html#nationstates.Nationstatesi)<br>
 For more info on the Nationstates Object, click [here](http://pynationstates.readthedocs.org/en/latest/pages/code_overview.html#nationstates.Api)
