@@ -1,5 +1,5 @@
 import nsapiwrapper
-from .objects import Nation, Region, World, WorldAssembly
+from .objects import Nation, Region, World, WorldAssembly, Telegram
 
 class Nationstates:
 
@@ -27,3 +27,6 @@ class Nationstates:
 
     def wa(self, chamber):
         return WorldAssembly(chamber, self)
+
+    def telegram(self, client_key=None, tgid=None, key=None):
+        return Telegram(self, client_key, tgid, key)

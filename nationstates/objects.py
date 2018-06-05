@@ -1,17 +1,28 @@
 from nsapiwrapper.exceptions import ConflictError, InternalServerError, CloudflareServerError
+from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
+from nsapiwrapper.urls import Shard
 from nsapiwrapper.utils import parsetree, parse
-from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI
+from xml.parsers.expat import ExpatError
 from time import sleep
 from .info import nation_shards, region_shards, world_shards, wa_shards
 
 def response_parser(response, full_response):
     xml = response["xml"]
     if full_response:
-        response["data"] = parsetree(xml)
-        response["data_xmltodict"] = parse(xml)
+        try:
+            response["data"] = parsetree(xml)
+            response["data_xmltodict"] = parse(xml)
+        except ExpatError:
+            response["data"] = xml
+            response["data_xmltodict"] = None          
         return response
     else:
-        return parsetree(xml)
+        try:
+            return parsetree(xml)
+        except ExpatError:
+            return xml
+
+
 
 
 class API_WRAPPER:
@@ -49,7 +60,10 @@ class API_WRAPPER:
         if full_response:
             return resp
         else:
-            return resp[self.api_name]
+            try:
+                return resp[self.api_name]
+            except TypeError:
+                return resp
 
     def _request(self, shards):
         return self.current_api.request(shards=shards)
@@ -85,7 +99,6 @@ class API_WRAPPER:
     def api(self):
         return self.api_mother.api
 
-
 class Nation(API_WRAPPER):
     api_name = NationAPI.api_name
     # These Shards can be used
@@ -120,6 +133,19 @@ class Nation(API_WRAPPER):
         resp = self.api_mother.region(self._auto_shard("region"))
         return resp
 
+    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
+        if telegram:
+            pass
+        else:
+            telegram = self.api_mother.telegram(client_key, tgid, key)
+        telegram.send_telegram(self.nation_name)
+
+    def verify(self, checksum=None, token=None, full_response=False):
+        payload = {"checksum":checksum, "a":"verify"}
+        if token:
+            payload.update({"token":token})
+        return self.get_shards(Shard(**payload), full_response=True)
+
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
     auto_shards = region_shards
@@ -142,7 +168,6 @@ class Region(API_WRAPPER):
         resp = self._auto_shard("nations")
         return tuple(self.api_mother.nation(x) for x in resp.split(":"))
     
-
 class World(API_WRAPPER):
     api_name = WorldAPI.api_name
     auto_shards = world_shards
@@ -150,7 +175,6 @@ class World(API_WRAPPER):
     def __init__(self, api_mother):
         super().__init__(api_mother)
         self._set_apiwrapper(self._determine_api())
-
 
     def _determine_api(self):
         return self.api.World()
@@ -171,3 +195,20 @@ class WorldAssembly(API_WRAPPER):
 
     def _determine_api(self, chamber):
         return self.api.WorldAssembly(chamber)
+
+class Telegram(API_WRAPPER):
+    api_name = TelegramAPI.api_name
+    api_value = TelegramAPI.api_value
+
+    def __init__(self, api_mother, client_key=None, tgid=None, key=None):
+        super().__init__(api_mother)
+        self.client_key = client_key
+        self.tgid = tgid
+        self.key = key
+        self._set_apiwrapper(self._determine_api())
+
+    def _determine_api(self):
+        return self.api.Telegram(self.client_key, self.tgid, self.key)
+
+    def send_telegram(self, nation, full_response=False):
+        return self.request(Shard(to=nation), full_response)
