@@ -6,11 +6,23 @@ from xml.parsers.expat import ExpatError
 from time import sleep
 from .info import nation_shards, region_shards, world_shards, wa_shards
 
+class NSDict(dict):
+    """Specialized Dict"""
+
+    def __init__(self, *arg, **kw):
+        super(NSDict, self).__init__(*arg, **kw)
+        
+    def __getattr__(self, attr):
+        if attr in self.keys():
+            return attr
+        raise AttributeError('\'{}\' has no attribute \'{}\''.format(
+            type(self), attr))
+
 def response_parser(response, full_response):
     xml = response["xml"]
     if full_response:
         try:
-            response["data"] = parsetree(xml)
+            response["data"] = parsetree(xml, dicttype=NSDict)
             response["data_xmltodict"] = parse(xml)
         except ExpatError:
             response["data"] = xml
@@ -21,9 +33,6 @@ def response_parser(response, full_response):
             return parsetree(xml)
         except ExpatError:
             return xml
-
-
-
 
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
