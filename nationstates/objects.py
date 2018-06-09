@@ -6,11 +6,23 @@ from xml.parsers.expat import ExpatError
 from time import sleep
 from .info import nation_shards, region_shards, world_shards, wa_shards
 
-def response_parser(response, full_response):
+class NSDict(dict):
+
+    def __getattr__(self, attr):
+        if attr in self.keys():
+            return self[attr]
+        else:
+            raise AttributeError('\'{}\' has no attribute \'{}\''.format(
+                type(self), attr))
+
+def response_parser(response, full_response, use_nsdict=True):
     xml = response["xml"]
     if full_response:
         try:
-            response["data"] = parsetree(xml)
+            if use_nsdict:
+                response["data"] = parsetree(xml, NSDict)
+            else:
+                response["data"] = parsetree(xml)
             response["data_xmltodict"] = parse(xml)
         except ExpatError:
             response["data"] = xml
@@ -18,12 +30,12 @@ def response_parser(response, full_response):
         return response
     else:
         try:
-            return parsetree(xml)
+            if use_nsdict:
+                return parsetree(xml, NSDict)
+            else:
+                return parsetree(xml)
         except ExpatError:
             return xml
-
-
-
 
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
@@ -95,6 +107,10 @@ class API_WRAPPER:
         resp = self.request(shards=args, full_response=full_response)
         return resp
 
+    def command(self, command, full_response=False, **kwargs):
+        command = Shard(c=command)
+        return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
+
     @property
     def api(self):
         return self.api_mother.api
@@ -145,6 +161,11 @@ class Nation(API_WRAPPER):
         if token:
             payload.update({"token":token})
         return self.get_shards(Shard(**payload), full_response=True)
+
+    def pick_issue(self, issue_id, option, full_response=False):
+        if not self.is_auth:
+            raise Exception("TODO: WRITE NOT AUTH EXCEPTON")
+        return self.command("issue", issue=issue_id, option=option, full_response=full_response)
 
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
