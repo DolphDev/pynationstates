@@ -1,10 +1,13 @@
-from nsapiwrapper.exceptions import ConflictError, InternalServerError, CloudflareServerError
 from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
 from nsapiwrapper.urls import Shard
 from nsapiwrapper.utils import parsetree, parse
+
 from xml.parsers.expat import ExpatError
 from time import sleep
+
+from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
 from .info import nation_shards, region_shards, world_shards, wa_shards
+
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -69,7 +72,8 @@ class API_WRAPPER:
         self.current_api = current_api
 
     def _parser(self, response, full_response):
-        resp =  response_parser(response, full_response)
+        resp =  response_parser(response, full_response, 
+                use_nsdict=self.api_mother.use_nsdict)
         if full_response:
             return resp
         else:
@@ -163,10 +167,25 @@ class Nation(API_WRAPPER):
             payload.update({"token":token})
         return self.get_shards(Shard(**payload), full_response=True)
 
-    def pick_issue(self, issue_id, option, full_response=False):
+    def _check_auth(self):
         if not self.is_auth:
-            raise Exception("TODO: WRITE NOT AUTH EXCEPTON")
-        return self.command("issue", issue=issue_id, option=option, full_response=full_response)
+            raise NotAuthenticated("Action requires authentication")
+
+    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True):
+        self._check_auth()
+        resp =  self.command("issue", issue=issue_id, option=option, full_response=True)
+        try:
+            if not raise_exception_if_fail:
+                raise KeyError
+
+            if resp["data"][self.api_name]["issue"]["error"]:
+                raise APIUsageError(resp["data"][self.api_name]["issue"]["error"])
+        except KeyError:
+            if full_response:
+                return resp
+            else:
+                return resp[self.api_name]
+
 
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
