@@ -37,10 +37,13 @@ def response_parser(response, full_response, use_nsdict=True):
         except ExpatError:
             return xml
 
+def bad_api_parameter(param, api_name):
+    if param == "":
+        raise ValueError("{} API's argument cannot be an empty string").format(api_name.upper())
+
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
     auto_shards = tuple()
-
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -124,6 +127,8 @@ class Nation(API_WRAPPER):
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
+        bad_api_parameter(nation_name, self.api_name)
+
         self.is_auth = bool(password or autologin)
         self.nation_name = nation_name
         self._set_apiwrapper(self._determine_api(nation_name, password, autologin))
@@ -173,6 +178,8 @@ class Region(API_WRAPPER):
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
+        bad_api_parameter(region_name, self.api_name)
+
         self.region_name = region_name
         self._set_apiwrapper(self._determine_api(region_name))
 
@@ -206,6 +213,8 @@ class WorldAssembly(API_WRAPPER):
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
+        bad_api_parameter(region_name, self.api_name)
+
         self.chamber = chamber
         self._set_apiwrapper(self._determine_api(chamber))
 

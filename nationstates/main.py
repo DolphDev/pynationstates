@@ -68,8 +68,5 @@ class Nationstates:
             :param client_key: Client Key Nationstates Gave you
             :param tgid: TGID from api template
             :param key: Key from api Template
-
-
-
         """
         return Telegram(self, client_key, tgid, key)
