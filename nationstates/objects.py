@@ -150,31 +150,13 @@ class Nation(API_WRAPPER):
         else:
             return self.api.Nation(name)
 
-    def authenticate(self, password=None, autologin=None):
-        self._set_apiwrapper(self._determine_api(self.nation_name, password, autologin))
-        return self
-
-    @property
-    def region(self):
-        resp = self.api_mother.region(self._auto_shard("region"))
-        return resp
-
-    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
-        if telegram:
-            pass
-        else:
-            telegram = self.api_mother.telegram(client_key, tgid, key)
-        telegram.send_telegram(self.nation_name)
-
-    def verify(self, checksum=None, token=None, full_response=False):
-        payload = {"checksum":checksum, "a":"verify"}
-        if token:
-            payload.update({"token":token})
-        return self.get_shards(Shard(**payload), full_response=True)
-
     def _check_auth(self):
         if not self.is_auth:
             raise NotAuthenticated("Action requires authentication")
+
+    def authenticate(self, password=None, autologin=None):
+        self._set_apiwrapper(self._determine_api(self.nation_name, password, autologin))
+        return self
 
     def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True):
         self._check_auth()
@@ -191,6 +173,24 @@ class Nation(API_WRAPPER):
             else:
                 return resp[self.api_name]
 
+    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
+        if telegram:
+            pass
+        else:
+            telegram = self.api_mother.telegram(client_key, tgid, key)
+        telegram.send_telegram(self.nation_name)
+
+    def verify(self, checksum=None, token=None, full_response=False):
+        payload = {"checksum":checksum, "a":"verify"}
+        if token:
+            payload.update({"token":token})
+        return self.get_shards(Shard(**payload), full_response=True)
+
+
+    @property
+    def region(self):
+        resp = self.api_mother.region(self._auto_shard("region"))
+        return resp
 
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
@@ -227,6 +227,11 @@ class World(API_WRAPPER):
     def _determine_api(self):
         return self.api.World()
 
+    @property
+    def nations(self):
+        resp = self._auto_shard("nations")
+        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
+
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
@@ -244,7 +249,12 @@ class WorldAssembly(API_WRAPPER):
             hexloc=hex(id(self)).upper().replace("X", "x"))
 
     def _determine_api(self, chamber):
-        return self.api.WorldAssembly(chamber)
+        return self.api.WorldAssembly(chamber)\
+
+    @property
+    def nations(self):
+        resp = self._auto_shard("nations")
+        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
 
 class Telegram(API_WRAPPER):
     api_name = TelegramAPI.api_name
@@ -252,13 +262,51 @@ class Telegram(API_WRAPPER):
 
     def __init__(self, api_mother, client_key=None, tgid=None, key=None):
         super().__init__(api_mother)
-        self.client_key = client_key
-        self.tgid = tgid
-        self.key = key
+        self.__clientkey__ = client_key
+        self.__tgid__ = tgid
+        self.__key__ = key
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Telegram(self.client_key, self.tgid, self.key)
+        return self.api.Telegram(self.__clientkey__, self.tgid, self.key)
+
+    def _newtelegramtemplate(self):
+        self._set_apiwrapper(self._determine_api())
+
 
     def send_telegram(self, nation, full_response=False):
-        return self.request(Shard(to=nation), full_response)
+        if isinstance(nation, Nation):
+            nation_str = nation.nation_name
+        else:
+            nation_str = nation
+        return self.request(Shard(to=nation_str), full_response)
+
+
+    # TODO: Detirmine if we want to encourage mutable
+    # Telegram objects
+    # @property
+    # def clientkey(self):
+    #     return self.__clientkey__
+
+    # @client_key.setter
+    # def clientkey(self, v):
+    #     self.__clientkey__ = v
+    #     self._newtelegramtemplate()
+
+    # @property
+    # def tgid(self):
+    #     return self.__tgid__
+
+    # @tgid.setter
+    # def tgid(self, v):
+    #     self.__tgid__ = v
+    #     self._newtelegramtemplate()
+
+    # @property
+    # def tgid(self):
+    #     return self.__key__
+
+    # @tgid.setter
+    # def tgid(self, v):
+    #     self.__key__ = v
+    #     self._newtelegramtemplate()
