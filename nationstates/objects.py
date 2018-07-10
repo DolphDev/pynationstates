@@ -171,7 +171,7 @@ class Nation(API_WRAPPER):
             if full_response:
                 return resp
             else:
-                return resp[self.api_name]
+                return resp["data"][self.api_name]
 
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
         if telegram:
