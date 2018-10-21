@@ -26,11 +26,11 @@ SOFTWARE.
 """
 
 
-version = '2.0.0.0'
+version = '2.0.0.0alpha'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["nsapiwrapper"],
+      install_requires=["nsapiwrapper==0.0.1a0"],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua Walters',
