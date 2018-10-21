@@ -5,16 +5,19 @@ class Nationstates:
 
     def __init__(self, user_agent, version="9", ratelimit_sleep=True,
                 ratelimit_limit=40, ratelimit_timeframe=30, ratelimit_sleep_time=4,
-                ratelimit_maxsleeps=10, do_retry=True, retry_sleep=5):
+                ratelimit_maxsleeps=10, ratelimit_enabled=True, do_retry=True, 
+                retry_sleep=5, use_nsdict=True):
 
         self.api = nsapiwrapper.Api(user_agent, version=version,
                                     ratelimit_sleep=ratelimit_sleep,
                                     ratelimit_sleep_time=ratelimit_sleep_time,
                                     ratelimit_max=ratelimit_limit,
                                     ratelimit_within=ratelimit_timeframe,
-                                    ratelimit_maxsleeps=ratelimit_maxsleeps)
+                                    ratelimit_maxsleeps=ratelimit_maxsleeps,
+                                    ratelimit_enabled=ratelimit_enabled)
         self.do_retry = do_retry
         self.retry_sleep = retry_sleep
+        self.use_nsdict = use_nsdict
         
     def nation(self, nation_name, password=None, autologin=None):
         """Setup access to the Nation API with the Nation object
@@ -68,8 +71,5 @@ class Nationstates:
             :param client_key: Client Key Nationstates Gave you
             :param tgid: TGID from api template
             :param key: Key from api Template
-
-
-
         """
         return Telegram(self, client_key, tgid, key)

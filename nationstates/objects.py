@@ -1,10 +1,13 @@
-from nsapiwrapper.exceptions import ConflictError, InternalServerError, CloudflareServerError
 from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
 from nsapiwrapper.urls import Shard
 from nsapiwrapper.utils import parsetree, parse
+
 from xml.parsers.expat import ExpatError
 from time import sleep
+
+from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
 from .info import nation_shards, region_shards, world_shards, wa_shards
+
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -38,10 +41,13 @@ def response_parser(response, full_response, use_nsdict=True):
         except ExpatError:
             return xml
 
+def bad_api_parameter(param, api_name):
+    if param == "":
+        raise ValueError("{} API's argument cannot be an empty string").format(api_name.upper())
+
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
     auto_shards = tuple()
-
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -69,7 +75,8 @@ class API_WRAPPER:
         self.current_api = current_api
 
     def _parser(self, response, full_response):
-        resp =  response_parser(response, full_response)
+        resp =  response_parser(response, full_response, 
+                use_nsdict=self.api_mother.use_nsdict)
         if full_response:
             return resp
         else:
@@ -125,6 +132,8 @@ class Nation(API_WRAPPER):
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
+        bad_api_parameter(nation_name, self.api_name)
+
         self.is_auth = bool(password or autologin)
         self.nation_name = nation_name
         self._set_apiwrapper(self._determine_api(nation_name, password, autologin))
@@ -141,14 +150,28 @@ class Nation(API_WRAPPER):
         else:
             return self.api.Nation(name)
 
+    def _check_auth(self):
+        if not self.is_auth:
+            raise NotAuthenticated("Action requires authentication")
+
     def authenticate(self, password=None, autologin=None):
         self._set_apiwrapper(self._determine_api(self.nation_name, password, autologin))
         return self
 
-    @property
-    def region(self):
-        resp = self.api_mother.region(self._auto_shard("region"))
-        return resp
+    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True):
+        self._check_auth()
+        resp =  self.command("issue", issue=issue_id, option=option, full_response=True)
+        try:
+            if not raise_exception_if_fail:
+                raise KeyError
+
+            if resp["data"][self.api_name]["issue"]["error"]:
+                raise APIUsageError(resp["data"][self.api_name]["issue"]["error"])
+        except KeyError:
+            if full_response:
+                return resp
+            else:
+                return resp["data"][self.api_name]
 
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
         if telegram:
@@ -163,10 +186,11 @@ class Nation(API_WRAPPER):
             payload.update({"token":token})
         return self.get_shards(Shard(**payload), full_response=True)
 
-    def pick_issue(self, issue_id, option, full_response=False):
-        if not self.is_auth:
-            raise Exception("TODO: WRITE NOT AUTH EXCEPTON")
-        return self.command("issue", issue=issue_id, option=option, full_response=full_response)
+
+    @property
+    def region(self):
+        resp = self.api_mother.region(self._auto_shard("region"))
+        return resp
 
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
@@ -174,6 +198,8 @@ class Region(API_WRAPPER):
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
+        bad_api_parameter(region_name, self.api_name)
+
         self.region_name = region_name
         self._set_apiwrapper(self._determine_api(region_name))
 
@@ -201,12 +227,19 @@ class World(API_WRAPPER):
     def _determine_api(self):
         return self.api.World()
 
+    @property
+    def nations(self):
+        resp = self._auto_shard("nations")
+        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
+
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
+        bad_api_parameter(region_name, self.api_name)
+
         self.chamber = chamber
         self._set_apiwrapper(self._determine_api(chamber))
 
@@ -216,7 +249,12 @@ class WorldAssembly(API_WRAPPER):
             hexloc=hex(id(self)).upper().replace("X", "x"))
 
     def _determine_api(self, chamber):
-        return self.api.WorldAssembly(chamber)
+        return self.api.WorldAssembly(chamber)\
+
+    @property
+    def nations(self):
+        resp = self._auto_shard("nations")
+        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
 
 class Telegram(API_WRAPPER):
     api_name = TelegramAPI.api_name
@@ -224,13 +262,51 @@ class Telegram(API_WRAPPER):
 
     def __init__(self, api_mother, client_key=None, tgid=None, key=None):
         super().__init__(api_mother)
-        self.client_key = client_key
-        self.tgid = tgid
-        self.key = key
+        self.__clientkey__ = client_key
+        self.__tgid__ = tgid
+        self.__key__ = key
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Telegram(self.client_key, self.tgid, self.key)
+        return self.api.Telegram(self.__clientkey__, self.tgid, self.key)
+
+    def _newtelegramtemplate(self):
+        self._set_apiwrapper(self._determine_api())
+
 
     def send_telegram(self, nation, full_response=False):
-        return self.request(Shard(to=nation), full_response)
+        if isinstance(nation, Nation):
+            nation_str = nation.nation_name
+        else:
+            nation_str = nation
+        return self.request(Shard(to=nation_str), full_response)
+
+
+    # TODO: Detirmine if we want to encourage mutable
+    # Telegram objects
+    # @property
+    # def clientkey(self):
+    #     return self.__clientkey__
+
+    # @client_key.setter
+    # def clientkey(self, v):
+    #     self.__clientkey__ = v
+    #     self._newtelegramtemplate()
+
+    # @property
+    # def tgid(self):
+    #     return self.__tgid__
+
+    # @tgid.setter
+    # def tgid(self, v):
+    #     self.__tgid__ = v
+    #     self._newtelegramtemplate()
+
+    # @property
+    # def tgid(self):
+    #     return self.__key__
+
+    # @tgid.setter
+    # def tgid(self, v):
+    #     self.__key__ = v
+    #     self._newtelegramtemplate()
