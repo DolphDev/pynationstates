@@ -48,6 +48,7 @@ def bad_api_parameter(param, api_name):
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
     auto_shards = tuple()
+    get_shard = tuple("get_"+x for x in auto_shards)
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -59,6 +60,10 @@ class API_WRAPPER:
         if attr in self.auto_shards:
             resp = self.get_shards(attr)
             return resp[attr]
+        elif attr in self.get_shard:
+            resp = self._get_shard(attr[4:])
+            return resp
+
         else:
             # Implement Default Behavior
             raise AttributeError('\'{}\' has no attribute \'{}\''.format(
@@ -87,6 +92,14 @@ class API_WRAPPER:
 
     def _request(self, shards):
         return self.current_api.request(shards=shards)
+
+    def _get_shard(self, shard):
+        """Returns a method that can be used by this class"""
+        def get_shard(*arg, **kwargs):
+            """Gets the shard '{}'""".format(shard)
+            return self.get_shards(Shard(shard, *arg, **kwargs))
+        return get_shard
+
 
     def request(self, shards, full_response, return_status_tuple=False):
         try:
@@ -129,6 +142,7 @@ class Nation(API_WRAPPER):
     # like Nation().shard
     # and return the result
     auto_shards = nation_shards
+    get_shard = tuple("get_"+x for x in auto_shards)
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
@@ -186,7 +200,6 @@ class Nation(API_WRAPPER):
             payload.update({"token":token})
         return self.get_shards(Shard(**payload), full_response=True)
 
-
     @property
     def region(self):
         resp = self.api_mother.region(self._auto_shard("region"))
@@ -195,6 +208,7 @@ class Nation(API_WRAPPER):
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
     auto_shards = region_shards
+    get_shard = tuple("get_"+x for x in auto_shards)
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
@@ -219,6 +233,7 @@ class Region(API_WRAPPER):
 class World(API_WRAPPER):
     api_name = WorldAPI.api_name
     auto_shards = world_shards
+    get_shard = tuple("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -235,6 +250,7 @@ class World(API_WRAPPER):
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
+    get_shard = tuple("get_"+x for x in auto_shards)
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
@@ -255,6 +271,11 @@ class WorldAssembly(API_WRAPPER):
     def nations(self):
         resp = self._auto_shard("nations")
         return tuple(self.api_mother.nation(x) for x in resp.split(":"))
+
+    @property
+    def regions(self):
+        resp = self._auto_shard("regions")
+        return tuple(self.api_mother.region(x) for x in resp.split(":"))
 
 class Telegram(API_WRAPPER):
     api_name = TelegramAPI.api_name
@@ -310,3 +331,7 @@ class Telegram(API_WRAPPER):
     # def tgid(self, v):
     #     self.__key__ = v
     #     self._newtelegramtemplate()
+
+# This compiles the get_shard family of methods to the classes
+# Due to the changing nature of the API, this is done at runtime rather than beforehand
+# Nations
