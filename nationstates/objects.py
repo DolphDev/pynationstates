@@ -254,7 +254,7 @@ class WorldAssembly(API_WRAPPER):
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
-        bad_api_parameter(region_name, self.api_name)
+        bad_api_parameter(chamber, self.api_name)
 
         self.chamber = chamber
         self._set_apiwrapper(self._determine_api(chamber))

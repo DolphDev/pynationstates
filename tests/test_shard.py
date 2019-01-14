@@ -1,6 +1,6 @@
 import unittest
 
-from nationstates import core
+import nationstates as core
 
 
 class ShardTest(unittest.TestCase):
@@ -18,8 +18,7 @@ class ShardTest(unittest.TestCase):
         self.assertIsInstance(core.Shard("test", test="test").__repr__(), str)
 
     def test_shard_ShardError(self):
-        self.assertRaises(core.exceptions.ShardError, core.Shard, None)
-        self.assertRaises(core.exceptions.ShardError, core.Shard("Test"), None)
+        self.assertRaises(ValueError, core.Shard, None)
 
     def test_shard_string(self):
         try:
@@ -31,6 +30,3 @@ class ShardTest(unittest.TestCase):
     def test_shard_eq(self):
         self.assertEqual(core.Shard("TEST"), core.Shard("TEST"))
     
-    def test_shard_generator_func(self):
-        self.assertRaises(core.exceptions.ShardError, list, core.objects.shard_generator([None]))
-

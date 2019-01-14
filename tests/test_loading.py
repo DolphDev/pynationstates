@@ -1,35 +1,33 @@
-import unittest
-import time
-import nationstates
+# import unittest
+# import time
+# import nationstates as ns
 
-USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman"
+# USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by Dolphman"
 
-class TestApi(object):
+# class TestApi(object):
 
-    __rltime__ = []
+#     __rltime__ = []
 
-    @property
-    def xrls(self):
-        return 0
-
-
+#     @property
+#     def xrls(self):
+#         return 0
 
 
-world = nationstates.Nationstates(
-    "world", shard=["numnations"], api_mother=TestApi()).load(USERAGENT)
-wa = nationstates.Nationstates(
-    "wa", "0", shard=["numnations"], api_mother=TestApi()).load(USERAGENT)
-time.sleep(0.3)
-nation = nationstates.Nationstates(
-    "nation", "The United Island Tribes", api_mother=TestApi()).load(USERAGENT)
-time.sleep(0.3)
-region = nationstates.Nationstates("region", "Balder", api_mother=TestApi()).load(USERAGENT)
 
+"""
+#world = nationstates.Nationstates(
+#    "world", shard=["numnations"], api_mother=TestApi()).load(USERAGENT)
 
+nationstates = ns.nationstates(USERAGENT)
+wa = nationstates.wa("0")
+nation = nationstates.nation("testlandia")
+region = nationstates.region("Balder")
+
+"""
 """
 These Test Makes sure that data accesses is consistant. (and that it can be accessed)
 """
-
+"""
 
 class NationTest(unittest.TestCase):
 
@@ -87,3 +85,4 @@ class TestUserAgent(unittest.TestCase):
 
     def test_wa_user_agent(self):
         self.assertEqual(USERAGENT, wa.data["request_instance"].request.headers["User-Agent"])
+"""

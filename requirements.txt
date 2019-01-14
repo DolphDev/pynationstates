@@ -1,1 +1,1 @@
-nsapiwrapper==0.0.1a0
+nsapiwrapper==0.0.1a1

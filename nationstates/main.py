@@ -73,3 +73,11 @@ class Nationstates:
             :param key: Key from api Template
         """
         return Telegram(self, client_key, tgid, key)
+
+    @property
+    def user_agent(self):
+        return self.api.user_agent
+
+    @user_agent.setter
+    def user_agent(self, ua):
+        self.api.user_agent = ua
