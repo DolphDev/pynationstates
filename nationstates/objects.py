@@ -4,9 +4,11 @@ from nsapiwrapper.utils import parsetree, parse
 
 from xml.parsers.expat import ExpatError
 from time import sleep
+from functools import wraps
 
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
 from .info import nation_shards, region_shards, world_shards, wa_shards
+
 
 
 class NSDict(dict):
@@ -94,12 +96,12 @@ class API_WRAPPER:
         return self.current_api.request(shards=shards)
 
     def _get_shard(self, shard):
-        """Returns a method that can be used by this class"""
+        """Dynamically Builds methods to query shard with proper with arg and kwargs support"""
+        @wraps(API_WRAPPER._get_shard)
         def get_shard(*arg, **kwargs):
             """Gets the shard '{}'""".format(shard)
             return self.get_shards(Shard(shard, *arg, **kwargs))
         return get_shard
-
 
     def request(self, shards, full_response, return_status_tuple=False):
         try:
@@ -247,6 +249,11 @@ class World(API_WRAPPER):
         resp = self._auto_shard("nations")
         return tuple(self.api_mother.nation(x) for x in resp.split(":"))
 
+    @property
+    def regions(self):
+        resp = self._auto_shard("regions")
+        return tuple(self.api_mother.region(x) for x in resp.split(":"))
+
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
@@ -293,7 +300,6 @@ class Telegram(API_WRAPPER):
 
     def _newtelegramtemplate(self):
         self._set_apiwrapper(self._determine_api())
-
 
     def send_telegram(self, nation, full_response=False):
         if isinstance(nation, Nation):
