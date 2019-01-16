@@ -11,8 +11,8 @@ Using Strings
 Strings can be used to represent simpler shards. 
 
     >>> import nationstates as ns
-    >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
-    >>> r = api.get_world(shard=["numnations"])
+    >>> api = ns.Nationstates(UniqueAndDescriptiveUserAgent)
+    >>> r = api.world().get_shards("numnations")
 
 
 Shard Object
@@ -22,9 +22,9 @@ The :class:`Shard` Object was built to allow more complicated shards. They allow
 
 
     >>> import nationstates as ns
-    >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
+    >>> api = ns.Nationstates(UniqueAndDescriptiveUserAgent)
     >>> happenings = ns.Shard("happenings", view="region.the_pacific", filter="founding")
-    >>> r = api.get_world(shard=[happenings])
+    >>> r = api.world().get_shards(happenings])
 
 
 

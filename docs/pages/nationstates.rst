@@ -7,13 +7,12 @@ The Nationstates package includes a simple interface for developers.
 
 For example, for the following code::
 
-    >>> import nationstates as ns
-    >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
-    >>> nation = api.get_nation("The United Island Tribes")
+    >>> import nationstates
+    >>> api = nationstates.Nationstates(UniqueAndDescriptiveUserAgent)
+    >>> nation = api.nation("testlandia")
 
-The :class:`.Api` object centralizes API use. It preforms the necessary handeling of :class:`Nationstates` objects
-to create objects that share certain attributes (Such as **requests's** :class:`.Session` object). The :method:`.get_nation` method 
-creates a :ref:`Nationstates` object for the `'The United Island Tribes'`. 
+The :class:`.Nationstates` object centralizes API use.  The :method:`.nation` method 
+creates a :ref:`Nation` object for the `'testlandia'`. 
 
 Interacting with the data
 ============
