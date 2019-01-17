@@ -14,26 +14,8 @@ objects attributes which are generated dynamically by pynationstates.
     :undoc-members:
     :show-inheritance:
 
-.. autoclass:: Nationstates
-   :members:
-   :inherited-members:
+-------------------
 
-.. autoclass:: Nationstates
-   :members:
-   :inherited-members:
-
-.. autoclass:: nationstates.objects.Nation
-   :members:
-   :inherited-members:
-
-.. autoclass:: nationstates.objects.Region
-   :members:
-   :inherited-members:
-
-.. autoclass:: nationstates.objects.World
-   :members:
-   :inherited-members:
-
-.. autoclass:: nationstates.objects.WorldAssembly
-   :members:
-   :inherited-members:
+.. automodule:: nationstates.objects
+    :members:
+    :show-inheritance:
