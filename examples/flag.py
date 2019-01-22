@@ -1,9 +1,5 @@
 import nationstates
 
-nationname = "The United Island Tribes"
+api = nationstates.Nationstates("Example for Nationstates API for python")
 
-api = nationstates.Api("Example for Nationstates API for python")
-
-print(
-	api.get_nation(nationname, shard=["flag"]).flag
-	)
+print(api.nation("TestLandia").flag)
