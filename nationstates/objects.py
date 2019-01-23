@@ -9,7 +9,9 @@ from functools import wraps
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
 from .info import nation_shards, region_shards, world_shards, wa_shards
 
-
+# Some Lines may have # pragma: no cover to specify to ignore coverage misses here
+# Mostly due to it not being pratical for those methods to be automatically tested
+#
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -130,7 +132,7 @@ class API_WRAPPER:
         resp = self.request(shards=args, full_response=full_response)
         return resp
 
-    def command(self, command, full_response=False, **kwargs):
+    def command(self, command, full_response=False, **kwargs): # pragma: no cover
         command = Shard(c=command)
         return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
 
@@ -174,7 +176,7 @@ class Nation(API_WRAPPER):
         self._set_apiwrapper(self._determine_api(self.nation_name, password, autologin))
         return self
 
-    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True):
+    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True): # pragma: no cover
         self._check_auth()
         resp =  self.command("issue", issue=issue_id, option=option, full_response=True)
         try:
@@ -189,7 +191,7 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
+    def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
         if telegram:
             pass
         else:
@@ -284,7 +286,7 @@ class WorldAssembly(API_WRAPPER):
         resp = self._auto_shard("regions")
         return tuple(self.api_mother.region(x) for x in resp.split(":"))
 
-class Telegram(API_WRAPPER):
+class Telegram(API_WRAPPER): # pragma: no cover
     api_name = TelegramAPI.api_name
     api_value = TelegramAPI.api_value
 
