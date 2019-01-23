@@ -26,16 +26,16 @@ SOFTWARE.
 """
 
 
-version = '2.0.0.0alpha'
+version = '2.0.0.1'
 
 from setuptools import setup
 setup(name='nationstates',
       install_requires=["nsapiwrapper==0.0.1a0"],
       version=version,
       description='Nationstates API wrapper for python',
-      author='Joshua Walters',
+      author='Joshua W',
       author_email='dolphdevgithub@gmail.com',
-      url='https://github.com/Dolphman/pynationstates',
+      url='https://github.com/DolphDev/pynationstates',
       packages=['nationstates'],
       package_data={'': ['LICENSE.txt', "readme.md"]},
       download_url='https://github.com/DolphDev/pynationstates/releases/tag/'+version,

@@ -51,8 +51,8 @@ def bad_api_parameter(param, api_name):
 
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code"""
-    auto_shards = tuple()
-    get_shard = tuple("get_"+x for x in auto_shards)
+    auto_shards = set()
+    get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -146,7 +146,7 @@ class Nation(API_WRAPPER):
     # like Nation().shard
     # and return the result
     auto_shards = nation_shards
-    get_shard = tuple("get_"+x for x in auto_shards)
+    get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
@@ -212,7 +212,7 @@ class Nation(API_WRAPPER):
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
     auto_shards = region_shards
-    get_shard = tuple("get_"+x for x in auto_shards)
+    get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
@@ -237,7 +237,7 @@ class Region(API_WRAPPER):
 class World(API_WRAPPER):
     api_name = WorldAPI.api_name
     auto_shards = world_shards
-    get_shard = tuple("get_"+x for x in auto_shards)
+    get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -259,7 +259,7 @@ class World(API_WRAPPER):
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
-    get_shard = tuple("get_"+x for x in auto_shards)
+    get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
@@ -342,4 +342,3 @@ class Telegram(API_WRAPPER): # pragma: no cover
 
 # This compiles the get_shard family of methods to the classes
 # Due to the changing nature of the API, this is done at runtime rather than beforehand
-# Nations

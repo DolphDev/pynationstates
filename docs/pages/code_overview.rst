@@ -14,7 +14,7 @@ objects attributes which are generated dynamically by pynationstates.
     :undoc-members:
     :show-inheritance:
 
-.. autoclass:: Api
+.. autoclass:: Nationstates
    :members:
    :inherited-members:
 
@@ -22,13 +22,18 @@ objects attributes which are generated dynamically by pynationstates.
    :members:
    :inherited-members:
 
- .. autofunction:: gen_url
+.. autoclass:: nationstates.objects.Nation
+   :members:
+   :inherited-members:
 
+.. autoclass:: nationstates.objects.Region
+   :members:
+   :inherited-members:
 
-:mod:`Exceptions`
--------------------
+.. autoclass:: nationstates.objects.World
+   :members:
+   :inherited-members:
 
-.. automodule:: nationstates.NScore.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. autoclass:: nationstates.objects.WorldAssembly
+   :members:
+   :inherited-members:
