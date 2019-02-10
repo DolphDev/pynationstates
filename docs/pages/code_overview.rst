@@ -18,10 +18,6 @@ objects attributes which are generated dynamically by pynationstates.
    :members:
    :inherited-members:
 
-.. autoclass:: Nationstates
-   :members:
-   :inherited-members:
-
 .. autoclass:: nationstates.objects.Nation
    :members:
    :inherited-members:
