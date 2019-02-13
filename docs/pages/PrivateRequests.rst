@@ -1,7 +1,7 @@
 .. _private_nations:
 
-Private Requests
-============
+Using Private Requests
+======================
 Private Shards and command, which are currently only supported the api for Nations
 
 .. warning:: It's not secure to have your password simply sitting in your source code, you may want use various config libraries or other means to get the password at runtime, rather than directly using it.
