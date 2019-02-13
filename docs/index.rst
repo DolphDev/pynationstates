@@ -13,4 +13,5 @@ Content Pages
     pages/shard
     pages/code_overview
     pages/PrivateRequests
-
+    pages/ratelimit
+    pages/api
