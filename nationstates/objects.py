@@ -49,8 +49,19 @@ def bad_api_parameter(param, api_name):
     if param == "":
         raise ValueError("{} API's argument cannot be an empty string").format(api_name.upper())
 
+
+class NSDict(dict):
+    """Specialized Dict, allows attribute access to results"""
+
+    def __getattr__(self, attr):
+        if attr in self.keys():
+            return self[attr]
+        else:
+            raise AttributeError('\'{}\' has no attribute \'{}\''.format(
+                type(self), attr))
+
 class API_WRAPPER:
-    """A object meant to be inherited that handles all shared code"""
+    """A object meant to be inherited that handles all shared code that each API endpoint uses"""
     auto_shards = set()
     get_shard = set("get_"+x for x in auto_shards)
 
@@ -106,6 +117,10 @@ class API_WRAPPER:
         return get_shard
 
     def request(self, shards, full_response, return_status_tuple=False):
+        """Request the API
+
+           This method is wrapped by similar functions
+        """
         try:
             resp = self._request(shards)
             if return_status_tuple:
@@ -129,18 +144,27 @@ class API_WRAPPER:
                 raise exc
 
     def get_shards(self, *args, full_response=False):
+        """Get Shards"""
+
         resp = self.request(shards=args, full_response=full_response)
         return resp
 
+<<<<<<< HEAD
     def command(self, command, full_response=False, **kwargs): # pragma: no cover
+=======
+    def command(self, command, full_response=False, **kwargs):
+        """Method Interface to the command API for Nationstates"""
+>>>>>>> f9d6a48c9c71232178f746c4d1c5159462f79608
         command = Shard(c=command)
         return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
 
     @property
     def api(self):
+        """Returns the Mother `Nationstates`"""
         return self.api_mother.api
 
 class Nation(API_WRAPPER):
+    """Nation API endpoint handeler"""
     api_name = NationAPI.api_name
     # These Shards can be used
     # like Nation().shard
@@ -191,7 +215,14 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
+<<<<<<< HEAD
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
+=======
+    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
+        """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
+            
+        """
+>>>>>>> f9d6a48c9c71232178f746c4d1c5159462f79608
         if telegram:
             pass
         else:
@@ -199,6 +230,7 @@ class Nation(API_WRAPPER):
         telegram.send_telegram(self.nation_name)
 
     def verify(self, checksum=None, token=None, full_response=False):
+        """Wraps around the verify API"""
         payload = {"checksum":checksum, "a":"verify"}
         if token:
             payload.update({"token":token})
@@ -206,6 +238,7 @@ class Nation(API_WRAPPER):
 
     @property
     def region(self):
+        """Returns the region, result is :class:`Region`"""
         resp = self.api_mother.region(self._auto_shard("region"))
         return resp
 

@@ -9,7 +9,9 @@ Content Pages
 .. toctree::
     :maxdepth: 1
 
-    pages/api
+    pages/nationstates
     pages/shard
     pages/code_overview
-
+    pages/PrivateRequests
+    pages/ratelimit
+    pages/api

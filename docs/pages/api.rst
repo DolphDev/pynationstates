@@ -8,7 +8,7 @@ The Nationstates package includes a simple interface for developers.
 For example, for the following code::
 
     >>> import nationstates as ns
-    >>> api = ns.Api(UniqueAndDescriptiveUserAgent)
+    >>> api = ns.Nationstates(UniqueAndDescriptiveUserAgent)
     >>> nation = api.get_nation("The United Island Tribes")
 
 The :class:`.Api` object centralizes API use. It preforms the necessary handeling of :class:`Nationstates` objects
