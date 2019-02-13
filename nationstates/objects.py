@@ -149,12 +149,8 @@ class API_WRAPPER:
         resp = self.request(shards=args, full_response=full_response)
         return resp
 
-<<<<<<< HEAD
     def command(self, command, full_response=False, **kwargs): # pragma: no cover
-=======
-    def command(self, command, full_response=False, **kwargs):
         """Method Interface to the command API for Nationstates"""
->>>>>>> f9d6a48c9c71232178f746c4d1c5159462f79608
         command = Shard(c=command)
         return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
 
@@ -215,14 +211,10 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-<<<<<<< HEAD
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
-=======
-    def send_telegram(telegram=None, client_key=None, tgid=None, key=None):
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
             
         """
->>>>>>> f9d6a48c9c71232178f746c4d1c5159462f79608
         if telegram:
             pass
         else:
