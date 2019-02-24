@@ -37,9 +37,9 @@ Output
 
     '184284'
 
-####Other Libraries
+#### Other Libraries
 
-[sans](https://github.com/zephyrkul/sans) for easy Async usage of the api
+* [sans](https://github.com/zephyrkul/sans) for easy Async usage of the api
 
 
 
