@@ -1,4 +1,4 @@
-from nsapiwrapper.exceptions import (
+from .nsapiwrapper.exceptions import (
     NSBaseError,
     RateLimitReached, 
     NSServerBaseException, 

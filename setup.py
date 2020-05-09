@@ -30,13 +30,14 @@ version = '2.0.0.1'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["nsapiwrapper==0.0.1a0"],
+      install_requires=["beautifulsoup4==4.9.0", "ezurl==0.1.3.25",
+                        "requests==2.23.*", "xmltodict==0.12.0" ],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua W',
       author_email='dolphdevgithub@gmail.com',
       url='https://github.com/DolphDev/pynationstates',
-      packages=['nationstates'],
+      packages=['nationstates', 'nationstates.nsapiwrapper'],
       package_data={'': ['LICENSE.txt', "readme.md"]},
       download_url='https://github.com/DolphDev/pynationstates/releases/tag/'+version,
       keywords=['nationstates', 'api wrapper', 'api',

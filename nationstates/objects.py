@@ -1,6 +1,6 @@
-from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
-from nsapiwrapper.urls import Shard
-from nsapiwrapper.utils import parsetree, parse
+from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
+from .nsapiwrapper.urls import Shard
+from .nsapiwrapper.utils import parsetree, parse
 
 from xml.parsers.expat import ExpatError
 from time import sleep

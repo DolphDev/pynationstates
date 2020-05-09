@@ -1,9 +1,9 @@
-import nsapiwrapper
+from . import nsapiwrapper
 from .objects import Nation, Region, World, WorldAssembly, Telegram
 
 class Nationstates:
 
-    def __init__(self, user_agent, version="9", ratelimit_sleep=True,
+    def __init__(self, user_agent, version="11", ratelimit_sleep=True,
                 ratelimit_limit=40, ratelimit_timeframe=30, ratelimit_sleep_time=4,
                 ratelimit_maxsleeps=10, ratelimit_enabled=True, do_retry=True, 
                 retry_sleep=5, use_nsdict=True):
