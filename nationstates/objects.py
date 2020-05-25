@@ -1,4 +1,4 @@
-from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
+from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI, CardsAPI
 from .nsapiwrapper.urls import Shard
 from .nsapiwrapper.utils import parsetree, parse
 
@@ -12,6 +12,13 @@ from .info import nation_shards, region_shards, world_shards, wa_shards
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
 # Mostly due to it not being pratical for those methods to be automatically tested
 #
+
+def cant_be_none(**kwargs):
+    # Raies ValueError is values are left None
+    for k,v in kwargs.items():
+        if v is None:
+            raise ValueError("'{}'' cannot be None".format(k))
+
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -299,7 +306,7 @@ class WorldAssembly(API_WRAPPER):
             hexloc=hex(id(self)).upper().replace("X", "x"))
 
     def _determine_api(self, chamber):
-        return self.api.WorldAssembly(chamber)\
+        return self.api.WorldAssembly(chamber)
 
     @property
     def nations(self):
@@ -335,35 +342,19 @@ class Telegram(API_WRAPPER): # pragma: no cover
             nation_str = nation
         return self.request(Shard(to=nation_str), full_response)
 
+class IndividualCards(API_WRAPPER):
+    api_name = CardsAPI.api_name
+    auto_shards = tuple()
+    get_shard = set("get_"+x for x in auto_shards)
 
-    # TODO: Detirmine if we want to encourage mutable
-    # Telegram objects
-    # @property
-    # def clientkey(self):
-    #     return self.__clientkey__
+    def __init__(self, api_mother, cardid=None, season=None):
+        super().__init__(api_mother)
+        cant_be_none(cardid=cardid, season=season)
+        self.__cardid__ = cardid
+        self.__season__ = season
+        self._set_apiwrapper(self._determine_api())
 
-    # @client_key.setter
-    # def clientkey(self, v):
-    #     self.__clientkey__ = v
-    #     self._newtelegramtemplate()
+    def _determine_api(self):
+        return self.api.Cards(cardid=self.__cardid__, season=self.__season__)
 
-    # @property
-    # def tgid(self):
-    #     return self.__tgid__
 
-    # @tgid.setter
-    # def tgid(self, v):
-    #     self.__tgid__ = v
-    #     self._newtelegramtemplate()
-
-    # @property
-    # def tgid(self):
-    #     return self.__key__
-
-    # @tgid.setter
-    # def tgid(self, v):
-    #     self.__key__ = v
-    #     self._newtelegramtemplate()
-
-# This compiles the get_shard family of methods to the classes
-# Due to the changing nature of the API, this is done at runtime rather than beforehand

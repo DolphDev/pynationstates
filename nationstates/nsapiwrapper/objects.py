@@ -330,4 +330,22 @@ class TelegramAPI(NationstatesAPI):
         return self._request(shards, url, self.api_name, self.api_value, self.api_mother.version)
 
 class CardsAPI(NationstatesAPI):
-    api_name = 'card'
+    # Cards is implemented de facto as a worlds api
+    api_name = "card"
+
+    def __init__(self, api_mother, **kwargs):
+        super().__init__(api_mother)
+        self.__defaultshards__ = Shard(**kwargs)
+
+    def _default_shards(self):
+        return (Shard('card'), self.__defaultshards__)
+
+    def request(self, shards=tuple()):
+        url = self.url(shards)
+        return self._request(shards, url, self.api_name, None, self.api_mother.version)
+
+    def url(self, shards):
+        return self._url(self.api_name, 
+            None,
+            self.combine_default_shards(shards),
+            self.api_mother.version)

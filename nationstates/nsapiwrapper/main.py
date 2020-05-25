@@ -2,7 +2,7 @@ from requests import Session
 from .objects import RateLimit, NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
 from .exceptions import RateLimitReached
 from .info import max_safe_requests, ratelimit_max, ratelimit_within, ratelimit_maxsleeps, ratelimit_sleep_time
-from .objects import RateLimit, NationAPI, PrivateNationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI
+from .objects import RateLimit, NationAPI, PrivateNationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, CardsAPI
 from .utils import sleep_thread
 
 class Api:
@@ -76,3 +76,7 @@ class Api:
 
     def Telegram(self, client_key=None, tgid=None, key=None):
         return TelegramAPI(self, client_key, tgid, key)
+
+    def Cards(self, **kwargs):
+        """ Pass request details in kwargs """
+        return CardsAPI(self, **kwargs)

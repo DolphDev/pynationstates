@@ -1,5 +1,5 @@
 from . import nsapiwrapper
-from .objects import Nation, Region, World, WorldAssembly, Telegram
+from .objects import Nation, Region, World, WorldAssembly, Telegram, IndividualCards
 
 class Nationstates:
 
@@ -73,6 +73,13 @@ class Nationstates:
             :param key: Key from api Template
         """
         return Telegram(self, client_key, tgid, key)
+
+    def individual_cards(self, cardid=None, season=None):
+        """Create Cards api for Individual cards
+            :param cardid: Cards ID
+            :param season: season
+        """
+        return IndividualCards(self, cardid=cardid, season=season)
 
     @property
     def user_agent(self):
