@@ -10,7 +10,7 @@ RateLimitStateEditLock = RLock()
 
 def response_check(data):
     def xmlsoup():
-        return BeautifulSoup(data["xml"], "lxml")
+        return BeautifulSoup(data["xml"], "http.parser")
     if data["status"] == 409:
         raise ConflictError("Nationstates API has returned a Conflict Error.")
     if data["status"] == 400:
