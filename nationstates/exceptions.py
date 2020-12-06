@@ -10,7 +10,8 @@ from .nsapiwrapper.exceptions import (
     APIUsageError,
     InternalServerError,
     CloudflareServerError,
-    BadRequest
+    BadRequest,
+    ServerError
 )
 
 class NotAuthenticated(Exception):

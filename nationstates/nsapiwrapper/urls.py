@@ -110,7 +110,7 @@ class Shard(object):
         return self.shardname
 
 def gen_url(api, shards, version, API_URL=API_URL):
-    if not api[0] in {"world", 'cards'}:
+    if not api[0] in {"world", 'cards', 'card'}:
         url = Url(API_URL).query(**({api[0]: api[1]}))
     else:
         url = Url(API_URL)

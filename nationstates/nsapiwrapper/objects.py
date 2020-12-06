@@ -10,7 +10,7 @@ RateLimitStateEditLock = RLock()
 
 def response_check(data):
     def xmlsoup():
-        return BeautifulSoup(data["xml"], "http.parser")
+        return BeautifulSoup(data["xml"], "html.parser")
     if data["status"] == 409:
         raise ConflictError("Nationstates API has returned a Conflict Error.")
     if data["status"] == 400:
@@ -188,6 +188,9 @@ class NationstatesAPI:
         else:
             return default_shards + shards
 
+    def url(self, *arg, **kwargs):
+        raise NotImplemented
+
 class NationAPI(NationstatesAPI):
     api_name = "nation"
 
@@ -331,20 +334,29 @@ class TelegramAPI(NationstatesAPI):
 
 class CardsAPI(NationstatesAPI):
     # Cards is implemented de facto as a worlds api
-    api_name = "cards"
+    # I Cards use `card`
+    api_name_single = "card"
+    api_name_multi = 'cards'
 
-    def __init__(self, api_mother, **kwargs):
+    def __init__(self, api_mother, multi=True, **kwargs):
         super().__init__(api_mother)
         if kwargs:
             self.__defaultshards__ = Shard(**kwargs)
         else:
             self.__defaultshards__ = None
+        if multi:
+            self.api_name = CardsAPI.api_name_multi
+        else:
+            self.api_name = CardsAPI.api_name_single
+
+        self.__ismulti__ = multi
 
     def _default_shards(self):
+        mother_shard = 'cards' if self.__ismulti__ else 'card'
         if self.__defaultshards__ is not None:  
-            return (Shard('Cards'), self.__defaultshards__)
+            return (Shard(mother_shard), self.__defaultshards__)
         else:
-            return (Shard('cards'),)
+            return (Shard(mother_shard),)
 
     def request(self, shards=tuple()):
         url = self.url(shards)

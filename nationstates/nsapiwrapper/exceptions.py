@@ -24,9 +24,6 @@ class APIError(NSServerBaseException):
 class Forbidden(APIError):
     pass
 
-class ConflictError(APIError):
-    """ConflictError from Server"""
-    pass
 
 class NotFound(APIError):
     """Nation/Region Not Found"""
@@ -39,10 +36,17 @@ class APIRateLimitBan(APIError):
 class APIUsageError(APIError):
     pass
 
-class InternalServerError(APIError):
+class ServerError(APIError):
+    # Can Be Used to check for an Website Error
     pass
 
-class CloudflareServerError(APIError):
+class ConflictError(ServerError):
+    """ConflictError from Server"""
+    pass
+class InternalServerError(ServerError):
+    pass
+
+class CloudflareServerError(ServerError):
     pass
 
 class BadRequest(APIError):

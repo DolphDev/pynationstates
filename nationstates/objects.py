@@ -7,7 +7,7 @@ from time import sleep
 from functools import wraps
 
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
-from .info import nation_shards, region_shards, world_shards, wa_shards
+from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
 # Mostly due to it not being pratical for those methods to be automatically tested
@@ -31,6 +31,16 @@ def nationid_or_name(n_id, name):
         raise ValueError('A nation_id or nation_name was not provided')
     return shard
 
+def dispatch_token(resp):
+    data = resp['data']
+    if data.get('error'):
+        raise APIUsageError(data['error'])
+    return data['success']
+
+def dispatch_error_check(resp):
+    data = resp['data']
+    if data.get('error'):
+        raise APIUsageError(data['error'])
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -151,13 +161,13 @@ class API_WRAPPER:
             if return_status_tuple:
                 return (None, False)
             elif self.api_mother.do_retry:
-                # TODO
-                # request_limit = 0
+                request_limit = 10
                 sleep(self.api_mother.retry_sleep)
                 resp = self.request(shards, full_response, True)
                 while not resp[1]:
                     sleep(self.api_mother.retry_sleep)
                     resp = self.request(shards, full_response, True)
+                    request_limit = 0
                 return resp[0]
             else:
                 raise exc
@@ -170,6 +180,8 @@ class API_WRAPPER:
 
     def command(self, command, full_response=False, **kwargs): # pragma: no cover
         """Method Interface to the command API for Nationstates"""
+        if not kwargs:
+            raise ValueError('Command requires keyword arguments')
         command = Shard(c=command)
         return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
 
@@ -230,9 +242,22 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
+    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, return_dispatchid=True, full_response=False):
+        cant_be_none(title=title, text=text, category=category, subcategory=None)
+        self._check_auth()
+        token_resp = self.command('dispatch', mode='prepare', title=title, text=text, full_response=True)
+        token = dispatch_token(token_resp)
+        pass
+
+    def edit_dispatch(self):
+        self._check_auth()
+        pass
+
+    def remove_dispatch(self):
+        self._check_auth()
+
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
-            
         """
         if telegram:
             pass
@@ -357,7 +382,7 @@ class Telegram(API_WRAPPER): # pragma: no cover
 
 class Cards(API_WRAPPER):
     # Shared code for Cards api
-    api_name = CardsAPI.api_name
+    api_name = CardsAPI.api_name_multi
     auto_shards = tuple()
     get_shard = set("get_"+x for x in auto_shards)
 
@@ -419,8 +444,8 @@ class Cards(API_WRAPPER):
 
 
 class IndividualCards(API_WRAPPER):
-    api_name = CardsAPI.api_name
-    auto_shards = tuple()
+    api_name = CardsAPI.api_name_single
+    auto_shards = individual_cards_shards
     get_shard = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother, cardid=None, season=None):
@@ -431,7 +456,7 @@ class IndividualCards(API_WRAPPER):
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Cards(cardid=self.__cardid__, season=self.__season__)
+        return self.api.Cards(cardid=self.__cardid__, season=self.__season__, multi=False)
 
     def __repr__(self):
         return "<Individual Card:'season-{season}|cardid={cardid}' at {hexloc}>".format(
