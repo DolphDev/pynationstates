@@ -22,3 +22,9 @@ Example
     >>> nation = api.nation("testlandia", pin=yourpin)
 
 Once you have this setup, the methods `.command()` will be functional, and you can send private shards through .`get_shards()` 
+
+Commands
+======================
+Once a nation is authenticated, you will have access to commands. `.command()` will implement the basic structure of a command request.
+
+pynationstates supplies some alias methods, like `.pickissue()`, `create_dispatch()`, `.edit_dispatch()`, and `.remove_dispatch()` that make it easier to support some of the more complicated commands.
