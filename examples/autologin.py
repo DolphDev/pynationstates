@@ -7,7 +7,7 @@ days = 15
 api = nationstates.Nationstates("YOUR USERAGENT")
 nation = api.nation("testlandia", password="YourPassword")
 while True:
-    api.get_shards("ping")
+    nation.get_shards("ping")
     time.sleep(days*24*60)
 
 
