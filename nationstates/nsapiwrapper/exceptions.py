@@ -5,7 +5,12 @@ class NSBaseError(Exception):
     """Base Error for all custom exceptions"""
     pass
 
-class RateLimitReached(NSBaseError):
+
+class RateLimitBreach(NSBaseError):
+    """Used if Ratelimit is disabled"""
+    pass
+
+class RateLimitReached(RateLimitBreach):
     """Rate Limit was reached"""
 
 class NSServerBaseException(NSBaseError):

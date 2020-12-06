@@ -1,5 +1,5 @@
 from . import nsapiwrapper
-from .objects import Nation, Region, World, WorldAssembly, Telegram, IndividualCards
+from .objects import Nation, Region, World, WorldAssembly, Telegram, Cards, IndividualCards
 
 class Nationstates:
 
@@ -74,8 +74,13 @@ class Nationstates:
         """
         return Telegram(self, client_key, tgid, key)
 
+    def cards(self, cardid=None, season=None):
+        """General Card api
+        """
+        return Cards(self)
+
     def individual_cards(self, cardid=None, season=None):
-        """Create Cards api for Individual cards
+        """Create Cards api for Individual cards, since they shard
             :param cardid: Cards ID
             :param season: season
         """

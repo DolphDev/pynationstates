@@ -19,6 +19,18 @@ def cant_be_none(**kwargs):
         if v is None:
             raise ValueError("'{}'' cannot be None".format(k))
 
+def nationid_or_name(n_id, name):
+    # Raies ValueError is values are left None
+    if name and n_id:
+        raise ValueError('Only one can be used at a time, nation_name / nation_id')
+    if name:
+        shard = dict(nationname=name)
+    elif n_id:
+        shard = dict(nationid=n_id)
+    else:
+        raise ValueError('A nation_id or nation_name was not provided')
+    return shard
+
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -342,6 +354,70 @@ class Telegram(API_WRAPPER): # pragma: no cover
             nation_str = nation
         return self.request(Shard(to=nation_str), full_response)
 
+
+class Cards(API_WRAPPER):
+    # Shared code for Cards api
+    api_name = CardsAPI.api_name
+    auto_shards = tuple()
+    get_shard = set("get_"+x for x in auto_shards)
+
+    def __init__(self, api_mother):
+        super().__init__(api_mother)
+        self._set_apiwrapper(self._determine_api())
+
+    def _determine_api(self):
+        return self.api.Cards()
+
+    def individual_cards(self, cardid=None, season=None, shards=tuple(), full_response=False):
+        # Alias's a individual card, which has it's own api
+        inv_cards = IndividualCards(self, cardid=cardid, season=season)
+        if isinstance(shards, Shard) or isinstance(shards, str):
+            shards = (shards,)
+
+        return inv_cards.get_shards(*shards, full_response)
+
+    def decks(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('deck', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def deck_owner_info(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('info', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def asks_and_bids(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('asksbids', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def collections(self, nation_name=None, nation_id=None, collections_id=None, full_response=False):
+        if nation_id or nation_name:
+            kw = nationid_or_name(nation_id, nation_name)
+        elif collections_id:
+            kw = {'collectionid': collections_id}
+        else:
+            raise ValueError('Collection id or nation not supplied')
+        shard = Shard('collections', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def auctions(self, full_response=False):
+        shard = Shard('auctions')
+        return self.get_shards(shard, full_response=full_response)
+
+    def trades(self, limit=None, sincetime=None, beforetime=None, full_response=False):
+        kw = {}
+        if limit:
+            kw['limit'] = limit
+        if sincetime:
+            kw['sincetime'] = sincetime
+        if beforetime:
+            kw['beforetime'] = beforetime
+
+        shard = Shard('trades', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+
 class IndividualCards(API_WRAPPER):
     api_name = CardsAPI.api_name
     auto_shards = tuple()
@@ -357,4 +433,8 @@ class IndividualCards(API_WRAPPER):
     def _determine_api(self):
         return self.api.Cards(cardid=self.__cardid__, season=self.__season__)
 
-
+    def __repr__(self):
+        return "<Individual Card:'season-{season}|cardid={cardid}' at {hexloc}>".format(
+            season=self.__season__,
+            cardid=self.__cardid__,
+            hexloc=hex(id(self)).upper().replace("X", "x"))
