@@ -7,6 +7,7 @@ from .urls import gen_url, Shard
 from threading import RLock
 
 RateLimitStateEditLock = RLock()
+PrivateNationStatusLock = RLock()
 
 def response_check(data):
     def xmlsoup():
@@ -239,27 +240,29 @@ class PrivateNationAPI(NationAPI):
 
     def _get_pin_headers(self):
         """Process Login data to give to the request"""
-        if self.pin:
-            custom_headers={"Pin": self.pin}
-        else:
-            if self.autologin:
-                custom_headers={"Autologin":self.autologin}
-            elif self.password:
-                custom_headers = {"Password": self.password}
-        return custom_headers
+        with PrivateNationStatusLock:
+            if self.pin:
+                custom_headers={"Pin": self.pin}
+            else:
+                if self.autologin:
+                    custom_headers={"Autologin":self.autologin}
+                elif self.password:
+                    custom_headers = {"Password": self.password}
+            return custom_headers
 
     def _setup_pin(self, response):
         # sets up pin
-        if self.password or self.autologin or self.pin:
-            headers = response["headers"]
-            try:
-                self.pin = headers["X-Pin"]
-                self.autologin = headers["X-AutoLogin"]
-                self.password = None
-            except KeyError:
-                # A Non Private Request was done
-                # Nothing needs to be done
-                pass
+        with PrivateNationStatusLock:
+            if self.password or self.autologin or self.pin:
+                headers = response["headers"]
+                try:
+                    self.pin = headers["X-Pin"]
+                    self.autologin = headers["X-AutoLogin"]
+                    self.password = None
+                except KeyError:
+                    # A Non Private Request was done
+                    # Nothing needs to be done
+                    pass
 
 class RegionAPI(NationstatesAPI): 
     api_name = "region"

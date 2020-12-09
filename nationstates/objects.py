@@ -31,16 +31,23 @@ def nationid_or_name(n_id, name):
         raise ValueError('A nation_id or nation_name was not provided')
     return shard
 
-def dispatch_token(resp):
-    data = resp['data']
+def dispatch_token(resp, use_exception):
+    data = resp['data'][Nation.api_name]
     if data.get('error'):
-        raise APIUsageError(data['error'])
+        if use_exception:
+            raise APIUsageError(data['error'])
+        else:
+            return False
     return data['success']
 
-def dispatch_error_check(resp):
-    data = resp['data']
+def dispatch_error_check(resp, use_exception):
+    data = resp['data'][Nation.api_name]
     if data.get('error'):
-        raise APIUsageError(data['error'])
+        if use_exception:
+            raise APIUsageError(data['error'])
+        else:
+            return False
+    return True
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -242,19 +249,58 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, return_dispatchid=True, full_response=False):
-        cant_be_none(title=title, text=text, category=category, subcategory=None)
+    def _dispatch(self, dispatch, use_exception=True, **kwargs): # pragma: no cover
         self._check_auth()
-        token_resp = self.command('dispatch', mode='prepare', title=title, text=text, full_response=True)
-        token = dispatch_token(token_resp)
-        pass
+        token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', full_response=True, **kwargs)
+        token = dispatch_token(token_resp, use_exception)
+        if use_exception is False and token is False:
+            return False
+        final_resp =  self.command('dispatch', dispatch=dispatch, mode='execute', token=token, full_response=True, **kwargs)
+        check = dispatch_error_check(final_resp, use_exception)
+        # Check was False - we need to return False down the line
+        if not check:
+            return check
+        else:
+            return final_resp
+        
 
-    def edit_dispatch(self):
-        self._check_auth()
-        pass
+    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+        cant_be_none(title=title, text=text, category=category, subcategory=subcategory)
 
-    def remove_dispatch(self):
-        self._check_auth()
+        final_resp =  self._dispatch('add', title=title, text=text, 
+                                    category=category, subcategory=subcategory, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
+
+    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+        cant_be_none(dispatch_id=dispatch_id, title=title, text=text, category=category, subcategory=subcategory)
+
+        final_resp =  self._dispatch('edit', dispatchid=dispatch_id, title=title, text=text, 
+                                    category=category, subcategory=subcategory, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
+
+    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): # pragma: no cover
+        cant_be_none(dispatch_id=dispatch_id)
+
+        final_resp =  self._dispatch('remove', dispatchid=dispatch_id, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
 
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
