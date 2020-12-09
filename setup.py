@@ -26,7 +26,6 @@ SOFTWARE.
 """
 
 
-<<<<<<< HEAD
 version = '3.0.0.0a0'
 
 from setuptools import setup
