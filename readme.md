@@ -4,19 +4,17 @@
 Nationstates API wrapper
 ---
 
-This is a high level and simple to use API wrapper for nationstates, currently being rewritten. 
+This is a high level and simple to use API wrapper for nationstates. Mean't to be beginner friendly, it does all of the tedious work in dealing the API for you providing a simple interface to do whatever you wan't in the api.
 
 
 ### API
-###### Note: All examples are set to change for 2.0.0.0 rewrite
 ##### Installation
 
 To install pynationstates simply use `pip`
 
     pip install nationstates
 
-The NS module usually updates monthly to either fix bugs or 
-to add features.  
+
 
 #####Examples
 ###### Making a API request
