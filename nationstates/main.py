@@ -74,7 +74,7 @@ class Nationstates:
         """
         return Telegram(self, client_key, tgid, key)
 
-    def cards(self, cardid=None, season=None):
+    def cards(self):
         """General Card api
         """
         return Cards(self)
