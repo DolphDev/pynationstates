@@ -1,9 +1,9 @@
-import nsapiwrapper
-from .objects import Nation, Region, World, WorldAssembly, Telegram
+from . import nsapiwrapper
+from .objects import Nation, Region, World, WorldAssembly, Telegram, Cards, IndividualCards
 
 class Nationstates:
 
-    def __init__(self, user_agent, version="9", ratelimit_sleep=True,
+    def __init__(self, user_agent, version="11", ratelimit_sleep=True,
                 ratelimit_limit=40, ratelimit_timeframe=30, ratelimit_sleep_time=4,
                 ratelimit_maxsleeps=10, ratelimit_enabled=True, do_retry=True, 
                 retry_sleep=5, use_nsdict=True):
@@ -73,6 +73,18 @@ class Nationstates:
             :param key: Key from api Template
         """
         return Telegram(self, client_key, tgid, key)
+
+    def cards(self, cardid=None, season=None):
+        """General Card api
+        """
+        return Cards(self)
+
+    def individual_cards(self, cardid=None, season=None):
+        """Create Cards api for Individual cards, since they shard
+            :param cardid: Cards ID
+            :param season: season
+        """
+        return IndividualCards(self, cardid=cardid, season=season)
 
     @property
     def user_agent(self):

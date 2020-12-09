@@ -17,7 +17,7 @@ If you are using your own rate limit code, it's recommend you disable this syste
 
 
     >>> import nationstates
-    >>> api = ns.Nationstates(ratelimit_enabled=False)
+    >>> api = nationstates.Nationstates(ratelimit_enabled=False)
 
 All of the library is centralized around the ``Nationstates`` module, so it's recommended you just have on. Do note though, that if you have mulitple `Nationstates` objects you'll need to pass the ratelimit argument for each.
 

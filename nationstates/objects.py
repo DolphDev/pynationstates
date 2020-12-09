@@ -1,17 +1,53 @@
-from nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI
-from nsapiwrapper.urls import Shard
-from nsapiwrapper.utils import parsetree, parse
+from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI, CardsAPI
+from .nsapiwrapper.urls import Shard
+from .nsapiwrapper.utils import parsetree, parse
 
 from xml.parsers.expat import ExpatError
 from time import sleep
 from functools import wraps
 
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
-from .info import nation_shards, region_shards, world_shards, wa_shards
+from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
 # Mostly due to it not being pratical for those methods to be automatically tested
 #
+
+def cant_be_none(**kwargs):
+    # Raies ValueError is values are left None
+    for k,v in kwargs.items():
+        if v is None:
+            raise ValueError("'{}'' cannot be None".format(k))
+
+def nationid_or_name(n_id, name):
+    # Raies ValueError is values are left None
+    if name and n_id:
+        raise ValueError('Only one can be used at a time, nation_name / nation_id')
+    if name:
+        shard = dict(nationname=name)
+    elif n_id:
+        shard = dict(nationid=n_id)
+    else:
+        raise ValueError('A nation_id or nation_name was not provided')
+    return shard
+
+def dispatch_token(resp, use_exception):
+    data = resp['data'][Nation.api_name]
+    if data.get('error'):
+        if use_exception:
+            raise APIUsageError(data['error'])
+        else:
+            return False
+    return data['success']
+
+def dispatch_error_check(resp, use_exception):
+    data = resp['data'][Nation.api_name]
+    if data.get('error'):
+        if use_exception:
+            raise APIUsageError(data['error'])
+        else:
+            return False
+    return True
 
 class NSDict(dict):
     """Specialized Dict"""
@@ -132,13 +168,13 @@ class API_WRAPPER:
             if return_status_tuple:
                 return (None, False)
             elif self.api_mother.do_retry:
-                # TODO
-                # request_limit = 0
+                request_limit = 10
                 sleep(self.api_mother.retry_sleep)
                 resp = self.request(shards, full_response, True)
                 while not resp[1]:
                     sleep(self.api_mother.retry_sleep)
                     resp = self.request(shards, full_response, True)
+                    request_limit = 0
                 return resp[0]
             else:
                 raise exc
@@ -151,6 +187,8 @@ class API_WRAPPER:
 
     def command(self, command, full_response=False, **kwargs): # pragma: no cover
         """Method Interface to the command API for Nationstates"""
+        if not kwargs:
+            raise ValueError('Command requires keyword arguments')
         command = Shard(c=command)
         return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
 
@@ -211,9 +249,61 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
+    def _dispatch(self, dispatch, use_exception=True, **kwargs): # pragma: no cover
+        self._check_auth()
+        token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', full_response=True, **kwargs)
+        token = dispatch_token(token_resp, use_exception)
+        if use_exception is False and token is False:
+            return False
+        final_resp =  self.command('dispatch', dispatch=dispatch, mode='execute', token=token, full_response=True, **kwargs)
+        check = dispatch_error_check(final_resp, use_exception)
+        # Check was False - we need to return False down the line
+        if not check:
+            return check
+        else:
+            return final_resp
+        
+
+    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+        cant_be_none(title=title, text=text, category=category, subcategory=subcategory)
+
+        final_resp =  self._dispatch('add', title=title, text=text, 
+                                    category=category, subcategory=subcategory, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
+
+    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+        cant_be_none(dispatch_id=dispatch_id, title=title, text=text, category=category, subcategory=subcategory)
+
+        final_resp =  self._dispatch('edit', dispatchid=dispatch_id, title=title, text=text, 
+                                    category=category, subcategory=subcategory, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
+
+    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): # pragma: no cover
+        cant_be_none(dispatch_id=dispatch_id)
+
+        final_resp =  self._dispatch('remove', dispatchid=dispatch_id, use_exception=use_exception)
+
+        if final_resp is False:
+            return False
+        elif full_response:
+            return final_resp
+        else:
+            return final_resp['data'][self.api_name]
+
     def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
-            
         """
         if telegram:
             pass
@@ -299,7 +389,7 @@ class WorldAssembly(API_WRAPPER):
             hexloc=hex(id(self)).upper().replace("X", "x"))
 
     def _determine_api(self, chamber):
-        return self.api.WorldAssembly(chamber)\
+        return self.api.WorldAssembly(chamber)
 
     @property
     def nations(self):
@@ -336,34 +426,86 @@ class Telegram(API_WRAPPER): # pragma: no cover
         return self.request(Shard(to=nation_str), full_response)
 
 
-    # TODO: Detirmine if we want to encourage mutable
-    # Telegram objects
-    # @property
-    # def clientkey(self):
-    #     return self.__clientkey__
+class Cards(API_WRAPPER):
+    # Shared code for Cards api
+    api_name = CardsAPI.api_name_multi
+    auto_shards = tuple()
+    get_shard = set("get_"+x for x in auto_shards)
 
-    # @client_key.setter
-    # def clientkey(self, v):
-    #     self.__clientkey__ = v
-    #     self._newtelegramtemplate()
+    def __init__(self, api_mother):
+        super().__init__(api_mother)
+        self._set_apiwrapper(self._determine_api())
 
-    # @property
-    # def tgid(self):
-    #     return self.__tgid__
+    def _determine_api(self):
+        return self.api.Cards()
 
-    # @tgid.setter
-    # def tgid(self, v):
-    #     self.__tgid__ = v
-    #     self._newtelegramtemplate()
+    def individual_cards(self, cardid=None, season=None, shards=tuple(), full_response=False):
+        # Alias's a individual card, which has it's own api
+        inv_cards = IndividualCards(self, cardid=cardid, season=season)
+        if isinstance(shards, Shard) or isinstance(shards, str):
+            shards = (shards,)
 
-    # @property
-    # def tgid(self):
-    #     return self.__key__
+        return inv_cards.get_shards(*shards, full_response)
 
-    # @tgid.setter
-    # def tgid(self, v):
-    #     self.__key__ = v
-    #     self._newtelegramtemplate()
+    def decks(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('deck', **kw)
+        return self.get_shards(shard, full_response=full_response)
 
-# This compiles the get_shard family of methods to the classes
-# Due to the changing nature of the API, this is done at runtime rather than beforehand
+    def deck_owner_info(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('info', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def asks_and_bids(self, nation_name=None, nation_id=None, full_response=False):
+        kw = nationid_or_name(nation_id, nation_name)
+        shard = Shard('asksbids', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def collections(self, nation_name=None, nation_id=None, collections_id=None, full_response=False):
+        if nation_id or nation_name:
+            kw = nationid_or_name(nation_id, nation_name)
+        elif collections_id:
+            kw = {'collectionid': collections_id}
+        else:
+            raise ValueError('Collection id or nation not supplied')
+        shard = Shard('collections', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+    def auctions(self, full_response=False):
+        shard = Shard('auctions')
+        return self.get_shards(shard, full_response=full_response)
+
+    def trades(self, limit=None, sincetime=None, beforetime=None, full_response=False):
+        kw = {}
+        if limit:
+            kw['limit'] = limit
+        if sincetime:
+            kw['sincetime'] = sincetime
+        if beforetime:
+            kw['beforetime'] = beforetime
+
+        shard = Shard('trades', **kw)
+        return self.get_shards(shard, full_response=full_response)
+
+
+class IndividualCards(API_WRAPPER):
+    api_name = CardsAPI.api_name_single
+    auto_shards = individual_cards_shards
+    get_shard = set("get_"+x for x in auto_shards)
+
+    def __init__(self, api_mother, cardid=None, season=None):
+        super().__init__(api_mother)
+        cant_be_none(cardid=cardid, season=season)
+        self.__cardid__ = cardid
+        self.__season__ = season
+        self._set_apiwrapper(self._determine_api())
+
+    def _determine_api(self):
+        return self.api.Cards(cardid=self.__cardid__, season=self.__season__, multi=False)
+
+    def __repr__(self):
+        return "<Individual Card:'season-{season}|cardid={cardid}' at {hexloc}>".format(
+            season=self.__season__,
+            cardid=self.__cardid__,
+            hexloc=hex(id(self)).upper().replace("X", "x"))

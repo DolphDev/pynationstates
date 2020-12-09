@@ -1,4 +1,4 @@
-from nsapiwrapper.exceptions import (
+from .nsapiwrapper.exceptions import (
     NSBaseError,
     RateLimitReached, 
     NSServerBaseException, 
@@ -10,7 +10,8 @@ from nsapiwrapper.exceptions import (
     APIUsageError,
     InternalServerError,
     CloudflareServerError,
-    BadRequest
+    BadRequest,
+    ServerError
 )
 
 class NotAuthenticated(Exception):

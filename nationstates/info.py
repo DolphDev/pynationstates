@@ -138,3 +138,11 @@ wa_shards = ('numnations',
  'dellog',
  'delvotes',
  'lastresolution')
+
+individual_cards_shards = (
+	'info',
+	'markets',
+	'owners',
+	'trades'
+	)
+

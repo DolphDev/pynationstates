@@ -4,7 +4,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 Dolphman
+Copyright (c) 2015-2020 DolphDev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +26,19 @@ SOFTWARE.
 """
 
 
-version = '2.0.0.2'
+<<<<<<< HEAD
+version = '3.0.0.0a0'
 
 from setuptools import setup
 setup(name='nationstates',
-      install_requires=["nsapiwrapper==0.0.2"],
+      install_requires=["beautifulsoup4==4.9.0", "ezurl==0.1.3.25",
+                        "requests==2.23.*", "xmltodict==0.12.0" ],
       version=version,
       description='Nationstates API wrapper for python',
       author='Joshua W',
       author_email='dolphdevgithub@gmail.com',
       url='https://github.com/DolphDev/pynationstates',
-      packages=['nationstates'],
+      packages=['nationstates', 'nationstates.nsapiwrapper'],
       package_data={'': ['LICENSE.txt', "readme.md"]},
       download_url='https://github.com/DolphDev/pynationstates/releases/tag/'+version,
       keywords=['nationstates', 'api wrapper', 'api',
@@ -46,6 +48,8 @@ setup(name='nationstates',
                    "Operating System :: OS Independent",
                    "Topic :: Utilities",
                    "Programming Language :: Python :: 3.5",
-                   "Programming Language :: Python :: 3.6"],
+                   "Programming Language :: Python :: 3.6",
+                   "Programming Language :: Python :: 3.7",
+                   "Programming Language :: Python :: 3.8"],
       license="MIT"
       )
