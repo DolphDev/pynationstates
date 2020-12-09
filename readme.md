@@ -4,7 +4,7 @@
 Nationstates API wrapper
 ---
 
-This is a high level and simple to use API wrapper for nationstates. Mean't to be beginner friendly, it does all of the tedious work in dealing the API for you providing a simple interface to do whatever you wan't in the api.
+This is a high level and simple to use API wrapper for nationstates. Mean't to be beginner friendly, it does all of the tedious work in dealing the API for you providing a simple interface to do whatever you want in the api.
 
 
 ### API
@@ -37,7 +37,7 @@ Output
 
 #### Other Libraries
 
-* [sans](https://github.com/zephyrkul/sans) for easy Async usage of the api
+* [sans](https://github.com/zephyrkul/sans) for easy Python Async usage of the api
 
 
 
