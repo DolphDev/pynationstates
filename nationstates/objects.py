@@ -99,7 +99,7 @@ class NSDict(dict):
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code that each API endpoint uses"""
     auto_shards = set()
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -111,7 +111,7 @@ class API_WRAPPER:
         if attr in self.auto_shards:
             resp = self.get_shards(attr)
             return resp[attr]
-        elif attr in self.get_shard:
+        elif attr in self._get_shard_:
             resp = self._get_shard(attr[4:])
             return resp
 
@@ -147,9 +147,9 @@ class API_WRAPPER:
     def _get_shard(self, shard):
         """Dynamically Builds methods to query shard with proper with arg and kwargs support"""
         @wraps(API_WRAPPER._get_shard)
-        def get_shard(*arg, **kwargs):
+        def get_shard(full_response=False, *arg, **kwargs):
             """Gets the shard '{}'""".format(shard)
-            return self.get_shards(Shard(shard, *arg, **kwargs))
+            return self.get_shards(Shard(shard, *arg, **kwargs), full_response=full_response)
         return get_shard
 
     def request(self, shards, full_response, return_status_tuple=False):
@@ -204,7 +204,7 @@ class Nation(API_WRAPPER):
     # like Nation().shard
     # and return the result
     auto_shards = nation_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
@@ -327,7 +327,7 @@ class Nation(API_WRAPPER):
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
     auto_shards = region_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
@@ -352,7 +352,7 @@ class Region(API_WRAPPER):
 class World(API_WRAPPER):
     api_name = WorldAPI.api_name
     auto_shards = world_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -374,7 +374,7 @@ class World(API_WRAPPER):
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
@@ -430,7 +430,7 @@ class Cards(API_WRAPPER):
     # Shared code for Cards api
     api_name = CardsAPI.api_name_multi
     auto_shards = tuple()
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -441,7 +441,7 @@ class Cards(API_WRAPPER):
 
     def individual_cards(self, cardid=None, season=None, shards=tuple(), full_response=False):
         # Alias's a individual card, which has it's own api
-        inv_cards = IndividualCards(self, cardid=cardid, season=season)
+        inv_cards = self.apimother.individual_cards(cardid=cardid, season=season)
         if isinstance(shards, Shard) or isinstance(shards, str):
             shards = (shards,)
 
