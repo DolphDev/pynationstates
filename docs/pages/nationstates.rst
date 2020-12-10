@@ -84,3 +84,7 @@ You can view what each endpoint currently supports in it's magic methods by view
     >>> nationstates.get_shard
     {'get_customreligion', 'get_rcensus', 'get_banners', 'get_govtpriority', 'get_banner', 'get_census', 'get_gavote', 'get_wcensus', 'get_firstlogin', 'get_notable', 'get_admirable', 'get_foundedtime', 'get_category', 'get_customleader', 'get_flag', 'get_currency', 'get_endorsements', 'get_lastlogin', 'get_region', 'get_religion', 'get_capital', 'get_name', 'get_type', 'get_happenings', 'get_crime', 'get_govtdesc', 'get_majorindustry', 'get_influence', 'get_customcapital', 'get_tax', 'get_tgcanrecruit', 'get_demonym2', 'get_legislation', 'get_poorest', 'get_wa', 'get_sectors', 'get_deaths', 'get_dbid', 'get_policies', 'get_scvote', 'get_lastactivity', 'get_demonym', 'get_freedom', 'get_animal', 'get_factbooklist', 'get_industrydesc', 'get_income', 'get_population', 'get_founded', 'get_richest', 'get_demonym2plural', 'get_gdp', 'get_dispatches', 'get_publicsector', 'get_fullname', 'get_motto', 'get_tgcancampaign', 'get_govt', 'get_sensibilities', 'get_dispatchlist', 'get_wabadges', 'get_factbooks', 'get_animaltrait', 'get_leader'}
 
+Is pynationstates thread safe?
+==============================
+
+pynationstates does have locks in place that should make it safe to use across threads. However, the author recommends you have independent `nationstates.Nationstates` instances for earch thread. This guarntees everything will work.  
