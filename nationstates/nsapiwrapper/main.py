@@ -13,10 +13,10 @@ class Api:
         ratelimit_within=ratelimit_within,
         ratelimit_maxsleeps=ratelimit_maxsleeps,
         max_safe_requests=max_safe_requests,
-        ratelimit_enabled=True):
+        ratelimit_enabled=True,
+        use_session=True):
         self.user_agent = user_agent
         self.version = version
-        self.session = Session()
         self.ratelimitsleep = ratelimit_sleep
         self.ratelimitsleep_time = ratelimit_sleep_time
         self.ratelimitsleep_maxsleeps = ratelimit_maxsleeps
@@ -24,6 +24,11 @@ class Api:
         self.ratelimit_within = ratelimit_within
         self.max_safe_requests = max_safe_requests
         self.ratelimit_enabled = ratelimit_enabled
+        self.use_session = use_session
+        if use_session:
+            self.session = Session()
+        else:
+            self.session = None
         self.xrls = 0
         self.rlobj = RateLimit()
 

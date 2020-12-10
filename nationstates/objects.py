@@ -168,7 +168,7 @@ class API_WRAPPER:
             if return_status_tuple:
                 return (None, False)
             elif self.api_mother.do_retry:
-                request_limit = 10
+                request_limit = self.api_mother.max_retries
                 sleep(self.api_mother.retry_sleep)
                 resp = self.request(shards, full_response, True)
                 while not resp[1]:
