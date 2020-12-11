@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/DolphDev/pynationstates.svg)](https://travis-ci.org/DolphDev/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates) [![Documentation Status](https://readthedocs.org/projects/pynationstates/badge/?version=latest)](http://pynationstates.readthedocs.org/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/DolphDev/pynationstates/badge.svg?branch=master)](https://coveralls.io/github/DolphDev/pynationstates?branch=master)
+[![CircleCI](https://circleci.com/gh/DolphDev/pynationstates.svg?style=svg)](https://circleci.com/gh/DolphDev/pynationstates) [![PyPI](https://img.shields.io/pypi/v/nationstates.svg)](https://pypi.python.org/pypi?:action=display&name=nationstates) [![Documentation Status](https://readthedocs.org/projects/pynationstates/badge/?version=latest)](http://pynationstates.readthedocs.org/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/DolphDev/pynationstates/badge.svg?branch=master)](https://coveralls.io/github/DolphDev/pynationstates?branch=master)
 
 
 Nationstates API wrapper
