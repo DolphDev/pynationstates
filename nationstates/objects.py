@@ -323,7 +323,7 @@ class Telegram(API_WRAPPER): # pragma: no cover
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Telegram(self.__clientkey__, self.tgid, self.key)
+        return self.api.Telegram(self.__clientkey__, self.__tgid__, self.__key__)
 
     def _newtelegramtemplate(self):
         self._set_apiwrapper(self._determine_api())
