@@ -13,6 +13,8 @@ key = os.environ.get('telegram_key')
 client_key = os.environ.get('telegram_clientkey')
 del os
 
+sep_api =  ns.Nationstates(USERAGENT)
+
 joint_api = ns.Nationstates(USERAGENT)
 test_nation_nonauth = joint_api.nation(test_nation)
 test_auth_nation = joint_api.nation(test_nation, password=PASSWORD)
@@ -23,12 +25,20 @@ def grab_id(newfactbookresponse_text):
     part1 = newfactbookresponse_text.split('id=')
     return part1[1].split('">')[0]
 
+
+class SetupCallTest(unittest.TestCase):
+
+    def test_create_ns(self):
+        try:
+            api = ns.Nationstates(USERAGENT)
+        except Exception as Err:
+            self.fail(Err)
+
 class SeperateCallTest(unittest.TestCase):
 
     def test_nation_call(self):
         try:
-            api = ns.Nationstates(USERAGENT)
-
+            api = sep_api
             mycall = api.nation("testlandia")
             mycall.get_shards(choice(mycall.auto_shards))
             mycall.get_shards(choice(mycall.auto_shards), full_response=True)
@@ -38,7 +48,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_region_call(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.region("Balder")
             mycall.get_shards(choice(mycall.auto_shards))
@@ -49,7 +59,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_world_call(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.world()
             mycall.get_shards(choice(mycall.auto_shards))
@@ -60,7 +70,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_wa_call(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.wa("1")
             mycall.get_shards(choice(mycall.auto_shards))
@@ -68,9 +78,112 @@ class SeperateCallTest(unittest.TestCase):
         except Exception as Err:
             self.fail(Err)
 
+    def test_cards_indv_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.individual_cards(1, 1)
+            mycall.individual_cards(1, 1, full_response=True)
+            mycall.individual_cards(1, 1, 'trades')
+            mycall.individual_cards(1, 1, ns.Shard('trades'))
+            mycall.individual_cards(1, 1, (ns.Shard('trades'),))
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            raise Err
+            self.fail(Err)
+
+    def test_cards_decks_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.decks(nation_name='testlandia')
+            mycall.decks(nation_name='testlandia', full_response=True)
+            mycall.decks(nation_id=1)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
+    def test_cards_decksinfo_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.deck_owner_info(nation_name='testlandia')
+            mycall.deck_owner_info(nation_name='testlandia', full_response=True)
+            mycall.deck_owner_info(nation_id=1)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
+    def test_cards_asks_and_bids_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.asks_and_bids(nation_name='testlandia')
+            mycall.asks_and_bids(nation_name='testlandia', full_response=True)
+            mycall.asks_and_bids(nation_id=1)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
+    def test_cards_collections_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.collections(nation_name='testlandia')
+            mycall.collections(nation_name='testlandia', full_response=True)
+            mycall.collections(nation_id=1)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
+
+    def test_cards_auctions_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.auctions()
+            mycall.auctions(full_response=True)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
+
+
+    def test_cards_trades_call(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.trades()
+            mycall.trades(full_response=True)
+            mycall.collections(nation_id=1)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            self.fail(Err)
+
     def test_auto_shard_static_n(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.nation("testlandia")
             mycall.fullname
@@ -79,7 +192,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_auto_shard_static_r(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.region("balder")
             mycall.numnations
@@ -88,7 +201,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_auto_shard_static_w(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.world()
             mycall.numnations
@@ -97,7 +210,7 @@ class SeperateCallTest(unittest.TestCase):
 
     def test_auto_shard_static_wa(self):
         try:
-            api = ns.Nationstates(USERAGENT)
+            api = sep_api
 
             mycall = api.wa("1")
             mycall.numnations

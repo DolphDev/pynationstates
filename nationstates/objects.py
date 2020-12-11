@@ -181,7 +181,6 @@ class API_WRAPPER:
 
     def get_shards(self, *args, full_response=False):
         """Get Shards"""
-
         resp = self.request(shards=args, full_response=full_response)
         return resp
 
@@ -439,13 +438,14 @@ class Cards(API_WRAPPER):
     def _determine_api(self):
         return self.api.Cards()
 
-    def individual_cards(self, cardid=None, season=None, shards=tuple(), full_response=False):
+    def individual_cards(self, cardid=None, season=None, shards=None, full_response=False):
         # Alias's a individual card, which has it's own api
-        inv_cards = self.apimother.individual_cards(cardid=cardid, season=season)
+        inv_cards = self.api_mother.individual_cards(cardid=cardid, season=season)
+        if shards is None:
+            shards = tuple()
         if isinstance(shards, Shard) or isinstance(shards, str):
             shards = (shards,)
-
-        return inv_cards.get_shards(*shards, full_response)
+        return inv_cards.get_shards(*shards, full_response=full_response)
 
     def decks(self, nation_name=None, nation_id=None, full_response=False):
         kw = nationid_or_name(nation_id, nation_name)
