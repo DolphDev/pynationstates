@@ -249,7 +249,7 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-    def _dispatch(self, dispatch, use_exception=True, **kwargs): # pragma: no cover
+    def _dispatch(self, dispatch, use_exception=True, **kwargs):
         self._check_auth()
         token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', full_response=True, **kwargs)
         token = dispatch_token(token_resp, use_exception)
@@ -264,7 +264,7 @@ class Nation(API_WRAPPER):
             return final_resp
         
 
-    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True):
         cant_be_none(title=title, text=text, category=category, subcategory=subcategory)
 
         final_resp =  self._dispatch('add', title=title, text=text, 
@@ -277,7 +277,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True):
         cant_be_none(dispatch_id=dispatch_id, title=title, text=text, category=category, subcategory=subcategory)
 
         final_resp =  self._dispatch('edit', dispatchid=dispatch_id, title=title, text=text, 
@@ -290,7 +290,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): # pragma: no cover
+    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): 
         cant_be_none(dispatch_id=dispatch_id)
 
         final_resp =  self._dispatch('remove', dispatchid=dispatch_id, use_exception=use_exception)
@@ -302,7 +302,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def send_telegram(self, telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
+    def send_telegram(self, telegram=None, client_key=None, tgid=None, key=None):
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
         """
         if telegram:
