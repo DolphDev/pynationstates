@@ -99,7 +99,7 @@ class NSDict(dict):
 class API_WRAPPER:
     """A object meant to be inherited that handles all shared code that each API endpoint uses"""
     auto_shards = set()
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, apiwrapper):
         self.api_mother = apiwrapper
@@ -111,7 +111,7 @@ class API_WRAPPER:
         if attr in self.auto_shards:
             resp = self.get_shards(attr)
             return resp[attr]
-        elif attr in self.get_shard:
+        elif attr in self._get_shard_:
             resp = self._get_shard(attr[4:])
             return resp
 
@@ -147,9 +147,9 @@ class API_WRAPPER:
     def _get_shard(self, shard):
         """Dynamically Builds methods to query shard with proper with arg and kwargs support"""
         @wraps(API_WRAPPER._get_shard)
-        def get_shard(*arg, **kwargs):
+        def get_shard(full_response=False, *arg, **kwargs):
             """Gets the shard '{}'""".format(shard)
-            return self.get_shards(Shard(shard, *arg, **kwargs))
+            return self.get_shards(Shard(shard, *arg, **kwargs), full_response=full_response)
         return get_shard
 
     def request(self, shards, full_response, return_status_tuple=False):
@@ -168,7 +168,7 @@ class API_WRAPPER:
             if return_status_tuple:
                 return (None, False)
             elif self.api_mother.do_retry:
-                request_limit = 10
+                request_limit = self.api_mother.max_retries
                 sleep(self.api_mother.retry_sleep)
                 resp = self.request(shards, full_response, True)
                 while not resp[1]:
@@ -204,7 +204,7 @@ class Nation(API_WRAPPER):
     # like Nation().shard
     # and return the result
     auto_shards = nation_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, nation_name, api_mother, password=None, autologin=None):
         super().__init__(api_mother)
@@ -249,7 +249,7 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-    def _dispatch(self, dispatch, use_exception=True, **kwargs): # pragma: no cover
+    def _dispatch(self, dispatch, use_exception=True, **kwargs):
         self._check_auth()
         token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', full_response=True, **kwargs)
         token = dispatch_token(token_resp, use_exception)
@@ -264,7 +264,7 @@ class Nation(API_WRAPPER):
             return final_resp
         
 
-    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+    def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True):
         cant_be_none(title=title, text=text, category=category, subcategory=subcategory)
 
         final_resp =  self._dispatch('add', title=title, text=text, 
@@ -277,7 +277,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True): # pragma: no cover
+    def edit_dispatch(self, dispatch_id=None, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True):
         cant_be_none(dispatch_id=dispatch_id, title=title, text=text, category=category, subcategory=subcategory)
 
         final_resp =  self._dispatch('edit', dispatchid=dispatch_id, title=title, text=text, 
@@ -290,7 +290,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): # pragma: no cover
+    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): 
         cant_be_none(dispatch_id=dispatch_id)
 
         final_resp =  self._dispatch('remove', dispatchid=dispatch_id, use_exception=use_exception)
@@ -302,7 +302,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
+    def send_telegram(self, telegram=None, client_key=None, tgid=None, key=None):
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
         """
         if telegram:
@@ -327,7 +327,7 @@ class Nation(API_WRAPPER):
 class Region(API_WRAPPER):
     api_name = RegionAPI.api_name
     auto_shards = region_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, region_name, api_mother):
         super().__init__(api_mother)
@@ -352,7 +352,7 @@ class Region(API_WRAPPER):
 class World(API_WRAPPER):
     api_name = WorldAPI.api_name
     auto_shards = world_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -374,7 +374,7 @@ class World(API_WRAPPER):
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
     auto_shards = wa_shards
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, chamber, api_mother):
         super().__init__(api_mother)
@@ -413,7 +413,7 @@ class Telegram(API_WRAPPER): # pragma: no cover
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Telegram(self.__clientkey__, self.tgid, self.key)
+        return self.api.Telegram(self.__clientkey__, self.__tgid__, self.__key__)
 
     def _newtelegramtemplate(self):
         self._set_apiwrapper(self._determine_api())
@@ -430,7 +430,7 @@ class Cards(API_WRAPPER):
     # Shared code for Cards api
     api_name = CardsAPI.api_name_multi
     auto_shards = tuple()
-    get_shard = set("get_"+x for x in auto_shards)
+    _get_shard_ = set("get_"+x for x in auto_shards)
 
     def __init__(self, api_mother):
         super().__init__(api_mother)
@@ -441,7 +441,7 @@ class Cards(API_WRAPPER):
 
     def individual_cards(self, cardid=None, season=None, shards=tuple(), full_response=False):
         # Alias's a individual card, which has it's own api
-        inv_cards = IndividualCards(self, cardid=cardid, season=season)
+        inv_cards = self.apimother.individual_cards(cardid=cardid, season=season)
         if isinstance(shards, Shard) or isinstance(shards, str):
             shards = (shards,)
 

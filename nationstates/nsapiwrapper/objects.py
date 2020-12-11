@@ -5,6 +5,7 @@ from .exceptions import APIError, APIRateLimitBan, BadRequest, CloudflareServerE
                         
 from .urls import gen_url, Shard
 from threading import RLock
+import requests
 
 RateLimitStateEditLock = RLock()
 PrivateNationStatusLock = RLock()
@@ -139,10 +140,13 @@ class NationstatesAPI:
 
     def _request_api(self, req):
         self.api_mother.check_ratelimit()
-        sess = self.api_mother.session
         headers = {"User-Agent":self.api_mother.user_agent}
         headers.update(req.custom_headers)
-        return sess.get(req.url, headers=headers)
+        if self.api_mother.use_session:
+            sess = self.api_mother.session
+            return sess.get(req.url, headers=headers)
+        else:
+            return requests.get(req.url, headers=headers)
 
     def _handle_request(self, response, request_meta):
         is_text = ""
