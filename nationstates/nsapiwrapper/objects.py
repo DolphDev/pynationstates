@@ -235,7 +235,7 @@ class PrivateNationAPI(NationAPI):
             # PIN is wrong or login is wrong
             if pin_used:
                 self.pin = None
-                return self.request(self, shards)
+                return self.request(shards=shards)
             else:
                 raise exc
             
