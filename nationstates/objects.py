@@ -302,7 +302,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def send_telegram(telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
+    def send_telegram(self, telegram=None, client_key=None, tgid=None, key=None): # pragma: no cover
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
         """
         if telegram:
@@ -413,7 +413,7 @@ class Telegram(API_WRAPPER): # pragma: no cover
         self._set_apiwrapper(self._determine_api())
 
     def _determine_api(self):
-        return self.api.Telegram(self.__clientkey__, self.tgid, self.key)
+        return self.api.Telegram(self.__clientkey__, self.__tgid__, self.__key__)
 
     def _newtelegramtemplate(self):
         self._set_apiwrapper(self._determine_api())
