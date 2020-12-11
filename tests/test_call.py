@@ -284,7 +284,10 @@ class ApiJoinTest(unittest.TestCase):
                 self.fail('API was suppose to block this')
             except ns.nsapiwrapper.exceptions.APIRateLimitBan:
                 pass
-            time.sleep(35)
-            telegram.send_telegram(test_nation_r.name)
+            try:
+                telegram.send_telegram(test_nation_r.name)
+            except ns.nsapiwrapper.exceptions.APIRateLimitBan:
+                # Just testing code path works - to much wasted time to wait 30 seconds
+                pass
         except Exception as Err:
             raise (Err)

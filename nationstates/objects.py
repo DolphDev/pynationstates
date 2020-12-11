@@ -174,7 +174,9 @@ class API_WRAPPER:
                 while not resp[1]:
                     sleep(self.api_mother.retry_sleep)
                     resp = self.request(shards, full_response, True)
-                    request_limit = 0
+                    request_limit = request_limit - 1
+                    if request_limit == 0:
+                        raise exc
                 return resp[0]
             else:
                 raise exc
