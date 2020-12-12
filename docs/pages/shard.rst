@@ -24,7 +24,7 @@ The :class:`Shard` Object was built to allow more complicated shards. They allow
     >>> import nationstates as ns
     >>> api = ns.Nationstates(UniqueAndDescriptiveUserAgent)
     >>> happenings = ns.Shard("happenings", view="region.the_pacific", filter="founding")
-    >>> r = api.world().get_shards(happenings])
+    >>> r = api.world().get_shards(happenings)
 
 
 

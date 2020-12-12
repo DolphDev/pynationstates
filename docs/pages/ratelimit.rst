@@ -19,7 +19,14 @@ If you are using your own rate limit code, it's recommend you disable this syste
     >>> import nationstates
     >>> api = nationstates.Nationstates(ratelimit_enabled=False)
 
-All of the library is centralized around the ``Nationstates`` module, so it's recommended you just have on. Do note though, that if you have mulitple `Nationstates` objects you'll need to pass the ratelimit argument for each.
+Additionally you may wish to remove some other functionality like the retry system
+
+    >>> api = nationstates.Nationstates(ratelimit_enabled=False, do_retry=False)
+
+Or you can keep using the ratelimit tracker, and just disable sleeping the thread. This means when the code would have sleep, it will raise a `RateLimitReached`
+exception
+
+All of the library is centralized around the ``Nationstates`` module, so it's recommended you just have one. Do note though, that if you have mulitple `Nationstates` objects you'll need to pass the ratelimit argument for each. Additionally, some requests like commands will sometimes use multiple requests if required too by the api
 
 Telegrams
 ---------
