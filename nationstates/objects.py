@@ -163,7 +163,7 @@ class API_WRAPPER:
                 return (self._parser(resp, full_response), True)
             else:
                 return self._parser(resp, full_response)
-        except (ConflictError, CloudflareServerError, InternalServerError) as exc:
+        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError) as exc:
             # The Retry system
             if return_status_tuple:
                 return (None, False)
