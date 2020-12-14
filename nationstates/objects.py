@@ -7,6 +7,7 @@ from time import sleep
 from functools import wraps
 
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
+from requests.exceptions import ConnectionError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
@@ -163,7 +164,7 @@ class API_WRAPPER:
                 return (self._parser(resp, full_response), True)
             else:
                 return self._parser(resp, full_response)
-        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError) as exc:
+        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError, ConnectionError) as exc:
             # The Retry system
             if return_status_tuple:
                 return (None, False)
@@ -402,7 +403,7 @@ class WorldAssembly(API_WRAPPER):
         resp = self._auto_shard("regions")
         return tuple(self.api_mother.region(x) for x in resp.split(":"))
 
-class Telegram(API_WRAPPER): # pragma: no cover
+class Telegram(API_WRAPPER):
     api_name = TelegramAPI.api_name
     api_value = TelegramAPI.api_value
 
@@ -415,9 +416,6 @@ class Telegram(API_WRAPPER): # pragma: no cover
 
     def _determine_api(self):
         return self.api.Telegram(self.__clientkey__, self.__tgid__, self.__key__)
-
-    def _newtelegramtemplate(self):
-        self._set_apiwrapper(self._determine_api())
 
     def send_telegram(self, nation, full_response=False):
         if isinstance(nation, Nation):
