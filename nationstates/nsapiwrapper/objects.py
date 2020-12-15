@@ -142,7 +142,6 @@ class NationstatesAPI:
         self.api_mother.check_ratelimit()
         headers = {"User-Agent":self.api_mother.user_agent}
         headers.update(req.custom_headers)
-        print(req.url)
         if self.api_mother.use_session:
             sess = self.api_mother.session
             return sess.get(req.url, headers=headers)
