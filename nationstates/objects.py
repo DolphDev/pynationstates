@@ -84,7 +84,7 @@ def response_parser(response, full_response, use_nsdict=True):
 
 def bad_api_parameter(param, api_name):
     if param == "":
-        raise ValueError("{} API's argument cannot be an empty string").format(api_name.upper())
+        raise ValueError("{} API's argument cannot be an empty string".format(api_name.upper()))
 
 
 class NSDict(dict):
@@ -307,14 +307,20 @@ class Nation(API_WRAPPER):
     def send_telegram(self, telegram=None, client_key=None, tgid=None, key=None):
         """Sends Telegram. Can either provide a telegram directly, or provide the api details and created internally
         """
+        try:
+            cant_be_none(telegram=telegram)
+        except ValueError:
+            cant_be_none(client_key=client_key, tgid=tgid, key=key)
+
         if telegram:
             pass
         else:
             telegram = self.api_mother.telegram(client_key, tgid, key)
         telegram.send_telegram(self.nation_name)
 
-    def verify(self, checksum=None, token=None, full_response=False):
+    def verify(self, checksum=None, token=None):
         """Wraps around the verify API"""
+        cant_be_none(checksum=checksum, token=token)
         payload = {"checksum":checksum, "a":"verify"}
         if token:
             payload.update({"token":token})
@@ -366,12 +372,12 @@ class World(API_WRAPPER):
     @property
     def nations(self):
         resp = self._auto_shard("nations")
-        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
+        return tuple(self.api_mother.nation(x) for x in resp.split(","))
 
     @property
     def regions(self):
         resp = self._auto_shard("regions")
-        return tuple(self.api_mother.region(x) for x in resp.split(":"))
+        return tuple(self.api_mother.region(x) for x in resp.split(","))
 
 class WorldAssembly(API_WRAPPER):
     api_name = WorldAssemblyAPI.api_name
