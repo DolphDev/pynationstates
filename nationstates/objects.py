@@ -132,7 +132,7 @@ class API_WRAPPER:
         self.current_api = current_api
 
     def _parser(self, response, full_response):
-        resp =  response_parser(response, full_response, 
+        resp = response_parser(response, full_response, 
                 use_nsdict=self.api_mother.use_nsdict)
         if full_response:
             return resp
@@ -145,6 +145,9 @@ class API_WRAPPER:
     def _request(self, shards):
         return self.current_api.request(shards=shards)
 
+    def _request_post(self, shards): 
+        return self.current_api.post(shards=shards)
+
     def _get_shard(self, shard):
         """Dynamically Builds methods to query shard with proper with arg and kwargs support"""
         @wraps(API_WRAPPER._get_shard)
@@ -153,13 +156,17 @@ class API_WRAPPER:
             return self.get_shards(Shard(shard, *arg, **kwargs), full_response=full_response)
         return get_shard
 
-    def request(self, shards, full_response, return_status_tuple=False):
+    def request(self, shards, full_response, return_status_tuple=False, use_post=False):
         """Request the API
 
-           This method is wrapped by similar functions
+           This method is wrapped by similar functions, not mean't for end user use
         """
         try:
-            resp = self._request(shards)
+            if use_post:
+                resp = self._request_post(shards)
+            else:
+                resp = self._request(shards)
+
             if return_status_tuple:
                 return (self._parser(resp, full_response), True)
             else:
@@ -171,10 +178,10 @@ class API_WRAPPER:
             elif self.api_mother.do_retry:
                 request_limit = self.api_mother.max_retries
                 sleep(self.api_mother.retry_sleep)
-                resp = self.request(shards, full_response, True)
+                resp = self.request(shards, full_response, True, use_post)
                 while not resp[1]:
                     sleep(self.api_mother.retry_sleep)
-                    resp = self.request(shards, full_response, True)
+                    resp = self.request(shards, full_response, True, use_post)
                     request_limit = request_limit - 1
                     if request_limit == 0:
                         raise exc
@@ -182,17 +189,25 @@ class API_WRAPPER:
             else:
                 raise exc
 
+    def __get_shards__(self, *args, full_response=False, use_post=False):
+        """Get Shards, internal implementation"""
+        if use_post:
+            resp = self.request(shards=args, full_response=full_response, use_post=True)
+            return resp         
+        else:
+            resp = self.request(shards=args, full_response=full_response, use_post=False)
+            return resp
+
     def get_shards(self, *args, full_response=False):
         """Get Shards"""
-        resp = self.request(shards=args, full_response=full_response)
-        return resp
+        return self.__get_shards__(*args, full_response=full_response, use_post=False)
 
-    def command(self, command, full_response=False, **kwargs): # pragma: no cover
+    def command(self, command, full_response=False, use_post=False, **kwargs): # pragma: no cover
         """Method Interface to the command API for Nationstates"""
         if not kwargs:
             raise ValueError('Command requires keyword arguments')
         command = Shard(c=command)
-        return self.get_shards(*(command, Shard(**kwargs)), full_response=full_response)
+        return self.__get_shards__(*(command, Shard(**kwargs)), full_response=full_response, use_post=use_post)
 
     @property
     def api(self):
@@ -253,11 +268,11 @@ class Nation(API_WRAPPER):
 
     def _dispatch(self, dispatch, use_exception=True, **kwargs):
         self._check_auth()
-        token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', full_response=True, **kwargs)
+        token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', nation=self.nation_name, full_response=True, use_post=True, **kwargs)
         token = dispatch_token(token_resp, use_exception)
         if use_exception is False and token is False:
             return False
-        final_resp =  self.command('dispatch', dispatch=dispatch, mode='execute', token=token, full_response=True, **kwargs)
+        final_resp =  self.command('dispatch', dispatch=dispatch, mode='execute', token=token, nation=self.nation_name, full_response=True, use_post=True, **kwargs)
         check = dispatch_error_check(final_resp, use_exception)
         # Check was False - we need to return False down the line
         if not check:
