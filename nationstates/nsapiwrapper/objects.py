@@ -16,7 +16,6 @@ def response_check(data):
     if data["status"] == 409:
         raise ConflictError("Nationstates API has returned a Conflict Error.")
     if data["status"] == 400:
-        print(data)
         raise BadRequest(xmlsoup().h1.text)
     if data["status"] == 403:
         raise Forbidden(xmlsoup().h1.text)
@@ -45,8 +44,6 @@ def response_check(data):
         raise CloudflareServerError(
             "Error 521: Cloudflare did not recieve a response from nationstates"
             )
-
-
 
 class RateLimit:
 

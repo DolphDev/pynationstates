@@ -251,7 +251,7 @@ class Nation(API_WRAPPER):
         self._set_apiwrapper(self._determine_api(self.nation_name, password, autologin))
         return self
 
-    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True): # pragma: no cover
+    def pick_issue(self, issue_id, option, full_response=False, raise_exception_if_fail=True):
         self._check_auth()
         resp =  self.command("issue", issue=issue_id, option=option, full_response=True)
         try:
