@@ -316,6 +316,7 @@ class ApiJoinTest(unittest.TestCase):
                 random_issue_id = random_issue.id
                 random_option_choice = random.choice(random_issue.option).id
                 (api.pick_issue(random_issue_id, random_option_choice))
+                break
         nations = [issue_nation_1, issue_nation_2, issue_nation_3]
         random.shuffle(nations)
         pick_random_nation(*nations)
