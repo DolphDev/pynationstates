@@ -307,7 +307,7 @@ class Nation(API_WRAPPER):
         else:
             return final_resp['data'][self.api_name]
 
-    def remove_dispatch(self, dispatch_id=None, use_exception=False, full_response=False): 
+    def remove_dispatch(self, dispatch_id=None, full_response=False, use_exception=True): 
         cant_be_none(dispatch_id=dispatch_id)
 
         final_resp =  self._dispatch('remove', dispatchid=dispatch_id, use_exception=use_exception)
