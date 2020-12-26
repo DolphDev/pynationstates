@@ -9,6 +9,7 @@ import requests
 
 RateLimitStateEditLock = RLock()
 PrivateNationStatusLock = RLock()
+RequestLock = RLock()
 
 def response_check(data):
     def xmlsoup():
@@ -178,24 +179,26 @@ class NationstatesAPI:
 
     def _request(self, shards, url, api_name, value_name, version, request_headers=None):
         # This relies on .url() being defined by child classes
-        url = self.url(shards)
-        req = self._prepare_request(url, 
-                api_name,
-                value_name,
-                shards, version, request_headers, False, None)
-        resp = self._request_api(req)
-        result = self._handle_request(resp, req)
-        return result
+        with RequestLock:
+            url = self.url(shards)
+            req = self._prepare_request(url, 
+                    api_name,
+                    value_name,
+                    shards, version, request_headers, False, None)
+            resp = self._request_api(req)
+            result = self._handle_request(resp, req)
+            return result
 
     def _request_post(self, shards, url, api_name, value_name, version, post_data, request_headers=None):
         # This relies on .url() being defined by child classes
-        req = self._prepare_request(url, 
-                api_name,
-                value_name,
-                shards, version, request_headers, True, post_data)
-        resp = self._request_api(req)
-        result = self._handle_request(resp, req)
-        return result
+        with RequestLock:
+            req = self._prepare_request(url, 
+                    api_name,
+                    value_name,
+                    shards, version, request_headers, True, post_data)
+            resp = self._request_api(req)
+            result = self._handle_request(resp, req)
+            return result
 
     def _default_shards(self):
         return None
