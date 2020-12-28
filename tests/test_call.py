@@ -19,6 +19,11 @@ joint_api = ns.Nationstates(USERAGENT)
 test_nation_nonauth = joint_api.nation(test_nation)
 test_auth_nation = joint_api.nation(test_nation, password=PASSWORD)
 test_nation_r = joint_api.nation(test_nation_r)
+issue_nation_1 = joint_api.nation('Pynationstates Issue Farm 1', password=PASSWORD)
+issue_nation_2 = joint_api.nation('Pynationstates Issue Farm 2', password=PASSWORD)
+issue_nation_3 = joint_api.nation('Pynationstates Issue Farm 3', password=PASSWORD)
+issue_nation_zero = joint_api.nation('pynationstates_0_issues_test_nation', password=PASSWORD)
+
 
 
 def grab_id(newfactbookresponse_text):
@@ -291,3 +296,28 @@ class ApiJoinTest(unittest.TestCase):
                 pass
         except Exception as Err:
             raise (Err)
+
+    def test_pick_issue_always_fail(self):
+        resp = issue_nation_zero.get_shards('issues')
+        if resp.issues is None:     
+            pass
+        else:
+            self.fail('Nation should have no issues')
+
+    def test_pick_issue(self):
+        import random
+
+        def pick_random_nation(*apis):
+            for api in apis:
+                resp = api.get_shards('issues')
+                if resp.issues is None:     
+                    continue
+                random_issue = random.choice(resp.issues.issue)
+                random_issue_id = random_issue.id
+                random_option_choice = random.choice(random_issue.option).id
+                (api.pick_issue(random_issue_id, random_option_choice))
+                break
+        nations = [issue_nation_1, issue_nation_2, issue_nation_3]
+        random.shuffle(nations)
+        pick_random_nation(*nations)
+

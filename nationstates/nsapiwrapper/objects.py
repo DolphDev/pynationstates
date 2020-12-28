@@ -3,12 +3,13 @@ from time import time as timestamp
 from xml.parsers.expat import ExpatError
 from .exceptions import APIError, APIRateLimitBan, BadRequest, CloudflareServerError, ConflictError, Forbidden, InternalServerError, NotFound
                         
-from .urls import gen_url, Shard
+from .urls import gen_url, Shard, POST_API_URL as API_URL, shard_object_extract
 from threading import RLock
 import requests
 
 RateLimitStateEditLock = RLock()
 PrivateNationStatusLock = RLock()
+RequestLock = RLock()
 
 def response_check(data):
     def xmlsoup():
@@ -44,8 +45,6 @@ def response_check(data):
         raise CloudflareServerError(
             "Error 521: Cloudflare did not recieve a response from nationstates"
             )
-
-
 
 class RateLimit:
 
@@ -113,13 +112,18 @@ class RateLimit:
 
 class APIRequest:
     """Data Class for this library"""
-    def __init__(self, url, api_name, api_value, shards, version, custom_headers):
+    def __init__(self, url, api_name, api_value, shards, version, custom_headers, use_post, post_data):
         self.url = url
         self.api_name = api_name
         self.api_value = api_value
         self.shards = shards
         self.version = version
         self.custom_headers = custom_headers
+        self.use_post = use_post
+        self.post_data = post_data
+
+    def __repr__(self):
+        return str(vars(self))
 
 class NationstatesAPI:
     """Implements Generic Code that is used by Inherited
@@ -133,20 +137,21 @@ class NationstatesAPI:
     def _ratelimitcheck(self):
         rlflag = self.api_mother.rl_can_request()
 
-    def _prepare_request(self, url, api_name, api_value, shards, version=None, request_headers=None):
+    def _prepare_request(self, url, api_name, api_value, shards, version=None, request_headers=None, use_post=False, post_data=None):
         if request_headers is None:
             request_headers = dict()
-        return APIRequest(url, api_name, api_value, shards, version, request_headers)
+        return APIRequest(url, api_name, api_value, shards, version, request_headers, use_post, post_data)
 
     def _request_api(self, req):
         self.api_mother.check_ratelimit()
         headers = {"User-Agent":self.api_mother.user_agent}
         headers.update(req.custom_headers)
-        if self.api_mother.use_session:
-            sess = self.api_mother.session
-            return sess.get(req.url, headers=headers)
+        sess = self.api_mother.session if  self.api_mother.use_session else requests
+        if req.use_post:
+            return sess.post(req.url, headers=headers, data=req.post_data)
         else:
-            return requests.get(req.url, headers=headers)
+            return sess.get(req.url, headers=headers)
+
 
     def _handle_request(self, response, request_meta):
         is_text = ""
@@ -173,15 +178,27 @@ class NationstatesAPI:
             version=version)
 
     def _request(self, shards, url, api_name, value_name, version, request_headers=None):
-    	# This relies on .url() being defined by child classes
-        url = self.url(shards)
-        req = self._prepare_request(url, 
-                api_name,
-                value_name,
-                shards, version, request_headers)
-        resp = self._request_api(req)
-        result = self._handle_request(resp, req)
-        return result
+        # This relies on .url() being defined by child classes
+        with RequestLock:
+            url = self.url(shards)
+            req = self._prepare_request(url, 
+                    api_name,
+                    value_name,
+                    shards, version, request_headers, False, None)
+            resp = self._request_api(req)
+            result = self._handle_request(resp, req)
+            return result
+
+    def _request_post(self, shards, url, api_name, value_name, version, post_data, request_headers=None):
+        # This relies on .url() being defined by child classes
+        with RequestLock:
+            req = self._prepare_request(url, 
+                    api_name,
+                    value_name,
+                    shards, version, request_headers, True, post_data)
+            resp = self._request_api(req)
+            result = self._handle_request(resp, req)
+            return result
 
     def _default_shards(self):
         return None
@@ -195,6 +212,12 @@ class NationstatesAPI:
 
     def url(self, *arg, **kwargs):
         raise NotImplemented
+
+    def post_url(self):
+        return API_URL
+
+    def post(self, *arg, **kwargs):
+        raise NotImplemented("{} hasn't implemented post requests".format())
 
 class NationAPI(NationstatesAPI):
     api_name = "nation"
@@ -239,6 +262,23 @@ class PrivateNationAPI(NationAPI):
             else:
                 raise exc
             
+        self._setup_pin(response)
+        return response
+
+    def post(self, shards=[]):
+        pin_used = bool(self.pin)
+        custom_headers = self._get_pin_headers() 
+        url = self.post_url()
+        post_data = shard_object_extract(shards)
+        try:
+            response = self._request_post(shards, url, self.api_name, self.nation_name, self.api_mother.version, post_data, request_headers=custom_headers)
+        except Forbidden as exc:
+            # PIN is wrong or login is wrong
+            if pin_used:
+                self.pin = None
+                return self.post(shards=shards)
+            else:
+                raise exc            
         self._setup_pin(response)
         return response
 

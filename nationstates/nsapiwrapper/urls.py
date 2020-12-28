@@ -2,6 +2,7 @@ from ezurl import Url
 from collections import OrderedDict
 
 API_URL = "www.nationstates.net/cgi-bin/api.cgi"
+POST_API_URL = "https://www.nationstates.net/cgi-bin/api.cgi"
 
 
 def shard_object_extract(shards):

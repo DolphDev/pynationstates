@@ -6,6 +6,10 @@ Nationstates API wrapper
 
 This is a high level and simple to use API wrapper for nationstates. Mean't to be beginner friendly, it does all of the tedious work in dealing the API for you providing a simple interface to do whatever you want in the api.
 
+### About
+
+Pynationstates is a simple to use to api wrapper for the nationstates api. It was designed to beginner friednly and handle all of the api for you. it includes a built in rate limiter and 
+
 
 ### API
 ##### Installation
