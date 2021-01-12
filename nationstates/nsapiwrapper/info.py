@@ -6,6 +6,9 @@
 # Due to the assumption being to risky at this point
 max_safe_requests = 40
 
+# quater of safe requests 
+max_ongoing_requests = 20
+
 # This module prefers safety over max efficiency
 # This allows safe multi-script usage additionally
 # Should never be over 50

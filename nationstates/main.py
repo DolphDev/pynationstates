@@ -6,7 +6,7 @@ class Nationstates:
     def __init__(self, user_agent, version="11", ratelimit_sleep=True,
                 ratelimit_limit=40, ratelimit_timeframe=30, ratelimit_sleep_time=4,
                 ratelimit_maxsleeps=10, ratelimit_enabled=True, do_retry=True, 
-                retry_sleep=5, max_retries=5, use_nsdict=True, use_session=True):
+                retry_sleep=5, max_retries=5, use_nsdict=True, use_session=True, threading_mode=False):
         self.api = nsapiwrapper.Api(user_agent, version=version,
                                     ratelimit_sleep=ratelimit_sleep,
                                     ratelimit_sleep_time=ratelimit_sleep_time,
@@ -14,7 +14,7 @@ class Nationstates:
                                     ratelimit_within=ratelimit_timeframe,
                                     ratelimit_maxsleeps=ratelimit_maxsleeps,
                                     ratelimit_enabled=ratelimit_enabled,
-                                    use_session=use_session)
+                                    use_session=use_session and threading_mode)
         self.do_retry = do_retry
         self.retry_sleep = retry_sleep
         self.max_retries = max_retries
