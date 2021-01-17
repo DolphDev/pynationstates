@@ -142,8 +142,7 @@ class RateLimit:
 
     def add_timestamp(self):
         """Adds timestamp to rltime"""
-        with RateLimitStateEditLock:
-            self.rltime = [timestamp()] + self.rltime
+        self.rltime = [timestamp()] + self.rltime
 
     def add_xrls_timestamp(self, xrls):
         """Adds timestamp to rltime"""
