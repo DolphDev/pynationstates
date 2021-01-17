@@ -2,7 +2,7 @@ import unittest
 import nationstates as ns
 from random import choice
 import datetime
-USERAGENT = "Automated Testing Builds by Travis CL for the nationstates API wrapper by The United Island Tribes. dolphdevgithub@gmail.com"
+USERAGENT = "Automated Testing Builds by Circle CI for the nationstates API wrapper by The United Island Tribes. dolphdevgithub@gmail.com"
 
 import os
 test_nation = 'Python Nationstates API wrapper'
@@ -23,7 +23,7 @@ issue_nation_1 = joint_api.nation('Pynationstates Issue Farm 1', password=PASSWO
 issue_nation_2 = joint_api.nation('Pynationstates Issue Farm 2', password=PASSWORD)
 issue_nation_3 = joint_api.nation('Pynationstates Issue Farm 3', password=PASSWORD)
 issue_nation_zero = joint_api.nation('pynationstates_0_issues_test_nation', password=PASSWORD)
-
+api_threads = ns.Nationstates(USERAGENT, threading_mode=True)
 
 
 def grab_id(newfactbookresponse_text):
@@ -321,3 +321,30 @@ class ApiJoinTest(unittest.TestCase):
         random.shuffle(nations)
         pick_random_nation(*nations)
 
+    def test_threads(self):
+        import threading
+        import time
+        nation = api_threads.nation('testlandia')
+
+
+        def HelloWorld():
+            """User defined Thread function"""
+            nation.flag
+
+            return
+
+
+        def Main():
+            threads = [] # Threads list needed when we use a bulk of threads
+            for i in range(5):
+                mythread = threading.Thread(target=HelloWorld)
+                threads.append(mythread)
+                mythread.start()
+
+            for row in threads:
+                row.join()
+
+            assert (nation.api_mother.api.__activerequests__) == 0
+
+
+        Main()

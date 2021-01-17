@@ -44,7 +44,22 @@ def response_check(data):
     if data["status"] == 521:
         raise CloudflareServerError(
             "Error 521: Cloudflare did not recieve a response from nationstates"
-            )
+             )
+
+def within(number, value, window):
+    return (value < (number+window)) and (value > (number-window))
+
+def find_xrls(rlref, window=2):
+    highest_value = rlref[-1]
+    latest = rlref[-1]
+    for row in rlref:
+        if row is latest:
+            continue
+        if not within(latest[0], row[0], window):
+            continue
+        if row[1] > highest_value[1]:
+            highest_value = row
+    return highest_value
 
 class RateLimit:
 
@@ -54,6 +69,8 @@ class RateLimit:
     """
     def __init__(self):
         self.rlref = []
+        self.rlxrls = []
+
 
     @property
     def rltime(self):
@@ -95,20 +112,61 @@ class RateLimit:
 
     def cleanup(self, amount_allow=50, within_time=30):
         """To prevent the list from growing forever when there isn't enough requests to force it
-            cleanup"""
+            cleanup
+
+
+            can only be called from ratelimitcheck
+            """
         with RateLimitStateEditLock:
+            currenttime = timestamp()
+
             try:
-                currenttime = timestamp()
                 while (self.rltime[-1]+within_time) < currenttime:
                     del self.rltime[-1]
             except IndexError as err:
                 #List is empty, pass
                 pass
 
+            try:
+                while (self.rlxrls[-1][0]+within_time) < currenttime:
+                    del self.rlxrls[-1]
+            except IndexError as err:
+                #List is empty, pass
+                pass
+
+    def _calculate_internal_xrls(self):
+        # may only be called by ratelimitcheck
+        self.cleanup()
+        return len(self.rltime)
+
+
     def add_timestamp(self):
         """Adds timestamp to rltime"""
-        with RateLimitStateEditLock:
-            self.rltime = [timestamp()] + self.rltime
+        self.rltime = [timestamp()] + self.rltime
+
+    def add_xrls_timestamp(self, xrls):
+        """Adds timestamp to rltime"""
+        self.rlxrls = [(timestamp(), int(xrls))] + self.rlxrls
+
+    def _get_xrls_timestamp(self):
+        timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
+        if len(timestamp_sorted) == 0:
+            return (0, 0)
+        return find_xrls(timestamp_sorted)
+
+    def get_xrls_timestamp_final(self):
+        server_xrls = self._get_xrls_timestamp()
+        local_xrls = self._calculate_internal_xrls()
+        if server_xrls[0] > local_xrls:
+            # We have to calculate the current xrls now
+            return server_xrls[1] + len(tuple(filter(lambda x: x > server_xrls[0], self.rltime)))
+        else:
+            return local_xrls
+
+        timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
+        if len(timestamp_sorted) == 0:
+            return 0
+        return find_xrls(timestamp_sorted)
 
 class APIRequest:
     """Data Class for this library"""
@@ -143,6 +201,7 @@ class NationstatesAPI:
         return APIRequest(url, api_name, api_value, shards, version, request_headers, use_post, post_data)
 
     def _request_api(self, req):
+        self.api_mother.rlobj.add_timestamp()
         self.api_mother.check_ratelimit()
         headers = {"User-Agent":self.api_mother.user_agent}
         headers.update(req.custom_headers)
@@ -179,7 +238,8 @@ class NationstatesAPI:
 
     def _request(self, shards, url, api_name, value_name, version, request_headers=None):
         # This relies on .url() being defined by child classes
-        with RequestLock:
+        self.api_mother.sleep_thread_if_overburden()
+        with self.api_mother:
             url = self.url(shards)
             req = self._prepare_request(url, 
                     api_name,
@@ -191,7 +251,8 @@ class NationstatesAPI:
 
     def _request_post(self, shards, url, api_name, value_name, version, post_data, request_headers=None):
         # This relies on .url() being defined by child classes
-        with RequestLock:
+        self.api_mother.sleep_thread_if_overburden()
+        with self.api_mother:
             req = self._prepare_request(url, 
                     api_name,
                     value_name,
