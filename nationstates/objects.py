@@ -1,6 +1,6 @@
 from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI, CardsAPI
 from .nsapiwrapper.urls import Shard
-from .nsapiwrapper.utils import parsetree, parse
+from .nsapiwrapper.utils import parsetree, parse, pyns_encode_entities
 
 from xml.parsers.expat import ExpatError
 from time import sleep
@@ -10,9 +10,13 @@ from .exceptions import ConflictError, InternalServerError, CloudflareServerErro
 from requests.exceptions import ConnectionError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
+import html
+
+
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
 # Mostly due to it not being pratical for those methods to be automatically tested
 #
+
 
 def cant_be_none(**kwargs):
     # Raies ValueError is values are left None
@@ -60,8 +64,14 @@ class NSDict(dict):
             raise AttributeError('\'{}\' has no attribute \'{}\''.format(
                 type(self), attr))
 
-def response_parser(response, full_response, use_nsdict=True):
-    xml = response["xml"]
+
+
+def response_parser(response, full_response, use_nsdict=True, escape=False):
+    raw_xml = response["xml"]
+    if escape:
+        xml = html.unescape(pyns_encode_entities(raw_xml))
+    else:
+        xml = raw_xml
     if full_response:
         try:
             if use_nsdict:
@@ -69,9 +79,15 @@ def response_parser(response, full_response, use_nsdict=True):
             else:
                 response["data"] = parsetree(xml)
             response["data_xmltodict"] = parse(xml)
+            response["data_parse_success"] = True
         except ExpatError:
+            if escape is False:
+                return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
+            # This is will be improved 
+            # Will likely replace with Exception asking to create a github issue 
             response["data"] = xml
-            response["data_xmltodict"] = None          
+            response["data_xmltodict"] = None  
+            response["data_parse_success"] = False
         return response
     else:
         try:
@@ -80,6 +96,10 @@ def response_parser(response, full_response, use_nsdict=True):
             else:
                 return parsetree(xml)
         except ExpatError:
+            if escape is False:
+                return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
+            # This needs to be improved
+            # Will likely replace with Exception asking to create a github issue
             return xml
 
 def bad_api_parameter(param, api_name):
