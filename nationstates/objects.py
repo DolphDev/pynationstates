@@ -64,9 +64,12 @@ class NSDict(dict):
             raise AttributeError('\'{}\' has no attribute \'{}\''.format(
                 type(self), attr))
 
-def response_parser(response, full_response, use_nsdict=True):
+def response_parser(response, full_response, use_nsdict=True, escape=False):
     raw_xml = response["xml"]
-    xml = html.unescape(raw_xml)
+    if escape:
+        xml = html.unescape(raw_xml)
+    else:
+        xml = raw_xml
     if full_response:
         try:
             if use_nsdict:
@@ -76,6 +79,8 @@ def response_parser(response, full_response, use_nsdict=True):
             response["data_xmltodict"] = parse(xml)
             response["data_parse_success"] = True
         except ExpatError:
+            if escape is False:
+                return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
             response["data"] = xml
             response["data_xmltodict"] = None  
             response["data_parse_success"] = False
@@ -87,7 +92,9 @@ def response_parser(response, full_response, use_nsdict=True):
             else:
                 return parsetree(xml)
         except ExpatError:
-            # This needs to be improved. 
+            if escape is False:
+                return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
+            # This needs to be improved w
             return xml
 
 def bad_api_parameter(param, api_name):
