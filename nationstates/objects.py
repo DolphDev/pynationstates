@@ -1,6 +1,6 @@
 from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI, CardsAPI
 from .nsapiwrapper.urls import Shard
-from .nsapiwrapper.utils import parsetree, parse
+from .nsapiwrapper.utils import parsetree, parse, pyns_encode_entities
 
 from xml.parsers.expat import ExpatError
 from time import sleep
@@ -64,10 +64,12 @@ class NSDict(dict):
             raise AttributeError('\'{}\' has no attribute \'{}\''.format(
                 type(self), attr))
 
+
+
 def response_parser(response, full_response, use_nsdict=True, escape=False):
     raw_xml = response["xml"]
     if escape:
-        xml = html.unescape(raw_xml)
+        xml = html.unescape(pyns_encode_entities(raw_xml))
     else:
         xml = raw_xml
     if full_response:
@@ -81,6 +83,8 @@ def response_parser(response, full_response, use_nsdict=True, escape=False):
         except ExpatError:
             if escape is False:
                 return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
+            # This is will be improved 
+            # Will likely replace with Exception asking to create a github issue 
             response["data"] = xml
             response["data_xmltodict"] = None  
             response["data_parse_success"] = False
@@ -94,7 +98,8 @@ def response_parser(response, full_response, use_nsdict=True, escape=False):
         except ExpatError:
             if escape is False:
                 return response_parser(response, full_response, use_nsdict=use_nsdict, escape=True)
-            # This needs to be improved w
+            # This needs to be improved
+            # Will likely replace with Exception asking to create a github issue
             return xml
 
 def bad_api_parameter(param, api_name):
