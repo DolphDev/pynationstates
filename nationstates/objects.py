@@ -10,9 +10,13 @@ from .exceptions import ConflictError, InternalServerError, CloudflareServerErro
 from requests.exceptions import ConnectionError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
+import html
+
+
 # Some Lines may have # pragma: no cover to specify to ignore coverage misses here
 # Mostly due to it not being pratical for those methods to be automatically tested
 #
+
 
 def cant_be_none(**kwargs):
     # Raies ValueError is values are left None
@@ -61,7 +65,8 @@ class NSDict(dict):
                 type(self), attr))
 
 def response_parser(response, full_response, use_nsdict=True):
-    xml = response["xml"]
+    raw_xml = response["xml"]
+    xml = html.unescape(raw_xml)
     if full_response:
         try:
             if use_nsdict:
@@ -69,9 +74,11 @@ def response_parser(response, full_response, use_nsdict=True):
             else:
                 response["data"] = parsetree(xml)
             response["data_xmltodict"] = parse(xml)
+            response["data_parse_success"] = True
         except ExpatError:
             response["data"] = xml
-            response["data_xmltodict"] = None          
+            response["data_xmltodict"] = None  
+            response["data_parse_success"] = False
         return response
     else:
         try:
@@ -80,6 +87,7 @@ def response_parser(response, full_response, use_nsdict=True):
             else:
                 return parsetree(xml)
         except ExpatError:
+            # This needs to be improved. 
             return xml
 
 def bad_api_parameter(param, api_name):
