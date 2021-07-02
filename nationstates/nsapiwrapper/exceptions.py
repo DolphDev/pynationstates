@@ -36,6 +36,9 @@ class APIRateLimitBan(APIError):
 class APIUsageError(APIError):
     pass
 
+class DispatchTooRecent(APIUsageError):
+    pass
+
 class ServerError(APIError):
     # Can Be Used to check for an Website Error
     pass

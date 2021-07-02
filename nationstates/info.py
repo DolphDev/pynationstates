@@ -7,6 +7,7 @@
 # To use those, use get_shards with Shard Objects
 
 nation_shards = ('admirable',
+ 'admirables'
  'animal',
  'animaltrait',
  'banner',
@@ -52,6 +53,7 @@ nation_shards = ('admirable',
  'motto',
  'name',
  'notable',
+ 'notables',
  'policies',
  'poorest',
  'population',
@@ -145,4 +147,7 @@ individual_cards_shards = (
 	'owners',
 	'trades'
 	)
+
+dispatch_to_soon = 'Your nation is attempting to issue many announcements in a short period of time. Please wait for the international press to catch their breath, then try again.'
+
 

@@ -1,15 +1,14 @@
 from .nsapiwrapper.objects import NationAPI, RegionAPI, WorldAPI, WorldAssemblyAPI, TelegramAPI, CardsAPI
 from .nsapiwrapper.urls import Shard
-from .nsapiwrapper.utils import parsetree, parse, pyns_encode_entities
+from .nsapiwrapper.utils import parsetree, parse, pyns_encode_entities, sleep_thread
 
 from xml.parsers.expat import ExpatError
 from time import sleep
 from functools import wraps
 
-from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse
+from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse, DispatchTooRecent
 from requests.exceptions import ConnectionError
-from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
-
+from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards, dispatch_to_soon
 import html
 
 
@@ -49,6 +48,8 @@ def dispatch_error_check(resp, use_exception):
     data = resp['data'][Nation.api_name]
     if data.get('error'):
         if use_exception:
+            if data['error'] == dispatch_to_soon:
+                raise DispatchTooRecent(data['error'])
             raise APIUsageError(data['error'])
         else:
             return False
@@ -191,7 +192,7 @@ class API_WRAPPER:
                 return (self._parser(resp, full_response), True)
             else:
                 return self._parser(resp, full_response)
-        except (ConflictError, CloudflareServerError, InternalServerError, Server,ConnectionResetError, ConnectionError) as exc:
+        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError, ConnectionError, BadResponse) as exc:
             # The Retry system
             if return_status_tuple:
                 return (None, False)
@@ -286,7 +287,7 @@ class Nation(API_WRAPPER):
             else:
                 return resp["data"][self.api_name]
 
-    def _dispatch(self, dispatch, use_exception=True, **kwargs):
+    def _dispatch_request(self, dispatch, use_exception=True, **kwargs):
         self._check_auth()
         token_resp = self.command('dispatch', dispatch=dispatch, mode='prepare', nation=self.nation_name, full_response=True, use_post=True, **kwargs)
         token = dispatch_token(token_resp, use_exception)
@@ -299,7 +300,20 @@ class Nation(API_WRAPPER):
             return check
         else:
             return final_resp
-        
+
+    def _dispatch(self, dispatch, use_exception=True, **kwargs):
+        limit = 10
+        sleep_time = 5
+        last_exc = None
+        while limit > 0:
+            try:
+                return self._dispatch_request(dispatch, use_exception=use_exception, **kwargs)
+            except DispatchTooRecent as Exc:        
+                limit = limit - 1
+                sleep_thread(sleep_time)
+                last_exc = Exc
+        raise last_exc
+
 
     def create_dispatch(self, title=None, text=None, category=None, subcategory=None, full_response=False, use_exception=True):
         cant_be_none(title=title, text=text, category=category, subcategory=subcategory)

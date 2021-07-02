@@ -8,10 +8,11 @@ from .nsapiwrapper.exceptions import (
     NotFound,
     APIRateLimitBan,
     APIUsageError,
+    DispatchTooRecent,
     InternalServerError,
     CloudflareServerError,
     BadRequest,
-    ServerErrorm,
+    ServerError,
     BadResponse
 )
 

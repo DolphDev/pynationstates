@@ -227,7 +227,7 @@ class NationstatesAPI:
             self.api_mother.rate_limit(new_xrls=response.headers["X-ratelimit-requests-seen"])
         except KeyError:
             # I've Noticed Nationstates may sometimes not include this header as an error state.
-            raise BadResponse('Nationstates Returned an Unusable Response')
+            raise BadResponse('Nationstates Returned an Unusable Response - No `X-ratelimit-requests-seen` in response')
         # Should this be here? Perhaps an argument to disable it
         response_check(result)
 
