@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from time import time as timestamp
 from xml.parsers.expat import ExpatError
-from .exceptions import APIError, APIRateLimitBan, BadRequest, CloudflareServerError, ConflictError, Forbidden, InternalServerError, NotFound
+from .exceptions import APIError, APIRateLimitBan, BadRequest, CloudflareServerError, ConflictError, Forbidden, InternalServerError, NotFound, BadResponse
                         
 from .urls import gen_url, Shard, POST_API_URL as API_URL, shard_object_extract
 from threading import RLock
@@ -223,8 +223,11 @@ class NationstatesAPI:
             "url": request_meta.url
         }
 
-        self.api_mother.rate_limit(new_xrls=response.headers["X-ratelimit-requests-seen"])
-       
+        try:
+            self.api_mother.rate_limit(new_xrls=response.headers["X-ratelimit-requests-seen"])
+        except KeyError:
+            # I've Noticed Nationstates may sometimes not include this header as an error state.
+            raise BadResponse('Nationstates Returned an Unusable Response')
         # Should this be here? Perhaps an argument to disable it
         response_check(result)
 

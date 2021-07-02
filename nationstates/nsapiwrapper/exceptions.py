@@ -49,5 +49,10 @@ class InternalServerError(ServerError):
 class CloudflareServerError(ServerError):
     pass
 
+class BadResponse(ServerError):
+    # When NS returns an odd response we can't otherwise classify
+    pass
+
+
 class BadRequest(APIError):
     pass

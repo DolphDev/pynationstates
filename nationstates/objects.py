@@ -6,7 +6,7 @@ from xml.parsers.expat import ExpatError
 from time import sleep
 from functools import wraps
 
-from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated
+from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse
 from requests.exceptions import ConnectionError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards
 
@@ -191,7 +191,7 @@ class API_WRAPPER:
                 return (self._parser(resp, full_response), True)
             else:
                 return self._parser(resp, full_response)
-        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError, ConnectionError) as exc:
+        except (ConflictError, CloudflareServerError, InternalServerError, Server,ConnectionResetError, ConnectionError) as exc:
             # The Retry system
             if return_status_tuple:
                 return (None, False)
