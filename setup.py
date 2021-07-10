@@ -26,7 +26,7 @@ SOFTWARE.
 """
 
 
-version = '3.0.2.8'
+version = '3.0.3.9'
 
 from setuptools import setup
 setup(name='nationstates',
