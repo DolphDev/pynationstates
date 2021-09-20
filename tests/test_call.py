@@ -16,9 +16,12 @@ del os
 sep_api =  ns.Nationstates(USERAGENT)
 
 joint_api = ns.Nationstates(USERAGENT)
+joint_api_enable_beta = ns.Nationstates(USERAGENT, enable_beta=True)
 joint_api_use_session = ns.Nationstates(USERAGENT, threading_mode=False)
 test_nation_nonauth = joint_api.nation(test_nation)
 test_auth_nation = joint_api.nation(test_nation, password=PASSWORD)
+test_auth_nation_BETA = joint_api_enable_beta.nation(test_nation, password=PASSWORD)
+
 test_nation_r = joint_api.nation(test_nation_r)
 issue_nation_1 = joint_api.nation('Pynationstates Issue Farm 1', password=PASSWORD)
 issue_nation_2 = joint_api.nation('Pynationstates Issue Farm 2', password=PASSWORD)
@@ -26,7 +29,6 @@ issue_nation_3 = joint_api.nation('Pynationstates Issue Farm 3', password=PASSWO
 issue_nation_zero = joint_api.nation('pynationstates_0_issues_test_nation', password=PASSWORD)
 api_threads = ns.Nationstates(USERAGENT, threading_mode=True)
 fake_nation = joint_api.nation('FAKE NATION 1 FAKE NATION 1 FAKE NATION 1 FAKE NATION 1')
-
 
 def grab_id(newfactbookresponse_text):
     part1 = newfactbookresponse_text.split('id=')
@@ -234,20 +236,36 @@ class ApiJoinTest(unittest.TestCase):
 
     def test_exists(self):
         assert fake_nation.exists() is False
-        assert test_nation.exists()
+        assert test_auth_nation.exists()
+
+    def test_create_dispatch(self):
+        from datetime import datetime
+        now = datetime.now
+        try:
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=True)
+            dispatch_id = grab_id(resp['data']['nation']['success'])
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=False)
+            dispatch_id = grab_id(resp.success)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+
+
+        except Exception as Err:
+            self.fail(Err)
 
 
     def test_create_dispatch(self):
         from datetime import datetime
         now = datetime.now
         try:
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=True)
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=True)
             dispatch_id = grab_id(resp['data']['nation']['success'])
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
 
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=False)
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH TEST', text=str(now()), category=1, subcategory=105, full_response=False)
             dispatch_id = grab_id(resp.success)
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
 
 
         except Exception as Err:
@@ -257,14 +275,14 @@ class ApiJoinTest(unittest.TestCase):
         from datetime import datetime
         now = datetime.now
         try:
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH EDIT TEST', text=str(now()), category=1, subcategory=105, full_response=False)
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH EDIT TEST', text=str(now()), category=1, subcategory=105, full_response=False)
             dispatch_id = grab_id(resp.success)
-            resp = test_auth_nation.edit_dispatch(dispatch_id=dispatch_id, title='EDIT TEST', text="THIS POST WAS LAST EDITED AT:" + str(now()), category=1, subcategory=111, full_response=False)
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)           
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH EDIT TEST', text=str(now()), category=1, subcategory=105, full_response=False)            
+            resp = test_auth_nation_BETA.edit_dispatch(dispatch_id=dispatch_id, title='EDIT TEST', text="THIS POST WAS LAST EDITED AT:" + str(now()), category=1, subcategory=111, full_response=False)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)           
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH EDIT TEST', text=str(now()), category=1, subcategory=105, full_response=False)            
             dispatch_id = grab_id(resp.success)            
-            resp = test_auth_nation.edit_dispatch(dispatch_id=dispatch_id, title='EDIT TEST', text="THIS POST WAS LAST EDITED AT:" + str(now()), category=1, subcategory=111, full_response=True)
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+            resp = test_auth_nation_BETA.edit_dispatch(dispatch_id=dispatch_id, title='EDIT TEST', text="THIS POST WAS LAST EDITED AT:" + str(now()), category=1, subcategory=111, full_response=True)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
         
         except Exception as Err:
             self.fail(Err)
@@ -281,6 +299,17 @@ class ApiJoinTest(unittest.TestCase):
             resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
         except Exception as Err:
             self.fail(Err)
+
+
+    def test_send_rmb(self):
+        from datetime import datetime
+        now = datetime.now
+        try:
+            test_auth_nation.send_rmb(test_auth_nation.region, 'Circle CI: Automated Test')
+            
+        except Exception as Err:
+            self.fail(Err)
+
 
 
     def test_telegram_send(self):
