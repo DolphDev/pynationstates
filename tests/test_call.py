@@ -43,6 +43,8 @@ class SetupCallTest(unittest.TestCase):
         except Exception as Err:
             self.fail(Err)
 
+
+
 class SeperateCallTest(unittest.TestCase):
 
     def test_nation_call(self):
@@ -54,6 +56,22 @@ class SeperateCallTest(unittest.TestCase):
 
         except Exception as Err:
             self.fail(Err)
+
+    def test_beta(self):
+        from datetime import datetime
+        now = datetime.now
+        try:
+            test_auth_nation_BETA._check_beta()
+            
+        except Exception as Err:
+            self.fail(Err)
+
+        try:
+            test_auth_nation._check_beta()
+            self.fail(Err)
+
+        except Exception as Err:
+            pass
 
     def test_region_call(self):
         try:
@@ -291,12 +309,12 @@ class ApiJoinTest(unittest.TestCase):
         from datetime import datetime
         now = datetime.now
         try:
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH REMOVE TEST', text=str(now()), category=1, subcategory=105, full_response=False)
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH REMOVE TEST', text=str(now()), category=1, subcategory=105, full_response=False)
             dispatch_id = grab_id(resp.success)
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id)
-            resp = test_auth_nation.create_dispatch(title='AUTOMATED ADD DISPATCH REMOVE TEST', text=str(now()), category=1, subcategory=105, full_response=False)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id)
+            resp = test_auth_nation_BETA.create_dispatch(title='AUTOMATED ADD DISPATCH REMOVE TEST', text=str(now()), category=1, subcategory=105, full_response=False)
             dispatch_id = grab_id(resp.success)
-            resp = test_auth_nation.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
         except Exception as Err:
             self.fail(Err)
 
@@ -305,7 +323,7 @@ class ApiJoinTest(unittest.TestCase):
         from datetime import datetime
         now = datetime.now
         try:
-            test_auth_nation.send_rmb(test_auth_nation.region, 'Circle CI: Automated Test')
+            test_auth_nation_BETA.send_rmb(test_auth_nation.region, 'Circle CI: Automated Test')
             
         except Exception as Err:
             self.fail(Err)

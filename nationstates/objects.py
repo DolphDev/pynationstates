@@ -234,7 +234,7 @@ class API_WRAPPER:
 
     def _check_beta(self):
         if not self.api_mother.enable_beta:
-            raise BetaDisabled('Beta Endpoints are not enabled. Pass enable_beta = True to nationstates.Nationstates to supress')
+            raise BetaDisabled('Beta Endpoints are not enabled. Pass enable_beta = True to nationstates.Nationstates to suppress')
 
     def get_shards(self, *args, full_response=False):
         """Get Shards"""
