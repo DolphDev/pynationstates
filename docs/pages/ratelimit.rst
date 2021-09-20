@@ -8,7 +8,7 @@ The Nationstates package constains an automatic ratelimiter. It's a simple imple
 How to use the Rate Limiter
 ---------------------------
 
-The Rate Limit system is completely automatic, and will simply ``time.sleep()`` your thread if it thinks your getting close to the api limit. Each thread keeps tracks of its own requests, so it can leave this period as soon as possible. Due to the possibility of multiple threads, this library slightly lowers the amount of requests per 30 second block to prevent accidental breaches of the ratelimit.
+The Rate Limit system is completely automatic, and will simply ``time.sleep()`` your thread if it thinks your getting close to the api limit. Each process keeps tracks of its own requests, so it can leave this period as soon as possible. Due to the possibility of multiple processes, this library slightly lowers the amount of requests per 30 second block to prevent accidental breaches of the ratelimit.
 
 Disabling the Rate Limiter
 --------------------------

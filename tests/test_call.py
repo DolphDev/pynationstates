@@ -16,6 +16,7 @@ del os
 sep_api =  ns.Nationstates(USERAGENT)
 
 joint_api = ns.Nationstates(USERAGENT)
+joint_api_use_session = ns.Nationstates(USERAGENT, threading_mode=False)
 test_nation_nonauth = joint_api.nation(test_nation)
 test_auth_nation = joint_api.nation(test_nation, password=PASSWORD)
 test_nation_r = joint_api.nation(test_nation_r)
@@ -24,6 +25,7 @@ issue_nation_2 = joint_api.nation('Pynationstates Issue Farm 2', password=PASSWO
 issue_nation_3 = joint_api.nation('Pynationstates Issue Farm 3', password=PASSWORD)
 issue_nation_zero = joint_api.nation('pynationstates_0_issues_test_nation', password=PASSWORD)
 api_threads = ns.Nationstates(USERAGENT, threading_mode=True)
+fake_nation = joint_api.nation('FAKE NATION 1 FAKE NATION 1 FAKE NATION 1 FAKE NATION 1')
 
 
 def grab_id(newfactbookresponse_text):
@@ -229,6 +231,10 @@ class ApiJoinTest(unittest.TestCase):
             test_auth_nation.get_shards('ping')
         except Exception as Err:
             self.fail(Err)
+
+    def test_exists(self):
+        assert fake_nation.exists() is False
+        assert test_nation.exists()
 
 
     def test_create_dispatch(self):
