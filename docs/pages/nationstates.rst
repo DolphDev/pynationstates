@@ -89,4 +89,4 @@ You can view what each endpoint currently supports in it's magic methods by view
 Is pynationstates thread safe?
 ==============================
 
-pynationstates does have locks in place that should make it safe to use across threads. However, the author recommends you have independent `nationstates.Nationstates` instances for earch thread. This guarntees everything will work.  
+Pynationstates is now fully thread safe and will work as is across threads.
