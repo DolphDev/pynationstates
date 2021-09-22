@@ -66,7 +66,6 @@ class SeperateCallTest(unittest.TestCase):
             api.world().nations
             api.world().regions
             api.wa('0').nations
-            api.wa('0').regions
 
         except Exception as Err:
             self.fail(Err)
@@ -299,7 +298,7 @@ class ApiJoinTest(unittest.TestCase):
 
     def test_exists(self):
         assert fake_nation.exists() is False
-        assert fake_region.exists is False
+        assert fake_region.exists() is False
         assert test_auth_nation.exists()
         assert fake_nation.exists() is False
         assert test_auth_nation.region.exists()

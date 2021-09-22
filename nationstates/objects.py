@@ -484,13 +484,8 @@ class WorldAssembly(API_WRAPPER):
 
     @property
     def nations(self):
-        resp = self._auto_shard("nations")
-        return tuple(self.api_mother.nation(x) for x in resp.split(":"))
-
-    @property
-    def regions(self):
-        resp = self._auto_shard("regions")
-        return tuple(self.api_mother.region(x) for x in resp.split(":"))
+        resp = self._auto_shard("members")
+        return tuple(self.api_mother.nation(x) for x in resp.split(","))
 
 class Telegram(API_WRAPPER):
     api_name = TelegramAPI.api_name
