@@ -29,7 +29,7 @@ issue_nation_3 = joint_api.nation('Pynationstates Issue Farm 3', password=PASSWO
 issue_nation_zero = joint_api.nation('pynationstates_0_issues_test_nation', password=PASSWORD)
 api_threads = ns.Nationstates(USERAGENT, threading_mode=True)
 fake_nation = joint_api.nation('FAKE NATION 1 FAKE NATION 1 FAKE NATION 1 FAKE NATION 1')
-
+fake_region = joint_api.region('FAKE REGION 1 FAKE REGION 1 FAKE REGION 1 FAKE REGION 1')
 def grab_id(newfactbookresponse_text):
     part1 = newfactbookresponse_text.split('id=')
     return part1[1].split('">')[0]
@@ -57,6 +57,20 @@ class SeperateCallTest(unittest.TestCase):
         except Exception as Err:
             self.fail(Err)
 
+    def test_nation_region_calls(self):
+        try:
+            api = sep_api
+            mycall = api.nation("testlandia")
+            myr = mycall.region
+            myr.nations
+            api.world().nations
+            api.world().regions
+            api.wa('0').nations
+            api.wa('0').regions
+
+        except Exception as Err:
+            self.fail(Err)
+
     def test_beta(self):
         from datetime import datetime
         now = datetime.now
@@ -68,7 +82,7 @@ class SeperateCallTest(unittest.TestCase):
 
         try:
             test_auth_nation._check_beta()
-            self.fail(Err)
+            self.fail('beta flag false')
 
         except Exception as Err:
             pass
@@ -136,6 +150,36 @@ class SeperateCallTest(unittest.TestCase):
         except Exception as Err:
             self.fail(Err)
 
+    def test_cards_decks_call_null(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.decks()
+
+            self.fail(Err)
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            pass
+
+    def test_cards_decks_call_both(self):
+        try:
+            api = sep_api
+
+            mycall = api.cards()
+            mycall.decks(nation_name='testlandia', nation_id=1)
+
+            self.fail('fail')
+
+            # mycall.get_shards(choice(mycall.auto_shards))
+            # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
+        except Exception as Err:
+            pass
+
+
+
     def test_cards_decksinfo_call(self):
         try:
             api = sep_api
@@ -177,6 +221,7 @@ class SeperateCallTest(unittest.TestCase):
             # mycall.get_shards(choice(mycall.auto_shards), full_response=True)
         except Exception as Err:
             self.fail(Err)
+
 
 
     def test_cards_auctions_call(self):
@@ -254,7 +299,10 @@ class ApiJoinTest(unittest.TestCase):
 
     def test_exists(self):
         assert fake_nation.exists() is False
+        assert fake_region.exists is False
         assert test_auth_nation.exists()
+        assert fake_nation.exists() is False
+        assert test_auth_nation.region.exists()
 
     def test_create_dispatch(self):
         from datetime import datetime
@@ -317,6 +365,16 @@ class ApiJoinTest(unittest.TestCase):
             resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=dispatch_id, full_response=True)
         except Exception as Err:
             self.fail(Err)
+
+    def test_remove_dispatch(self):
+        from datetime import datetime
+        now = datetime.now
+        try:
+            resp = test_auth_nation_BETA.remove_dispatch(dispatch_id=None, full_response=True)
+            self.fail('should of failed')
+
+        except Exception as Err:
+            pass
 
 
     def test_send_rmb(self):
