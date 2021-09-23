@@ -149,5 +149,7 @@ individual_cards_shards = (
 	)
 
 dispatch_to_soon = 'Your nation is attempting to issue many announcements in a short period of time. Please wait for the international press to catch their breath, then try again.'
+rmb_to_soon = 'To prevent spam, you cannot post a message so soon after your previous one. Please try again in a few moments.'
+
 
 
