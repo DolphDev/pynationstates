@@ -7,8 +7,6 @@ from .urls import gen_url, Shard, POST_API_URL as API_URL, shard_object_extract
 from threading import RLock
 import requests
 
-RateLimitStateEditLock = RLock()
-PrivateNationStatusLock = RLock()
 RequestLock = RLock()
 
 def response_check(data):
@@ -70,6 +68,7 @@ class RateLimit:
     def __init__(self):
         self.rlref = []
         self.rlxrls = []
+        self.lock = RLock()
 
 
     @property
@@ -80,14 +79,15 @@ class RateLimit:
     @rltime.setter
     def rltime(self, val):
         """Sets the current tracker"""
-        self.rlref = val
+        with self.lock:
+            self.rlref = val
 
     def ratelimitcheck(self, amount_allow=48, within_time=30, xrls=0):
         """Checks if nsapiwrapper needs pause to prevent api banning
 
             Side Effects: Also calls .cleanup() when returning True
         """
-        with RateLimitStateEditLock:
+        with self.lock:
             if xrls >= amount_allow:
                 pre_raf = xrls - (xrls - len(self.rltime))
                 currenttime = timestamp()
@@ -117,7 +117,7 @@ class RateLimit:
 
             can only be called from ratelimitcheck
             """
-        with RateLimitStateEditLock:
+        with self.lock:
             currenttime = timestamp()
 
             try:
@@ -136,37 +136,42 @@ class RateLimit:
 
     def _calculate_internal_xrls(self):
         # may only be called by ratelimitcheck
-        self.cleanup()
-        return len(self.rltime)
+        with self.lock:
+            self.cleanup()
+            return len(self.rltime)
 
 
     def add_timestamp(self):
         """Adds timestamp to rltime"""
-        self.rltime = [timestamp()] + self.rltime
+        with self.lock:
+            self.rltime = [timestamp()] + self.rltime
 
     def add_xrls_timestamp(self, xrls):
         """Adds timestamp to rltime"""
-        self.rlxrls = [(timestamp(), int(xrls))] + self.rlxrls
+        with self.lock:
+            self.rlxrls = [(timestamp(), int(xrls))] + self.rlxrls
 
     def _get_xrls_timestamp(self):
-        timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
-        if len(timestamp_sorted) == 0:
-            return (0, 0)
-        return find_xrls(timestamp_sorted)
+        with self.lock:
+            timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
+            if len(timestamp_sorted) == 0:
+                return (0, 0)
+            return find_xrls(timestamp_sorted)
 
     def get_xrls_timestamp_final(self):
-        server_xrls = self._get_xrls_timestamp()
-        local_xrls = self._calculate_internal_xrls()
-        if server_xrls[0] > local_xrls:
-            # We have to calculate the current xrls now
-            return server_xrls[1] + len(tuple(filter(lambda x: x > server_xrls[0], self.rltime)))
-        else:
-            return local_xrls
+        with self.lock:
+            server_xrls = self._get_xrls_timestamp()
+            local_xrls = self._calculate_internal_xrls()
+            if server_xrls[0] > local_xrls:
+                # We have to calculate the current xrls now
+                return server_xrls[1] + len(tuple(filter(lambda x: x > server_xrls[0], self.rltime)))
+            else:
+                return local_xrls
 
-        timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
-        if len(timestamp_sorted) == 0:
-            return 0
-        return find_xrls(timestamp_sorted)
+            timestamp_sorted = sorted(self.rlxrls, key=lambda x: x[0])
+            if len(timestamp_sorted) == 0:
+                return 0
+            return find_xrls(timestamp_sorted)
 
 class APIRequest:
     """Data Class for this library"""
@@ -309,6 +314,7 @@ class PrivateNationAPI(NationAPI):
         else:
             self.autologin_used = False
         self.pin = None
+        self.lock = RLock()
         super().__init__(nation_name, api_mother)
 
     def request(self, shards=[]):
@@ -348,7 +354,7 @@ class PrivateNationAPI(NationAPI):
 
     def _get_pin_headers(self):
         """Process Login data to give to the request"""
-        with PrivateNationStatusLock:
+        with self.lock:
             if self.pin:
                 custom_headers={"Pin": self.pin}
             else:
@@ -360,7 +366,7 @@ class PrivateNationAPI(NationAPI):
 
     def _setup_pin(self, response):
         # sets up pin
-        with PrivateNationStatusLock:
+        with self.lock:
             if self.password or self.autologin or self.pin:
                 headers = response["headers"]
                 try:
