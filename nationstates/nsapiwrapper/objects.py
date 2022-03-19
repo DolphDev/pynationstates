@@ -357,6 +357,8 @@ class PrivateNationAPI(NationAPI):
         with self.lock:
             if self.pin:
                 custom_headers={"Pin": self.pin}
+                if self.autologin:
+                    custom_headers.update({"Autologin":self.autologin})
             else:
                 if self.autologin:
                     custom_headers={"Autologin":self.autologin}
@@ -370,10 +372,12 @@ class PrivateNationAPI(NationAPI):
             if self.password or self.autologin or self.pin:
                 headers = response["headers"]
                 try:
-                    self.pin = headers["X-Pin"]
-                    self.autologin = headers["X-AutoLogin"]
+                    if headers.get("X-Pin"):
+                        self.pin = headers["X-Pin"]
+                    if self.password is not None:
+                        self.autologin = headers["X-AutoLogin"]
                     self.password = None
-                except KeyError:
+                except KeyError as exception:
                     # A Non Private Request was done
                     # Nothing needs to be done
                     pass
