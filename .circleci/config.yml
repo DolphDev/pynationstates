@@ -1,9 +1,9 @@
 version: 2.0
 
 jobs:
-  Python_3.8:
+  Python_3.6:
       docker:
-        - image: circleci/python:3.8
+        - image: circleci/python:3.6
       resource_class: small
       steps: &steps
         - checkout
@@ -18,4 +18,4 @@ workflows:
   version: 2
   build:
     jobs:
-      - Python_3.8
+      - Python_3.6
