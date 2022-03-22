@@ -3,7 +3,7 @@ version: 2.0
 jobs:
   Python_3.6:
       docker:
-        - image: circleci/python:3.6
+        - image: cimg/python:3.8.4
       resource_class: small
       steps: &steps
         - checkout
