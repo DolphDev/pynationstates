@@ -222,7 +222,10 @@ class API_WRAPPER:
                 return resp[0]
             else:
                 raise exc
-        except:
+        except NSBaseError as exc:
+            # These are mean't to be raised
+            raise exc
+        except Exception as err:
             # Got an exception we are not prepared for, will wait for retry timer and then retry. To prevent infinite loops, we only do this once as last resort.
             if return_status_tuple:
                 return (None, None)
