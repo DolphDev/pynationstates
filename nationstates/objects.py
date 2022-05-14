@@ -7,7 +7,7 @@ from time import sleep
 from functools import wraps
 
 from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse, DispatchTooRecent, BetaDisabled, ActionTooRecent, NotFound
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, SSLError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards, dispatch_to_soon, rmb_to_soon
 import html
 
@@ -205,7 +205,7 @@ class API_WRAPPER:
                 return (self._parser(resp, full_response), True)
             else:
                 return self._parser(resp, full_response)
-        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError, ConnectionError, BadResponse) as exc:
+        except (ConflictError, CloudflareServerError, InternalServerError, ConnectionResetError, ConnectionError, SSLError, BadResponse) as exc:
             # The Retry system
             if return_status_tuple:
                 return (None, False)
@@ -222,6 +222,16 @@ class API_WRAPPER:
                 return resp[0]
             else:
                 raise exc
+        except:
+            # Got an exception we are not prepared for, will wait for retry timer and then retry. To prevent infinite loops, we only do this once as last resort.
+            if return_status_tuple:
+                return (None, None)
+            elif self.api_mother.do_retry:
+                sleep(self.api_mother.retry_sleep)
+                resp = self.request(shards, full_response, True, use_post)
+                if not resp[1]:
+                    raise exc
+                return resp[0]          
 
     def __get_shards__(self, *args, full_response=False, use_post=False):
         """Get Shards, internal implementation"""
