@@ -6,7 +6,7 @@ from xml.parsers.expat import ExpatError
 from time import sleep
 from functools import wraps
 
-from .exceptions import ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse, DispatchTooRecent, BetaDisabled, ActionTooRecent, NotFound
+from .exceptions import NSBaseError, ConflictError, InternalServerError, CloudflareServerError, APIUsageError, NotAuthenticated, BadResponse, DispatchTooRecent, BetaDisabled, ActionTooRecent, NotFound
 from requests.exceptions import ConnectionError, SSLError
 from .info import nation_shards, region_shards, world_shards, wa_shards, individual_cards_shards, dispatch_to_soon, rmb_to_soon
 import html
