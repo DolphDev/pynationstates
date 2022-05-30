@@ -5,11 +5,12 @@ executors:
       - image: cimg/python:3.8
 jobs:
   pynationstates:
+    resource_class: small
     executor: pynationstates-tests
     steps:
       - checkout # checkout source code
       - run: |
-          sudo add-apt-repository universe; sudo apt-get update; sudo apt-get -y install python3-pip ; sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
+          sudo add-apt-repository universe ; sudo apt-get update ; sudo apt-get -y install python3-pip ; sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
 workflows:
   pynationstates-tests:
     jobs:
