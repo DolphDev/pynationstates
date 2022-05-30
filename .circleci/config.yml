@@ -1,15 +1,18 @@
-version: 2.0
-jobs:
-  build:
+version: 2.1
+executors:
+  my-custom-executor:
     docker:
-      image: cimg/python:3.8
-      resource_class: small
-      steps:
-        - checkout
-        - run: sudo pip install -r requirements.txt
-        - run: sudo pip install coveralls pytest pytest-cov
-        - run: python --version ; pip --version ; pwd ; ls
-        # stop the build if there are Python syntax errors or undefined names
-        # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide      
-        - run: py.test --cov=nationstates tests/
-        - run: coveralls
+      - image: cimg/python:3.8
+jobs:
+  pynationstates:
+
+    executor: my-custom-executor
+    steps:
+      - checkout
+      - run: |
+          sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
+
+workflows:
+  my-custom-workflow:
+    jobs:
+      - pynationstates
