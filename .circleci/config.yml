@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout # checkout source code
       - run: |
-          sudo apt-get -y install python3-pip ; sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
+          sudo add-apt-repository universe; sudo apt-get update; sudo apt-get -y install python3-pip ; sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
 workflows:
   pynationstates-tests:
     jobs:
