@@ -1,21 +1,17 @@
-version: 2.0
-
+version: 2.1
+executors:
+  pynationstates-tests:
+    docker:
+      - image: cimg/python:3.8
 jobs:
-  Python_3.6:
-      docker:
-        - image: circleci/python:3.6
-      resource_class: small
-      steps: &steps
-        - checkout
-        - run: sudo pip install -r requirements.txt
-        - run: sudo pip install coveralls pytest pytest-cov
-        - run: python --version ; pip --version ; pwd ; ls
-        # stop the build if there are Python syntax errors or undefined names
-        # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide      
-        - run: py.test --cov=nationstates tests/
-        - run: coveralls
+  pynationstates:
+    resource_class: small
+    executor: pynationstates-tests
+    steps:
+      - checkout # checkout source code
+      - run: |
+          sudo add-apt-repository universe ; sudo apt-get update ; sudo apt-get -y install python3-pip ; sudo pip install -r requirements.txt ; sudo pip install coveralls pytest pytest-cov ; python --version ; pip --version ; pwd ; ls ; py.test --cov=nationstates tests/ ; coveralls
 workflows:
-  version: 2
-  build:
+  pynationstates-tests:
     jobs:
-      - Python_3.6
+      - pynationstates
