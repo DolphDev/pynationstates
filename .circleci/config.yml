@@ -1,7 +1,7 @@
 jobs:
   build:
     docker:
-      - image: cimg/python:3.8
+      image: cimg/python:3.8
       resource_class: small
       steps:
         - checkout
